@@ -1,0 +1,21 @@
+loadaddr=0x86a00000
+ipaddr=192.168.1.1
+serverip=192.168.1.10
+bootled_pwr=blue:power
+
+bootconf=config-1
+bootfile=openwrt-airoha-en7523-mikrotik_e60iugs-initramfs-kernel.bin
+
+boot_tftp=tftpboot $loadaddr $bootfile && bootm $loadaddr#$bootconf
+ubi_read_openwrt=ubi read $loadaddr fit && iminfo $loadaddr
+boot_openwrt=led $bootled_pwr on ; run boot_tftp && bootm $loadaddr#$bootconf ; led $bootled_pwr blink 3
+
+bootcmd=run boot_tftp
+bootdelay=3
+bootmenu_confirm_return=askenv - Press ENTER to return to menu ; bootmenu 20
+bootmenu_default=0
+bootmenu_delay=3
+bootmenu_title=      34m( ( ( mOpenWrt34m ) ) )
+bootmenu_0=Run default boot command.=run boot_openwrt
+bootmenu_1=Boot system via TFTP.=run boot_tftp ; run bootmenu_confirm_return
+bootmenu_5=Reboot.=reset
