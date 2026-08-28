@@ -3133,7 +3133,7 @@ static const struct airoha_eth_soc_data en751221_data = {
 	.direct_reset = true,
 	.late_probe = true,
 	.dscp_byte_swap = true,
-	.switch_compatible = "mediatek,mt7530",
+	.switch_compatible = "econet,en751221-switch",
 };
 
 static const struct airoha_eth_soc_data en7528_data = {
