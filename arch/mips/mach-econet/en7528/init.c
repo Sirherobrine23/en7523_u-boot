@@ -18,8 +18,6 @@ DECLARE_GLOBAL_DATA_PTR;
 
 #define EN7528_RESET_CONTROL				0xbfb00040UL
 #define EN7528_SYS_GLOBAL_PARM				0xbfb00284UL
-#define EN7528_SYS_GLOBAL_DRAM_SIZE_MASK	GENMASK(31, 20)
-#define EN7528_SYS_GLOBAL_DRAM_SIZE_SHIFT	20
 #define NP_SCU_BASE		((void __iomem *)CKSEG1ADDR(0x1fb00000))
 
 int print_cpuinfo(void)
@@ -32,7 +30,9 @@ int print_cpuinfo(void)
 	if (pkgid != END_PACKAGE_ID) {
 		printf("SoC:   Airoha %s\n", soc_name);
 	} else {
-		printf("SoC:   Airoha EN7528\n");
+		printf("SoC:   Airoha %s\n",
+		       IS_ENABLED(CONFIG_TARGET_EN751627) ?
+		       "EN7516/EN7527" : "EN7528");
 	}
 
 	return 0;
@@ -44,19 +44,21 @@ int dram_init(void)
 
 	/*
 	 * The vendor first stage stores the calibrated DRAM size in MiB in the
-	 * upper 12 bits of SYS_GLOBAL_PARM.  EN751221 uses the lower 12 bits of
-	 * the same register because its boot code is built big-endian, whereas
-	 * EN7528 is little-endian.
+	 * SYS_GLOBAL_PARM bitfield. EN751627 (big-endian) places dram_size in
+	 * bits [11:0]; EN7528 (little-endian) places it in bits [31:20].
+	 * The MMIO word itself is native-endian on both variants.
 	 */
-	value = readl((void __iomem *)EN7528_SYS_GLOBAL_PARM);
-	size_mb = (value & EN7528_SYS_GLOBAL_DRAM_SIZE_MASK) >>
-		  EN7528_SYS_GLOBAL_DRAM_SIZE_SHIFT;
+	value = __raw_readl((void __iomem *)EN7528_SYS_GLOBAL_PARM);
+	if (IS_ENABLED(CONFIG_TARGET_EN751627))
+		size_mb = value & GENMASK(11, 0);
+	else
+		size_mb = (value >> 20) & GENMASK(11, 0);
 
-	debug("EN7528 DRAM: global-param=%08x size=%u MiB\n",
+	debug("EN751627/EN7528 DRAM: global-param=%08x size=%u MiB\n",
 	      value, size_mb);
 
 	if (size_mb < 32 || size_mb > 512) {
-		printf("Invalid EN7528 calibrated DRAM size: %u MiB\n",
+		printf("Invalid EN751627/EN7528 calibrated DRAM size: %u MiB\n",
 		       size_mb);
 		return -EINVAL;
 	}
@@ -93,7 +95,7 @@ int ft_system_setup(void *blob, struct bd_info *bd)
 
 void _machine_restart(void)
 {
-	writel(0x80000000, (void __iomem *)EN7528_RESET_CONTROL);
+	__raw_writel(0x80000000, (void __iomem *)EN7528_RESET_CONTROL);
 	while (1) {
 		/* loop forever */
 	}

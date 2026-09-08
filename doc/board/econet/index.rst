@@ -7,3 +7,4 @@ EcoNet/Airoha
    :maxdepth: 2
 
    en7512
+   en751627
