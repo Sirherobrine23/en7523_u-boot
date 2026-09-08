@@ -10,7 +10,7 @@
 
 .section .text,"ax",@progbits
 .balign 16
-__recon_pkgId_1_start:
+.set __recon_pkgId_1_start, .
 .local efuse_disable
 .type efuse_disable, @function
 efuse_disable:
@@ -135,51 +135,51 @@ efuse_read_data:
 .byte 0x23, 0x28, 0xa4, 0x00, 0x00, 0x08, 0xa4, 0x24, 0x07, 0x08, 0xa5, 0x24, 0x00, 0x00, 0x8c, 0x28
 .byte 0x0b, 0x20, 0xac, 0x00, 0xc3, 0x60, 0x04, 0x00, 0x00, 0x00, 0x0b, 0x3c, 0x00, 0x00, 0x6b, 0x25
 .byte 0x00, 0x00, 0x09, 0x3c, 0x12, 0x01, 0x00, 0x08, 0x0c, 0x00, 0x29, 0x25, 0x00, 0x00, 0x00, 0x00
-.reloc __recon_pkgId_1_start + 0x94, R_MIPS_26, 
-.reloc __recon_pkgId_1_start + 0xb8, R_MIPS_26, 
-.reloc __recon_pkgId_1_start + 0xc0, R_MIPS_26, 
-.reloc __recon_pkgId_1_start + 0xe8, R_MIPS_HI16, 
-.reloc __recon_pkgId_1_start + 0xec, R_MIPS_LO16, 
-.reloc __recon_pkgId_1_start + 0xf8, R_MIPS_HI16, 
-.reloc __recon_pkgId_1_start + 0xfc, R_MIPS_LO16, 
-.reloc __recon_pkgId_1_start + 0x148, R_MIPS_HI16, 
-.reloc __recon_pkgId_1_start + 0x14c, R_MIPS_LO16, 
-.reloc __recon_pkgId_1_start + 0x15c, R_MIPS_HI16, 
-.reloc __recon_pkgId_1_start + 0x160, R_MIPS_LO16, 
-.reloc __recon_pkgId_1_start + 0x178, R_MIPS_26, 
-.reloc __recon_pkgId_1_start + 0x180, R_MIPS_LO16, 
-.reloc __recon_pkgId_1_start + 0x18c, R_MIPS_HI16, 
-.reloc __recon_pkgId_1_start + 0x190, R_MIPS_LO16, 
-.reloc __recon_pkgId_1_start + 0x1ac, R_MIPS_26, 
-.reloc __recon_pkgId_1_start + 0x1c8, R_MIPS_26, 
+.reloc __recon_pkgId_1_start + 0x94, R_MIPS_26, __recon_pkgId_1_start
+.reloc __recon_pkgId_1_start + 0xb8, R_MIPS_26, __recon_pkgId_1_start
+.reloc __recon_pkgId_1_start + 0xc0, R_MIPS_26, __recon_pkgId_1_start
+.reloc __recon_pkgId_1_start + 0xe8, R_MIPS_HI16, __recon_pkgId_4_start
+.reloc __recon_pkgId_1_start + 0xec, R_MIPS_LO16, __recon_pkgId_4_start
+.reloc __recon_pkgId_1_start + 0xf8, R_MIPS_HI16, __recon_pkgId_4_start
+.reloc __recon_pkgId_1_start + 0xfc, R_MIPS_LO16, __recon_pkgId_4_start
+.reloc __recon_pkgId_1_start + 0x148, R_MIPS_HI16, __recon_pkgId_4_start
+.reloc __recon_pkgId_1_start + 0x14c, R_MIPS_LO16, __recon_pkgId_4_start
+.reloc __recon_pkgId_1_start + 0x15c, R_MIPS_HI16, __recon_pkgId_4_start
+.reloc __recon_pkgId_1_start + 0x160, R_MIPS_LO16, __recon_pkgId_4_start
+.reloc __recon_pkgId_1_start + 0x178, R_MIPS_26, __recon_pkgId_1_start
+.reloc __recon_pkgId_1_start + 0x180, R_MIPS_LO16, __recon_pkgId_4_start
+.reloc __recon_pkgId_1_start + 0x18c, R_MIPS_HI16, __recon_pkgId_4_start
+.reloc __recon_pkgId_1_start + 0x190, R_MIPS_LO16, __recon_pkgId_4_start
+.reloc __recon_pkgId_1_start + 0x1ac, R_MIPS_26, __recon_pkgId_1_start
+.reloc __recon_pkgId_1_start + 0x1c8, R_MIPS_26, __recon_pkgId_1_start
 .reloc __recon_pkgId_1_start + 0x1d8, R_MIPS_26, get_SYS_HCLK
-.reloc __recon_pkgId_1_start + 0x238, R_MIPS_26, 
+.reloc __recon_pkgId_1_start + 0x238, R_MIPS_26, __recon_pkgId_1_start
 .reloc __recon_pkgId_1_start + 0x2d8, R_MIPS_HI16, efuse
 .reloc __recon_pkgId_1_start + 0x2dc, R_MIPS_LO16, efuse
-.reloc __recon_pkgId_1_start + 0x2f4, R_MIPS_26, 
+.reloc __recon_pkgId_1_start + 0x2f4, R_MIPS_26, __recon_pkgId_1_start
 .reloc __recon_pkgId_1_start + 0x36c, R_MIPS_HI16, init_flag
 .reloc __recon_pkgId_1_start + 0x370, R_MIPS_LO16, init_flag
-.reloc __recon_pkgId_1_start + 0x380, R_MIPS_26, 
-.reloc __recon_pkgId_1_start + 0x388, R_MIPS_26, 
-.reloc __recon_pkgId_1_start + 0x390, R_MIPS_26, 
-.reloc __recon_pkgId_1_start + 0x3a0, R_MIPS_26, 
+.reloc __recon_pkgId_1_start + 0x380, R_MIPS_26, __recon_pkgId_1_start
+.reloc __recon_pkgId_1_start + 0x388, R_MIPS_26, __recon_pkgId_1_start
+.reloc __recon_pkgId_1_start + 0x390, R_MIPS_26, __recon_pkgId_1_start
+.reloc __recon_pkgId_1_start + 0x3a0, R_MIPS_26, __recon_pkgId_1_start
 .reloc __recon_pkgId_1_start + 0x3b0, R_MIPS_HI16, $LC0
 .reloc __recon_pkgId_1_start + 0x39c, R_MIPS_HI16, $LC0
 .reloc __recon_pkgId_1_start + 0x3b4, R_MIPS_LO16, $LC0
 .reloc __recon_pkgId_1_start + 0x3b8, R_MIPS_26, prom_printf
-.reloc __recon_pkgId_1_start + 0x3c0, R_MIPS_26, 
-.reloc __recon_pkgId_1_start + 0x3ac, R_MIPS_HI16, 
-.reloc __recon_pkgId_1_start + 0x3c8, R_MIPS_LO16, 
+.reloc __recon_pkgId_1_start + 0x3c0, R_MIPS_26, __recon_pkgId_1_start
+.reloc __recon_pkgId_1_start + 0x3ac, R_MIPS_HI16, __recon_pkgId_4_start
+.reloc __recon_pkgId_1_start + 0x3c8, R_MIPS_LO16, __recon_pkgId_4_start
 .reloc __recon_pkgId_1_start + 0x3d0, R_MIPS_26, memset
-.reloc __recon_pkgId_1_start + 0x3e0, R_MIPS_26, 
-.reloc __recon_pkgId_1_start + 0x3fc, R_MIPS_26, 
-.reloc __recon_pkgId_1_start + 0x430, R_MIPS_26, 
-.reloc __recon_pkgId_1_start + 0x434, R_MIPS_LO16, 
-.reloc __recon_pkgId_1_start + 0x440, R_MIPS_26, 
-.reloc __recon_pkgId_1_start + 0x42c, R_MIPS_HI16, 
-.reloc __recon_pkgId_1_start + 0x444, R_MIPS_LO16, 
-.reloc __recon_pkgId_1_start + 0x4d8, R_MIPS_HI16, 
-.reloc __recon_pkgId_1_start + 0x4dc, R_MIPS_LO16, 
+.reloc __recon_pkgId_1_start + 0x3e0, R_MIPS_26, __recon_pkgId_1_start
+.reloc __recon_pkgId_1_start + 0x3fc, R_MIPS_26, __recon_pkgId_1_start
+.reloc __recon_pkgId_1_start + 0x430, R_MIPS_26, __recon_pkgId_1_start
+.reloc __recon_pkgId_1_start + 0x434, R_MIPS_LO16, __recon_pkgId_3_start
+.reloc __recon_pkgId_1_start + 0x440, R_MIPS_26, __recon_pkgId_1_start
+.reloc __recon_pkgId_1_start + 0x42c, R_MIPS_HI16, __recon_pkgId_3_start
+.reloc __recon_pkgId_1_start + 0x444, R_MIPS_LO16, __recon_pkgId_3_start
+.reloc __recon_pkgId_1_start + 0x4d8, R_MIPS_HI16, __recon_pkgId_4_start
+.reloc __recon_pkgId_1_start + 0x4dc, R_MIPS_LO16, __recon_pkgId_4_start
 .reloc __recon_pkgId_1_start + 0x4e4, R_MIPS_HI16, efuse
 .reloc __recon_pkgId_1_start + 0x4e8, R_MIPS_LO16, efuse
 .reloc __recon_pkgId_1_start + 0x540, R_MIPS_HI16, init_flag
@@ -187,25 +187,24 @@ efuse_read_data:
 .reloc __recon_pkgId_1_start + 0x55c, R_MIPS_26, memset
 .reloc __recon_pkgId_1_start + 0x57c, R_MIPS_HI16, efuse
 .reloc __recon_pkgId_1_start + 0x580, R_MIPS_LO16, efuse
-.reloc __recon_pkgId_1_start + 0x58c, R_MIPS_26, 
-.reloc __recon_pkgId_1_start + 0x5dc, R_MIPS_26, 
+.reloc __recon_pkgId_1_start + 0x58c, R_MIPS_26, __recon_pkgId_1_start
+.reloc __recon_pkgId_1_start + 0x5dc, R_MIPS_26, __recon_pkgId_1_start
 .reloc __recon_pkgId_1_start + 0x610, R_MIPS_26, prom_printf
 .reloc __recon_pkgId_1_start + 0x60c, R_MIPS_HI16, $LC0
 .reloc __recon_pkgId_1_start + 0x614, R_MIPS_LO16, $LC0
-.reloc __recon_pkgId_1_start + 0x61c, R_MIPS_HI16, 
-.reloc __recon_pkgId_1_start + 0x620, R_MIPS_LO16, 
-.reloc __recon_pkgId_1_start + 0x624, R_MIPS_26, 
-.reloc __recon_pkgId_1_start + 0x43c, R_MIPS_HI16, 
-.reloc __recon_pkgId_1_start + 0x62c, R_MIPS_LO16, 
+.reloc __recon_pkgId_1_start + 0x61c, R_MIPS_HI16, __recon_pkgId_3_start
+.reloc __recon_pkgId_1_start + 0x620, R_MIPS_LO16, __recon_pkgId_3_start
+.reloc __recon_pkgId_1_start + 0x624, R_MIPS_26, __recon_pkgId_1_start
+.reloc __recon_pkgId_1_start + 0x43c, R_MIPS_HI16, __recon_pkgId_3_start
+.reloc __recon_pkgId_1_start + 0x62c, R_MIPS_LO16, __recon_pkgId_3_start
 .reloc __recon_pkgId_1_start + 0x658, R_MIPS_HI16, efuse
 .reloc __recon_pkgId_1_start + 0x65c, R_MIPS_LO16, efuse
-.reloc __recon_pkgId_1_start + 0x664, R_MIPS_26, 
-.reloc __recon_pkgId_1_start + 0x660, R_MIPS_HI16, 
-.reloc __recon_pkgId_1_start + 0x668, R_MIPS_LO16, 
-
+.reloc __recon_pkgId_1_start + 0x664, R_MIPS_26, __recon_pkgId_1_start
+.reloc __recon_pkgId_1_start + 0x660, R_MIPS_HI16, __recon_pkgId_4_start
+.reloc __recon_pkgId_1_start + 0x668, R_MIPS_LO16, __recon_pkgId_4_start
 .section .data,"aw",@progbits
 .balign 16
-__recon_pkgId_3_start:
+.set __recon_pkgId_3_start, .
 .local key_repair_cnt
 .type key_repair_cnt, @object
 key_repair_cnt:
@@ -213,7 +212,7 @@ key_repair_cnt:
 
 .section .bss,"aw",@nobits
 .balign 16
-__recon_pkgId_4_start:
+.set __recon_pkgId_4_start, .
 .globl init_flag
 .type init_flag, @object
 init_flag:
@@ -230,7 +229,7 @@ rsa_repair_table:
 
 .section .rodata.str1.4,"a",@progbits
 .balign 4
-__recon_pkgId_9_start:
+.set __recon_pkgId_9_start, .
 .local $LC0
 $LC0:
 .byte 0x52, 0x65, 0x61, 0x64, 0x20, 0x45, 0x46, 0x55, 0x53, 0x45, 0x20, 0x65, 0x72, 0x72, 0x6f, 0x72

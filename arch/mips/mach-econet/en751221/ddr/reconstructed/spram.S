@@ -68,23 +68,22 @@ ispram_fill:
 .byte 0x8f, 0xbe, 0x00, 0x30, 0x8f, 0xb7, 0x00, 0x2c, 0x8f, 0xb6, 0x00, 0x28, 0x8f, 0xb5, 0x00, 0x24
 .byte 0x8f, 0xb4, 0x00, 0x20, 0x8f, 0xb3, 0x00, 0x1c, 0x8f, 0xb2, 0x00, 0x18, 0x8f, 0xb1, 0x00, 0x14
 .byte 0x8f, 0xb0, 0x00, 0x10, 0x03, 0xe0, 0x00, 0x08, 0x27, 0xbd, 0x00, 0x38, 0x00, 0x00, 0x00, 0x00
-.reloc __recon_spram_1_start + 0x20, R_MIPS_26, 
-.reloc __recon_spram_1_start + 0x70, R_MIPS_26, 
-.reloc __recon_spram_1_start + 0xd4, R_MIPS_26, 
-.reloc __recon_spram_1_start + 0xdc, R_MIPS_26, 
-.reloc __recon_spram_1_start + 0xe4, R_MIPS_26, 
-.reloc __recon_spram_1_start + 0xec, R_MIPS_26, 
-.reloc __recon_spram_1_start + 0xf4, R_MIPS_26, 
-.reloc __recon_spram_1_start + 0x128, R_MIPS_26, 
-.reloc __recon_spram_1_start + 0x140, R_MIPS_26, 
-.reloc __recon_spram_1_start + 0x168, R_MIPS_26, 
-.reloc __recon_spram_1_start + 0x170, R_MIPS_26, 
-.reloc __recon_spram_1_start + 0x1e8, R_MIPS_26, 
-.reloc __recon_spram_1_start + 0x1f4, R_MIPS_26, 
-.reloc __recon_spram_1_start + 0x244, R_MIPS_26, 
-.reloc __recon_spram_1_start + 0x284, R_MIPS_26, 
-.reloc __recon_spram_1_start + 0x294, R_MIPS_26, 
-
+.reloc __recon_spram_1_start + 0x20, R_MIPS_26, __recon_spram_1_start
+.reloc __recon_spram_1_start + 0x70, R_MIPS_26, __recon_spram_1_start
+.reloc __recon_spram_1_start + 0xd4, R_MIPS_26, __recon_spram_1_start
+.reloc __recon_spram_1_start + 0xdc, R_MIPS_26, __recon_spram_1_start
+.reloc __recon_spram_1_start + 0xe4, R_MIPS_26, __recon_spram_1_start
+.reloc __recon_spram_1_start + 0xec, R_MIPS_26, __recon_spram_1_start
+.reloc __recon_spram_1_start + 0xf4, R_MIPS_26, __recon_spram_1_start
+.reloc __recon_spram_1_start + 0x128, R_MIPS_26, __recon_spram_1_start
+.reloc __recon_spram_1_start + 0x140, R_MIPS_26, __recon_spram_1_start
+.reloc __recon_spram_1_start + 0x168, R_MIPS_26, __recon_spram_1_start
+.reloc __recon_spram_1_start + 0x170, R_MIPS_26, __recon_spram_1_start
+.reloc __recon_spram_1_start + 0x1e8, R_MIPS_26, __recon_spram_1_start
+.reloc __recon_spram_1_start + 0x1f4, R_MIPS_26, __recon_spram_1_start
+.reloc __recon_spram_1_start + 0x244, R_MIPS_26, __recon_spram_1_start
+.reloc __recon_spram_1_start + 0x284, R_MIPS_26, __recon_spram_1_start
+.reloc __recon_spram_1_start + 0x294, R_MIPS_26, __recon_spram_1_start
 .section .data,"aw",@progbits
 .balign 16
 __recon_spram_3_start:

@@ -38,7 +38,7 @@
 
 
 		ddr-blob {
-			type = "blob-ext";
+			type = "blob";
 			filename = "en7580_ddr.bin";
 			offset = <0x00010000>;
 			size = <0x0000b000>;
@@ -56,7 +56,7 @@
 
 
 		ddr-blob {
-			type = "blob-ext";
+			type = "blob";
 			filename = "en7580_ddr.bin";
 			offset = <0x00010000>;
 			size = <0x0000b000>;

@@ -171,26 +171,26 @@ start_spram:
 .byte 0x00, 0x40, 0xf8, 0x09, 0x00, 0x00, 0x00, 0x00, 0x8f, 0xbf, 0x00, 0x14, 0x03, 0xe0, 0x00, 0x08
 .byte 0x27, 0xbd, 0x00, 0x18, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
 .reloc __recon_main_1_start + 0x8, R_MIPS_26, uart_init
-.reloc __recon_main_1_start + 0x3c, R_MIPS_26, 
-.reloc __recon_main_1_start + 0x88, R_MIPS_26, 
-.reloc __recon_main_1_start + 0x118, R_MIPS_26, 
-.reloc __recon_main_1_start + 0x198, R_MIPS_26, 
-.reloc __recon_main_1_start + 0x218, R_MIPS_26, 
-.reloc __recon_main_1_start + 0x2b4, R_MIPS_26, 
-.reloc __recon_main_1_start + 0x338, R_MIPS_26, 
-.reloc __recon_main_1_start + 0x3bc, R_MIPS_26, 
-.reloc __recon_main_1_start + 0x42c, R_MIPS_26, 
-.reloc __recon_main_1_start + 0x494, R_MIPS_26, 
-.reloc __recon_main_1_start + 0x514, R_MIPS_26, 
-.reloc __recon_main_1_start + 0x598, R_MIPS_26, 
-.reloc __recon_main_1_start + 0x61c, R_MIPS_26, 
-.reloc __recon_main_1_start + 0x6a0, R_MIPS_26, 
-.reloc __recon_main_1_start + 0x724, R_MIPS_26, 
-.reloc __recon_main_1_start + 0x7a8, R_MIPS_26, 
-.reloc __recon_main_1_start + 0x81c, R_MIPS_26, 
-.reloc __recon_main_1_start + 0x824, R_MIPS_26, 
-.reloc __recon_main_1_start + 0x88c, R_MIPS_26, 
-.reloc __recon_main_1_start + 0x90c, R_MIPS_26, 
+.reloc __recon_main_1_start + 0x3c, R_MIPS_26, __recon_main_1_start
+.reloc __recon_main_1_start + 0x88, R_MIPS_26, __recon_main_1_start
+.reloc __recon_main_1_start + 0x118, R_MIPS_26, __recon_main_1_start
+.reloc __recon_main_1_start + 0x198, R_MIPS_26, __recon_main_1_start
+.reloc __recon_main_1_start + 0x218, R_MIPS_26, __recon_main_1_start
+.reloc __recon_main_1_start + 0x2b4, R_MIPS_26, __recon_main_1_start
+.reloc __recon_main_1_start + 0x338, R_MIPS_26, __recon_main_1_start
+.reloc __recon_main_1_start + 0x3bc, R_MIPS_26, __recon_main_1_start
+.reloc __recon_main_1_start + 0x42c, R_MIPS_26, __recon_main_1_start
+.reloc __recon_main_1_start + 0x494, R_MIPS_26, __recon_main_1_start
+.reloc __recon_main_1_start + 0x514, R_MIPS_26, __recon_main_1_start
+.reloc __recon_main_1_start + 0x598, R_MIPS_26, __recon_main_1_start
+.reloc __recon_main_1_start + 0x61c, R_MIPS_26, __recon_main_1_start
+.reloc __recon_main_1_start + 0x6a0, R_MIPS_26, __recon_main_1_start
+.reloc __recon_main_1_start + 0x724, R_MIPS_26, __recon_main_1_start
+.reloc __recon_main_1_start + 0x7a8, R_MIPS_26, __recon_main_1_start
+.reloc __recon_main_1_start + 0x81c, R_MIPS_26, __recon_main_1_start
+.reloc __recon_main_1_start + 0x824, R_MIPS_26, __recon_main_1_start
+.reloc __recon_main_1_start + 0x88c, R_MIPS_26, __recon_main_1_start
+.reloc __recon_main_1_start + 0x90c, R_MIPS_26, __recon_main_1_start
 .reloc __recon_main_1_start + 0x940, R_MIPS_26, time_polling_init
 .reloc __recon_main_1_start + 0x948, R_MIPS_26, main
 

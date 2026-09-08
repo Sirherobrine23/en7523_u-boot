@@ -4,13 +4,15 @@ EN7512/EN7521 reference board
 =============================
 
 This target provides the initial U-Boot port for the MIPS-based EcoNet/Airoha
-EN7512 and EN7521 SoCs. It replaces the proprietary multi-stage TCBoot flow
-with U-Boot TPL, SPL and U-Boot proper stages.
+EN7512 and EN7521 SoCs. It implements an experimental TPL, SPL and U-Boot proper flow intended to
+replace TCBoot after the board-specific reset and flash paths are validated.
 
 Boot flow
 ---------
 
-The boot ROM starts the TPL from the uncached flash window at ``0xbfc00000``.
+The TPL is linked for the uncached reset mapping at ``0xbfc00000``. This
+link address alone does not establish compatibility with internal-ROM NAND
+boot, the vendor stage descriptor, or the stock flash ECC layout.
 The TPL enables the Front-End SRAM, initializes the serial port and reads the
 DDR calibration image and SPL through the early SFC reader. After DDR
 initialization, SPL loads ``u-boot.img`` into DRAM.
@@ -45,14 +47,16 @@ Use a big-endian MIPS cross compiler::
     make en7512_reference_defconfig
     make CROSS_COMPILE=mips-linux-gnu-
 
-The flashable combined image is ``u-boot-en7512.bin``.
+The experimental combined image is ``u-boot-en7512.bin``. The DDR payload is
+built automatically before Binman, including out-of-tree builds. A missing
+payload is a build error; it must not be replaced by a fake external blob.
 
 Current limitations
 -------------------
 
-* DDR initialization temporarily uses the original vendor calibration image,
-  linked for execution at ``0x9fa32800``. Its source code was not included in
-  the SDK and it must eventually be replaced by a native driver.
+* DDR initialization uses reconstructed assembly from the vendor calibration
+  objects, linked at ``0x9fa32800``. This is not a native, independently
+  documented DRAM driver. See ``tcboot-build.rst`` for provenance and limits.
 * The SFC implementation used by TPL and SPL is read-only. U-Boot proper uses
   the Airoha EN7523 SPI-MEM driver with the EN751221 double chip-select quirk.
   Flash erase/write must not be used until the board's BBT/BMT layout has been

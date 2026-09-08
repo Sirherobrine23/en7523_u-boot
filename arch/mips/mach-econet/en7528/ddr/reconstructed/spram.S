@@ -66,21 +66,20 @@ ispram_fill:
 .byte 0x30, 0x00, 0xb7, 0x8f, 0x2c, 0x00, 0xb6, 0x8f, 0x28, 0x00, 0xb5, 0x8f, 0x24, 0x00, 0xb4, 0x8f
 .byte 0x20, 0x00, 0xb3, 0x8f, 0x1c, 0x00, 0xb2, 0x8f, 0x18, 0x00, 0xb1, 0x8f, 0x14, 0x00, 0xb0, 0x8f
 .byte 0x08, 0x00, 0xe0, 0x03, 0x38, 0x00, 0xbd, 0x27, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
-.reloc __recon_spram_1_start + 0x20, R_MIPS_26, 
-.reloc __recon_spram_1_start + 0x70, R_MIPS_26, 
-.reloc __recon_spram_1_start + 0xd4, R_MIPS_26, 
-.reloc __recon_spram_1_start + 0xdc, R_MIPS_26, 
-.reloc __recon_spram_1_start + 0xe4, R_MIPS_26, 
-.reloc __recon_spram_1_start + 0xec, R_MIPS_26, 
-.reloc __recon_spram_1_start + 0xf4, R_MIPS_26, 
-.reloc __recon_spram_1_start + 0x128, R_MIPS_26, 
-.reloc __recon_spram_1_start + 0x140, R_MIPS_26, 
-.reloc __recon_spram_1_start + 0x168, R_MIPS_26, 
-.reloc __recon_spram_1_start + 0x170, R_MIPS_26, 
-.reloc __recon_spram_1_start + 0x1e4, R_MIPS_26, 
-.reloc __recon_spram_1_start + 0x1f0, R_MIPS_26, 
-.reloc __recon_spram_1_start + 0x23c, R_MIPS_26, 
-
+.reloc __recon_spram_1_start + 0x20, R_MIPS_26, __recon_spram_1_start
+.reloc __recon_spram_1_start + 0x70, R_MIPS_26, __recon_spram_1_start
+.reloc __recon_spram_1_start + 0xd4, R_MIPS_26, __recon_spram_1_start
+.reloc __recon_spram_1_start + 0xdc, R_MIPS_26, __recon_spram_1_start
+.reloc __recon_spram_1_start + 0xe4, R_MIPS_26, __recon_spram_1_start
+.reloc __recon_spram_1_start + 0xec, R_MIPS_26, __recon_spram_1_start
+.reloc __recon_spram_1_start + 0xf4, R_MIPS_26, __recon_spram_1_start
+.reloc __recon_spram_1_start + 0x128, R_MIPS_26, __recon_spram_1_start
+.reloc __recon_spram_1_start + 0x140, R_MIPS_26, __recon_spram_1_start
+.reloc __recon_spram_1_start + 0x168, R_MIPS_26, __recon_spram_1_start
+.reloc __recon_spram_1_start + 0x170, R_MIPS_26, __recon_spram_1_start
+.reloc __recon_spram_1_start + 0x1e4, R_MIPS_26, __recon_spram_1_start
+.reloc __recon_spram_1_start + 0x1f0, R_MIPS_26, __recon_spram_1_start
+.reloc __recon_spram_1_start + 0x23c, R_MIPS_26, __recon_spram_1_start
 .section .data,"aw",@progbits
 .balign 16
 __recon_spram_3_start:

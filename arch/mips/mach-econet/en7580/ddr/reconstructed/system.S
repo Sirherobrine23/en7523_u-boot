@@ -7,7 +7,7 @@
 
 .section .text,"ax",@progbits
 .balign 16
-__recon_system_1_start:
+.set __recon_system_1_start, .
 .local en7580_setup_clk
 .type en7580_setup_clk, @function
 en7580_setup_clk:
@@ -80,40 +80,39 @@ init_system:
 .reloc __recon_system_1_start + 0x48, R_MIPS_26, prom_puts
 .reloc __recon_system_1_start + 0x44, R_MIPS_HI16, $LC1
 .reloc __recon_system_1_start + 0x4c, R_MIPS_LO16, $LC1
-.reloc __recon_system_1_start + 0x50, R_MIPS_26, 
-.reloc __recon_system_1_start + 0x78, R_MIPS_26, 
+.reloc __recon_system_1_start + 0x50, R_MIPS_26, __recon_system_1_start
+.reloc __recon_system_1_start + 0x78, R_MIPS_26, __recon_system_1_start
 .reloc __recon_system_1_start + 0xfc, R_MIPS_26, pause_polling
-.reloc __recon_system_1_start + 0x1b8, R_MIPS_26, 
+.reloc __recon_system_1_start + 0x1b8, R_MIPS_26, __recon_system_1_start
 .reloc __recon_system_1_start + 0x230, R_MIPS_26, set_spi_ctrler_ecc
-.reloc __recon_system_1_start + 0x258, R_MIPS_26, 
-.reloc __recon_system_1_start + 0x278, R_MIPS_26, 
+.reloc __recon_system_1_start + 0x258, R_MIPS_26, __recon_system_1_start
+.reloc __recon_system_1_start + 0x278, R_MIPS_26, __recon_system_1_start
 .reloc __recon_system_1_start + 0x298, R_MIPS_26, pause_polling
-.reloc __recon_system_1_start + 0x2b4, R_MIPS_26, 
-.reloc __recon_system_1_start + 0x2bc, R_MIPS_26, 
-.reloc __recon_system_1_start + 0x2c4, R_MIPS_26, 
+.reloc __recon_system_1_start + 0x2b4, R_MIPS_26, __recon_system_1_start
+.reloc __recon_system_1_start + 0x2bc, R_MIPS_26, __recon_system_1_start
+.reloc __recon_system_1_start + 0x2c4, R_MIPS_26, __recon_system_1_start
 .reloc __recon_system_1_start + 0x2cc, R_MIPS_26, time_polling_init
 .reloc __recon_system_1_start + 0x2e0, R_MIPS_26, efuse_read_data
 .reloc __recon_system_1_start + 0x2f4, R_MIPS_26, prom_puts
 .reloc __recon_system_1_start + 0x2f0, R_MIPS_HI16, $LC2
 .reloc __recon_system_1_start + 0x2f8, R_MIPS_LO16, $LC2
-.reloc __recon_system_1_start + 0x2fc, R_MIPS_26, 
+.reloc __recon_system_1_start + 0x2fc, R_MIPS_26, __recon_system_1_start
 .reloc __recon_system_1_start + 0x320, R_MIPS_26, efuse_read_data
 .reloc __recon_system_1_start + 0x334, R_MIPS_26, prom_puts
 .reloc __recon_system_1_start + 0x330, R_MIPS_HI16, $LC3
 .reloc __recon_system_1_start + 0x338, R_MIPS_LO16, $LC3
-.reloc __recon_system_1_start + 0x33c, R_MIPS_26, 
-
+.reloc __recon_system_1_start + 0x33c, R_MIPS_26, __recon_system_1_start
 .section .data,"aw",@progbits
 .balign 16
-__recon_system_3_start:
+.set __recon_system_3_start, .
 
 .section .bss,"aw",@nobits
 .balign 16
-__recon_system_4_start:
+.set __recon_system_4_start, .
 
 .section .rodata.str1.4,"a",@progbits
 .balign 4
-__recon_system_9_start:
+.set __recon_system_9_start, .
 .local $LC0
 $LC0:
 .byte 0x0a, 0x57, 0x72, 0x6f, 0x6e, 0x67, 0x20, 0x43, 0x50, 0x55, 0x20, 0x43, 0x6c, 0x6f, 0x63, 0x6b

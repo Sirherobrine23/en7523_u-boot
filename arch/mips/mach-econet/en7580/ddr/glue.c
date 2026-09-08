@@ -10,7 +10,6 @@
 typedef unsigned char u8;
 typedef unsigned int u32;
 #define REG32(addr)	(*(volatile u32 *)(addr))
-#define REG8(addr)	(*(volatile u8 *)(addr))
 
 #define EN7580_SYS_GLOBAL_PARM	0xbfb00284u
 #define EN7580_TIMER_BASE	0xbfbf0100u
@@ -41,10 +40,10 @@ int get_SYS_HCLK(void)
 
 static void serial_outc(char c)
 {
-	while (!(REG8(EN7580_UART_BASE + 0x17) & 0x20))
+	while (!(REG32(EN7580_UART_BASE + 0x14) & 0x20))
 		;
 
-	REG8(EN7580_UART_BASE + 0x03) = (u8)c;
+	REG32(EN7580_UART_BASE + 0x00) = (u8)c;
 }
 
 void prom_puts(const char *str)
@@ -129,15 +128,5 @@ int spram_preprocess(void)
 int spram_postprocess(void)
 {
 	/* CPU1-3 are intentionally left parked; U-Boot owns SMP bring-up. */
-	return 0;
-}
-
-/*
- * Temporary bring-up fallback. The original EN7580 system code consults
- * eFuse/package data before selecting some clock and DRAM parameters. Replace
- * this with the native eFuse reader before using the port on unknown packages.
- */
-int efuse_read_data(void)
-{
 	return 0;
 }
