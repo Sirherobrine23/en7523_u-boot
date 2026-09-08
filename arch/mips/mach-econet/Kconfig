@@ -5,6 +5,8 @@ config TARGET_EN751221
 	bool "Airoha EN751221 SoC"
 	select SYSCON
 	select MIPS_TUNE_34KC
+	select BINMAN
+	select SPL_LOADER_SUPPORT if SPL
 
 config TARGET_EN751627
 	bool "Airoha EN7516/EN7527 SoC (big-endian)"
@@ -20,12 +22,16 @@ config TARGET_EN7528
 	select SYSCON
 	select MIPS_TUNE_1004KC
 	select MIPS_SKIP_CP0_COUNT_CLEAR
+	select BINMAN
+	select SPL_LOADER_SUPPORT if SPL
 
 config TARGET_EN7580
 	bool "Airoha EN7580 SoC"
 	select SYSCON
 	select MIPS_TUNE_1004KC
 	select MIPS_SKIP_CP0_COUNT_CLEAR
+	select BINMAN
+	select SPL_LOADER_SUPPORT if SPL
 	help
 	  Select support for the little-endian MIPS32r2 EN7580 family.
 	  Initial support targets direct TPL/SPL bring-up on the XGZ030.
@@ -85,8 +91,6 @@ config BUILD_TARGET
 config BOARD_EN7512_REFERENCE
 	bool "EN7512/EN7521 reference board"
 	select TARGET_EN751221
-	select BINMAN
-	select SPL_LOADER_SUPPORT if SPL
 	help
 	  Build a boot image compatible with the EN7512/EN7521 TCBoot flow.
 	  TPL initializes the serial flash controller, executes the legacy DDR
@@ -95,8 +99,6 @@ config BOARD_EN7512_REFERENCE
 config BOARD_EN7580_XGZ030
 	bool "XGZ030 (EN7580, experimental TPL/SPL)"
 	select TARGET_EN7580
-	select BINMAN
-	select SPL_LOADER_SUPPORT if SPL
 	help
 	  Experimental direct-boot target for the XGZ030 EN7580 platform.
 	  TPL runs from the reset mapping, loads the GPL RAM-training payload

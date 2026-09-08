@@ -19,7 +19,7 @@
 	};
 
 	aliases {
-		serial0 = &uart1;
+		serial0 = &uart0;
 		ethernet0 = &gdm1;
 	};
 
@@ -43,7 +43,7 @@
 			#reset-cells = <1>;
 		};
 
-		uart1: serial@1fbf0000 {
+		uart0: serial@1fbf0000 {
 			compatible = "ns16550";
 			reg = <0x1fbf0000 0x30>;
 			reg-io-width = <4>;
