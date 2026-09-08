@@ -1389,6 +1389,30 @@ define deprecated
 
 endef
 
+# Build the EcoNet DDR payload before Binman consumes it, including O= builds.
+ifeq ($(CONFIG_ARCH_ECONET)$(CONFIG_TPL),yy)
+econet-ddr-soc-$(CONFIG_TARGET_EN751221) := en751221
+econet-ddr-soc-$(CONFIG_TARGET_EN7580) := en7580
+econet-ddr-soc := $(econet-ddr-soc-y)
+econet-ddr-dir := $(srctree)/arch/mips/mach-econet/$(econet-ddr-soc)/ddr
+econet-ddr-image := $(econet-ddr-soc)_ddr.bin
+
+quiet_cmd_econet_ddr = DDR     $@
+cmd_econet_ddr = srctree="$(abspath $(srctree))" \
+	objtree="$(CURDIR)" CROSS_COMPILE="$(CROSS_COMPILE)" \
+	$(CONFIG_SHELL) $(srctree)/tools/build-econet-ddr.sh $(econet-ddr-soc)
+
+$(econet-ddr-image): $(wildcard $(econet-ddr-dir)/reconstructed/*.S) \
+		   $(wildcard $(econet-ddr-dir)/*.c) \
+		   $(wildcard $(econet-ddr-dir)/*.S) \
+		   $(econet-ddr-dir)/ddr.lds \
+		   $(srctree)/tools/build-econet-ddr.sh FORCE
+	$(call if_changed,econet_ddr)
+
+targets += $(econet-ddr-image)
+.binman_stamp: $(econet-ddr-image)
+endif
+
 # Timestamp file to make sure that binman always runs
 .binman_stamp: $(INPUTS-y) FORCE
 ifeq ($(CONFIG_BINMAN),y)

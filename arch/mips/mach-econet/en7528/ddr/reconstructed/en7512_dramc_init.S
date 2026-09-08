@@ -356,7 +356,7 @@ en7512_dramc_init:
 .byte 0x20, 0x00, 0xbd, 0x27, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
 .reloc __recon_en7512_dramc_init_1_start + 0x2c, R_MIPS_HI16, dram_speed
 .reloc __recon_en7512_dramc_init_1_start + 0x30, R_MIPS_LO16, dram_speed
-.reloc __recon_en7512_dramc_init_1_start + 0x84, R_MIPS_26, 
+.reloc __recon_en7512_dramc_init_1_start + 0x84, R_MIPS_26, __recon_en7512_dramc_init_1_start
 .reloc __recon_en7512_dramc_init_1_start + 0xa4, R_MIPS_26, pause_polling
 .reloc __recon_en7512_dramc_init_1_start + 0xc0, R_MIPS_26, pause_polling
 .reloc __recon_en7512_dramc_init_1_start + 0x120, R_MIPS_26, pause_polling
@@ -373,7 +373,7 @@ en7512_dramc_init:
 .reloc __recon_en7512_dramc_init_1_start + 0x324, R_MIPS_26, pause_polling
 .reloc __recon_en7512_dramc_init_1_start + 0x358, R_MIPS_HI16, dram_speed
 .reloc __recon_en7512_dramc_init_1_start + 0x35c, R_MIPS_LO16, dram_speed
-.reloc __recon_en7512_dramc_init_1_start + 0x3e0, R_MIPS_26, 
+.reloc __recon_en7512_dramc_init_1_start + 0x3e0, R_MIPS_26, __recon_en7512_dramc_init_1_start
 .reloc __recon_en7512_dramc_init_1_start + 0x410, R_MIPS_26, pause_polling
 .reloc __recon_en7512_dramc_init_1_start + 0x42c, R_MIPS_26, pause_polling
 .reloc __recon_en7512_dramc_init_1_start + 0x444, R_MIPS_26, pause_polling
@@ -382,8 +382,8 @@ en7512_dramc_init:
 .reloc __recon_en7512_dramc_init_1_start + 0x4f8, R_MIPS_26, pause_polling
 .reloc __recon_en7512_dramc_init_1_start + 0x50c, R_MIPS_26, pause_polling
 .reloc __recon_en7512_dramc_init_1_start + 0x610, R_MIPS_26, pause_polling
-.reloc __recon_en7512_dramc_init_1_start + 0x6a8, R_MIPS_26, 
-.reloc __recon_en7512_dramc_init_1_start + 0x6b0, R_MIPS_26, 
+.reloc __recon_en7512_dramc_init_1_start + 0x6a8, R_MIPS_26, __recon_en7512_dramc_init_1_start
+.reloc __recon_en7512_dramc_init_1_start + 0x6b0, R_MIPS_26, __recon_en7512_dramc_init_1_start
 .reloc __recon_en7512_dramc_init_1_start + 0x710, R_MIPS_HI16, PKG_type
 .reloc __recon_en7512_dramc_init_1_start + 0x136c, R_MIPS_HI16, PKG_type
 .reloc __recon_en7512_dramc_init_1_start + 0x1348, R_MIPS_HI16, PKG_type
@@ -395,15 +395,15 @@ en7512_dramc_init:
 .reloc __recon_en7512_dramc_init_1_start + 0x724, R_MIPS_26, prom_puts
 .reloc __recon_en7512_dramc_init_1_start + 0x720, R_MIPS_HI16, $LC0
 .reloc __recon_en7512_dramc_init_1_start + 0x728, R_MIPS_LO16, $LC0
-.reloc __recon_en7512_dramc_init_1_start + 0x72c, R_MIPS_26, 
+.reloc __recon_en7512_dramc_init_1_start + 0x72c, R_MIPS_26, __recon_en7512_dramc_init_1_start
 .reloc __recon_en7512_dramc_init_1_start + 0x740, R_MIPS_26, prom_puts
 .reloc __recon_en7512_dramc_init_1_start + 0x73c, R_MIPS_HI16, $LC1
 .reloc __recon_en7512_dramc_init_1_start + 0x744, R_MIPS_LO16, $LC1
-.reloc __recon_en7512_dramc_init_1_start + 0x748, R_MIPS_26, 
+.reloc __recon_en7512_dramc_init_1_start + 0x748, R_MIPS_26, __recon_en7512_dramc_init_1_start
 .reloc __recon_en7512_dramc_init_1_start + 0x754, R_MIPS_26, prom_puts
 .reloc __recon_en7512_dramc_init_1_start + 0x750, R_MIPS_HI16, $LC2
 .reloc __recon_en7512_dramc_init_1_start + 0x758, R_MIPS_LO16, $LC2
-.reloc __recon_en7512_dramc_init_1_start + 0x770, R_MIPS_26, 
+.reloc __recon_en7512_dramc_init_1_start + 0x770, R_MIPS_26, __recon_en7512_dramc_init_1_start
 .reloc __recon_en7512_dramc_init_1_start + 0x788, R_MIPS_26, prom_puts
 .reloc __recon_en7512_dramc_init_1_start + 0x784, R_MIPS_HI16, $LC3
 .reloc __recon_en7512_dramc_init_1_start + 0x78c, R_MIPS_LO16, $LC3
@@ -418,135 +418,135 @@ en7512_dramc_init:
 .reloc __recon_en7512_dramc_init_1_start + 0x7c0, R_MIPS_LO16, $LC5
 .reloc __recon_en7512_dramc_init_1_start + 0x7cc, R_MIPS_26, pause_polling
 .reloc __recon_en7512_dramc_init_1_start + 0x810, R_MIPS_26, mempll_init_int
-.reloc __recon_en7512_dramc_init_1_start + 0x818, R_MIPS_26, 
+.reloc __recon_en7512_dramc_init_1_start + 0x818, R_MIPS_26, __recon_en7512_dramc_init_1_start
 .reloc __recon_en7512_dramc_init_1_start + 0x820, R_MIPS_26, mempll_init_ddr1066
 .reloc __recon_en7512_dramc_init_1_start + 0x828, R_MIPS_26, mt_mempll_cali
 .reloc __recon_en7512_dramc_init_1_start + 0x8a0, R_MIPS_26, pause_polling
 .reloc __recon_en7512_dramc_init_1_start + 0x910, R_MIPS_26, pause_polling
-.reloc __recon_en7512_dramc_init_1_start + 0x924, R_MIPS_26, 
+.reloc __recon_en7512_dramc_init_1_start + 0x924, R_MIPS_26, __recon_en7512_dramc_init_1_start
 .reloc __recon_en7512_dramc_init_1_start + 0x948, R_MIPS_26, pause_polling
-.reloc __recon_en7512_dramc_init_1_start + 0x96c, R_MIPS_26, 
+.reloc __recon_en7512_dramc_init_1_start + 0x96c, R_MIPS_26, __recon_en7512_dramc_init_1_start
 .reloc __recon_en7512_dramc_init_1_start + 0x990, R_MIPS_26, pause_polling
-.reloc __recon_en7512_dramc_init_1_start + 0x9b4, R_MIPS_26, 
+.reloc __recon_en7512_dramc_init_1_start + 0x9b4, R_MIPS_26, __recon_en7512_dramc_init_1_start
 .reloc __recon_en7512_dramc_init_1_start + 0x9d8, R_MIPS_26, pause_polling
-.reloc __recon_en7512_dramc_init_1_start + 0x9fc, R_MIPS_26, 
+.reloc __recon_en7512_dramc_init_1_start + 0x9fc, R_MIPS_26, __recon_en7512_dramc_init_1_start
 .reloc __recon_en7512_dramc_init_1_start + 0xa20, R_MIPS_26, pause_polling
-.reloc __recon_en7512_dramc_init_1_start + 0xa44, R_MIPS_26, 
+.reloc __recon_en7512_dramc_init_1_start + 0xa44, R_MIPS_26, __recon_en7512_dramc_init_1_start
 .reloc __recon_en7512_dramc_init_1_start + 0xa68, R_MIPS_26, pause_polling
-.reloc __recon_en7512_dramc_init_1_start + 0xa84, R_MIPS_26, 
+.reloc __recon_en7512_dramc_init_1_start + 0xa84, R_MIPS_26, __recon_en7512_dramc_init_1_start
 .reloc __recon_en7512_dramc_init_1_start + 0xaa8, R_MIPS_26, pause_polling
-.reloc __recon_en7512_dramc_init_1_start + 0xac4, R_MIPS_26, 
+.reloc __recon_en7512_dramc_init_1_start + 0xac4, R_MIPS_26, __recon_en7512_dramc_init_1_start
 .reloc __recon_en7512_dramc_init_1_start + 0xae8, R_MIPS_26, pause_polling
-.reloc __recon_en7512_dramc_init_1_start + 0xb04, R_MIPS_26, 
+.reloc __recon_en7512_dramc_init_1_start + 0xb04, R_MIPS_26, __recon_en7512_dramc_init_1_start
 .reloc __recon_en7512_dramc_init_1_start + 0xb28, R_MIPS_26, pause_polling
-.reloc __recon_en7512_dramc_init_1_start + 0xb4c, R_MIPS_26, 
+.reloc __recon_en7512_dramc_init_1_start + 0xb4c, R_MIPS_26, __recon_en7512_dramc_init_1_start
 .reloc __recon_en7512_dramc_init_1_start + 0xb70, R_MIPS_26, pause_polling
-.reloc __recon_en7512_dramc_init_1_start + 0xb94, R_MIPS_26, 
+.reloc __recon_en7512_dramc_init_1_start + 0xb94, R_MIPS_26, __recon_en7512_dramc_init_1_start
 .reloc __recon_en7512_dramc_init_1_start + 0xbb8, R_MIPS_26, pause_polling
-.reloc __recon_en7512_dramc_init_1_start + 0xbdc, R_MIPS_26, 
+.reloc __recon_en7512_dramc_init_1_start + 0xbdc, R_MIPS_26, __recon_en7512_dramc_init_1_start
 .reloc __recon_en7512_dramc_init_1_start + 0xc00, R_MIPS_26, pause_polling
-.reloc __recon_en7512_dramc_init_1_start + 0xc38, R_MIPS_26, 
+.reloc __recon_en7512_dramc_init_1_start + 0xc38, R_MIPS_26, __recon_en7512_dramc_init_1_start
 .reloc __recon_en7512_dramc_init_1_start + 0xc5c, R_MIPS_26, pause_polling
 .reloc __recon_en7512_dramc_init_1_start + 0xc84, R_MIPS_26, pause_polling
 .reloc __recon_en7512_dramc_init_1_start + 0xc9c, R_MIPS_26, pause_polling
-.reloc __recon_en7512_dramc_init_1_start + 0xcf4, R_MIPS_26, 
+.reloc __recon_en7512_dramc_init_1_start + 0xcf4, R_MIPS_26, __recon_en7512_dramc_init_1_start
 .reloc __recon_en7512_dramc_init_1_start + 0xd00, R_MIPS_26, prom_puts
 .reloc __recon_en7512_dramc_init_1_start + 0xcfc, R_MIPS_HI16, $LC6
 .reloc __recon_en7512_dramc_init_1_start + 0xd04, R_MIPS_LO16, $LC6
 .reloc __recon_en7512_dramc_init_1_start + 0xd10, R_MIPS_26, pause_polling
 .reloc __recon_en7512_dramc_init_1_start + 0xd24, R_MIPS_HI16, PKG_type
 .reloc __recon_en7512_dramc_init_1_start + 0xd28, R_MIPS_LO16, PKG_type
-.reloc __recon_en7512_dramc_init_1_start + 0xd48, R_MIPS_26, 
+.reloc __recon_en7512_dramc_init_1_start + 0xd48, R_MIPS_26, __recon_en7512_dramc_init_1_start
 .reloc __recon_en7512_dramc_init_1_start + 0xd60, R_MIPS_HI16, PKG_type
 .reloc __recon_en7512_dramc_init_1_start + 0xd64, R_MIPS_LO16, PKG_type
-.reloc __recon_en7512_dramc_init_1_start + 0xd80, R_MIPS_26, 
+.reloc __recon_en7512_dramc_init_1_start + 0xd80, R_MIPS_26, __recon_en7512_dramc_init_1_start
 .reloc __recon_en7512_dramc_init_1_start + 0xd94, R_MIPS_HI16, PKG_type
 .reloc __recon_en7512_dramc_init_1_start + 0xd98, R_MIPS_LO16, PKG_type
 .reloc __recon_en7512_dramc_init_1_start + 0xdac, R_MIPS_26, mempll_init_int
-.reloc __recon_en7512_dramc_init_1_start + 0xdb4, R_MIPS_26, 
+.reloc __recon_en7512_dramc_init_1_start + 0xdb4, R_MIPS_26, __recon_en7512_dramc_init_1_start
 .reloc __recon_en7512_dramc_init_1_start + 0xdcc, R_MIPS_26, mempll_init_int
-.reloc __recon_en7512_dramc_init_1_start + 0xdd4, R_MIPS_26, 
+.reloc __recon_en7512_dramc_init_1_start + 0xdd4, R_MIPS_26, __recon_en7512_dramc_init_1_start
 .reloc __recon_en7512_dramc_init_1_start + 0xddc, R_MIPS_26, mempll_init_int
 .reloc __recon_en7512_dramc_init_1_start + 0xde4, R_MIPS_26, mt_mempll_cali
 .reloc __recon_en7512_dramc_init_1_start + 0xdfc, R_MIPS_HI16, PKG_type
 .reloc __recon_en7512_dramc_init_1_start + 0xe00, R_MIPS_LO16, PKG_type
-.reloc __recon_en7512_dramc_init_1_start + 0xe1c, R_MIPS_26, 
-.reloc __recon_en7512_dramc_init_1_start + 0xe38, R_MIPS_26, 
+.reloc __recon_en7512_dramc_init_1_start + 0xe1c, R_MIPS_26, __recon_en7512_dramc_init_1_start
+.reloc __recon_en7512_dramc_init_1_start + 0xe38, R_MIPS_26, __recon_en7512_dramc_init_1_start
 .reloc __recon_en7512_dramc_init_1_start + 0xe4c, R_MIPS_26, pause_polling
 .reloc __recon_en7512_dramc_init_1_start + 0xe60, R_MIPS_26, pause_polling
 .reloc __recon_en7512_dramc_init_1_start + 0xe98, R_MIPS_HI16, PKG_type
 .reloc __recon_en7512_dramc_init_1_start + 0xe9c, R_MIPS_LO16, PKG_type
-.reloc __recon_en7512_dramc_init_1_start + 0xeb4, R_MIPS_26, 
+.reloc __recon_en7512_dramc_init_1_start + 0xeb4, R_MIPS_26, __recon_en7512_dramc_init_1_start
 .reloc __recon_en7512_dramc_init_1_start + 0xee0, R_MIPS_HI16, PKG_type
 .reloc __recon_en7512_dramc_init_1_start + 0xee4, R_MIPS_LO16, PKG_type
-.reloc __recon_en7512_dramc_init_1_start + 0xf00, R_MIPS_26, 
-.reloc __recon_en7512_dramc_init_1_start + 0xf1c, R_MIPS_26, 
+.reloc __recon_en7512_dramc_init_1_start + 0xf00, R_MIPS_26, __recon_en7512_dramc_init_1_start
+.reloc __recon_en7512_dramc_init_1_start + 0xf1c, R_MIPS_26, __recon_en7512_dramc_init_1_start
 .reloc __recon_en7512_dramc_init_1_start + 0xf30, R_MIPS_26, pause_polling
 .reloc __recon_en7512_dramc_init_1_start + 0xf38, R_MIPS_HI16, PKG_type
 .reloc __recon_en7512_dramc_init_1_start + 0xf3c, R_MIPS_LO16, PKG_type
-.reloc __recon_en7512_dramc_init_1_start + 0xf54, R_MIPS_26, 
+.reloc __recon_en7512_dramc_init_1_start + 0xf54, R_MIPS_26, __recon_en7512_dramc_init_1_start
 .reloc __recon_en7512_dramc_init_1_start + 0xf84, R_MIPS_HI16, PKG_type
 .reloc __recon_en7512_dramc_init_1_start + 0xf88, R_MIPS_LO16, PKG_type
-.reloc __recon_en7512_dramc_init_1_start + 0xfa0, R_MIPS_26, 
+.reloc __recon_en7512_dramc_init_1_start + 0xfa0, R_MIPS_26, __recon_en7512_dramc_init_1_start
 .reloc __recon_en7512_dramc_init_1_start + 0xfb0, R_MIPS_HI16, PKG_type
 .reloc __recon_en7512_dramc_init_1_start + 0xfb4, R_MIPS_LO16, PKG_type
-.reloc __recon_en7512_dramc_init_1_start + 0xfd0, R_MIPS_26, 
+.reloc __recon_en7512_dramc_init_1_start + 0xfd0, R_MIPS_26, __recon_en7512_dramc_init_1_start
 .reloc __recon_en7512_dramc_init_1_start + 0x100c, R_MIPS_HI16, PKG_type
 .reloc __recon_en7512_dramc_init_1_start + 0x1010, R_MIPS_LO16, PKG_type
-.reloc __recon_en7512_dramc_init_1_start + 0x1028, R_MIPS_26, 
+.reloc __recon_en7512_dramc_init_1_start + 0x1028, R_MIPS_26, __recon_en7512_dramc_init_1_start
 .reloc __recon_en7512_dramc_init_1_start + 0x1048, R_MIPS_26, pause_polling
 .reloc __recon_en7512_dramc_init_1_start + 0x1050, R_MIPS_HI16, PKG_type
 .reloc __recon_en7512_dramc_init_1_start + 0x1054, R_MIPS_LO16, PKG_type
-.reloc __recon_en7512_dramc_init_1_start + 0x1068, R_MIPS_26, 
-.reloc __recon_en7512_dramc_init_1_start + 0x108c, R_MIPS_26, 
+.reloc __recon_en7512_dramc_init_1_start + 0x1068, R_MIPS_26, __recon_en7512_dramc_init_1_start
+.reloc __recon_en7512_dramc_init_1_start + 0x108c, R_MIPS_26, __recon_en7512_dramc_init_1_start
 .reloc __recon_en7512_dramc_init_1_start + 0x10b0, R_MIPS_26, pause_polling
-.reloc __recon_en7512_dramc_init_1_start + 0x10d4, R_MIPS_26, 
+.reloc __recon_en7512_dramc_init_1_start + 0x10d4, R_MIPS_26, __recon_en7512_dramc_init_1_start
 .reloc __recon_en7512_dramc_init_1_start + 0x10f4, R_MIPS_26, pause_polling
 .reloc __recon_en7512_dramc_init_1_start + 0x1104, R_MIPS_HI16, PKG_type
 .reloc __recon_en7512_dramc_init_1_start + 0x1108, R_MIPS_LO16, PKG_type
-.reloc __recon_en7512_dramc_init_1_start + 0x111c, R_MIPS_26, 
-.reloc __recon_en7512_dramc_init_1_start + 0x1140, R_MIPS_26, 
+.reloc __recon_en7512_dramc_init_1_start + 0x111c, R_MIPS_26, __recon_en7512_dramc_init_1_start
+.reloc __recon_en7512_dramc_init_1_start + 0x1140, R_MIPS_26, __recon_en7512_dramc_init_1_start
 .reloc __recon_en7512_dramc_init_1_start + 0x1160, R_MIPS_26, pause_polling
 .reloc __recon_en7512_dramc_init_1_start + 0x1170, R_MIPS_HI16, PKG_type
 .reloc __recon_en7512_dramc_init_1_start + 0x1174, R_MIPS_LO16, PKG_type
-.reloc __recon_en7512_dramc_init_1_start + 0x1188, R_MIPS_26, 
-.reloc __recon_en7512_dramc_init_1_start + 0x11ac, R_MIPS_26, 
+.reloc __recon_en7512_dramc_init_1_start + 0x1188, R_MIPS_26, __recon_en7512_dramc_init_1_start
+.reloc __recon_en7512_dramc_init_1_start + 0x11ac, R_MIPS_26, __recon_en7512_dramc_init_1_start
 .reloc __recon_en7512_dramc_init_1_start + 0x11cc, R_MIPS_26, pause_polling
 .reloc __recon_en7512_dramc_init_1_start + 0x11dc, R_MIPS_HI16, PKG_type
 .reloc __recon_en7512_dramc_init_1_start + 0x11e0, R_MIPS_LO16, PKG_type
-.reloc __recon_en7512_dramc_init_1_start + 0x1200, R_MIPS_26, 
+.reloc __recon_en7512_dramc_init_1_start + 0x1200, R_MIPS_26, __recon_en7512_dramc_init_1_start
 .reloc __recon_en7512_dramc_init_1_start + 0x1220, R_MIPS_26, pause_polling
 .reloc __recon_en7512_dramc_init_1_start + 0x123c, R_MIPS_26, pause_polling
 .reloc __recon_en7512_dramc_init_1_start + 0x1244, R_MIPS_HI16, PKG_type
 .reloc __recon_en7512_dramc_init_1_start + 0x1248, R_MIPS_LO16, PKG_type
-.reloc __recon_en7512_dramc_init_1_start + 0x125c, R_MIPS_26, 
-.reloc __recon_en7512_dramc_init_1_start + 0x128c, R_MIPS_26, 
+.reloc __recon_en7512_dramc_init_1_start + 0x125c, R_MIPS_26, __recon_en7512_dramc_init_1_start
+.reloc __recon_en7512_dramc_init_1_start + 0x128c, R_MIPS_26, __recon_en7512_dramc_init_1_start
 .reloc __recon_en7512_dramc_init_1_start + 0x12ac, R_MIPS_26, pause_polling
 .reloc __recon_en7512_dramc_init_1_start + 0x12c8, R_MIPS_HI16, PKG_type
 .reloc __recon_en7512_dramc_init_1_start + 0x12cc, R_MIPS_LO16, PKG_type
-.reloc __recon_en7512_dramc_init_1_start + 0x12e4, R_MIPS_26, 
+.reloc __recon_en7512_dramc_init_1_start + 0x12e4, R_MIPS_26, __recon_en7512_dramc_init_1_start
 .reloc __recon_en7512_dramc_init_1_start + 0x12f8, R_MIPS_HI16, PKG_type
 .reloc __recon_en7512_dramc_init_1_start + 0x12fc, R_MIPS_LO16, PKG_type
-.reloc __recon_en7512_dramc_init_1_start + 0x1314, R_MIPS_26, 
+.reloc __recon_en7512_dramc_init_1_start + 0x1314, R_MIPS_26, __recon_en7512_dramc_init_1_start
 .reloc __recon_en7512_dramc_init_1_start + 0x1328, R_MIPS_26, pause_polling
 .reloc __recon_en7512_dramc_init_1_start + 0x1330, R_MIPS_HI16, PKG_type
 .reloc __recon_en7512_dramc_init_1_start + 0x1334, R_MIPS_LO16, PKG_type
-.reloc __recon_en7512_dramc_init_1_start + 0x1344, R_MIPS_26, 
+.reloc __recon_en7512_dramc_init_1_start + 0x1344, R_MIPS_26, __recon_en7512_dramc_init_1_start
 .reloc __recon_en7512_dramc_init_1_start + 0x134c, R_MIPS_HI16, dram_speed
 .reloc __recon_en7512_dramc_init_1_start + 0x1350, R_MIPS_LO16, dram_speed
-.reloc __recon_en7512_dramc_init_1_start + 0x1368, R_MIPS_26, 
+.reloc __recon_en7512_dramc_init_1_start + 0x1368, R_MIPS_26, __recon_en7512_dramc_init_1_start
 .reloc __recon_en7512_dramc_init_1_start + 0x1378, R_MIPS_HI16, PKG_type
 .reloc __recon_en7512_dramc_init_1_start + 0x137c, R_MIPS_LO16, PKG_type
-.reloc __recon_en7512_dramc_init_1_start + 0x1394, R_MIPS_26, 
+.reloc __recon_en7512_dramc_init_1_start + 0x1394, R_MIPS_26, __recon_en7512_dramc_init_1_start
 .reloc __recon_en7512_dramc_init_1_start + 0x13a8, R_MIPS_26, pause_polling
 .reloc __recon_en7512_dramc_init_1_start + 0x13b0, R_MIPS_HI16, PKG_type
 .reloc __recon_en7512_dramc_init_1_start + 0x13b4, R_MIPS_LO16, PKG_type
-.reloc __recon_en7512_dramc_init_1_start + 0x13e4, R_MIPS_26, 
+.reloc __recon_en7512_dramc_init_1_start + 0x13e4, R_MIPS_26, __recon_en7512_dramc_init_1_start
 .reloc __recon_en7512_dramc_init_1_start + 0x1444, R_MIPS_26, pause_polling
 .reloc __recon_en7512_dramc_init_1_start + 0x1450, R_MIPS_26, prom_puts
 .reloc __recon_en7512_dramc_init_1_start + 0x144c, R_MIPS_HI16, $LC7
 .reloc __recon_en7512_dramc_init_1_start + 0x1454, R_MIPS_LO16, $LC7
-.reloc __recon_en7512_dramc_init_1_start + 0x1458, R_MIPS_26, 
+.reloc __recon_en7512_dramc_init_1_start + 0x1458, R_MIPS_26, __recon_en7512_dramc_init_1_start
 .reloc __recon_en7512_dramc_init_1_start + 0x1464, R_MIPS_26, prom_puts
 .reloc __recon_en7512_dramc_init_1_start + 0x1460, R_MIPS_HI16, $LC8
 .reloc __recon_en7512_dramc_init_1_start + 0x1468, R_MIPS_LO16, $LC8

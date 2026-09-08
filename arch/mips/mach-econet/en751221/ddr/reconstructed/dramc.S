@@ -276,8 +276,8 @@ main:
 .reloc __recon_dramc_1_start + 0x134, R_MIPS_26, prom_print_hex
 .reloc __recon_dramc_1_start + 0x13c, R_MIPS_26, prom_puts
 .reloc __recon_dramc_1_start + 0x140, R_MIPS_LO16, $LC2
-.reloc __recon_dramc_1_start + 0x144, R_MIPS_26, 
-.reloc __recon_dramc_1_start + 0x154, R_MIPS_26, 
+.reloc __recon_dramc_1_start + 0x144, R_MIPS_26, __recon_dramc_1_start
+.reloc __recon_dramc_1_start + 0x154, R_MIPS_26, __recon_dramc_1_start
 .reloc __recon_dramc_1_start + 0x170, R_MIPS_26, pause_polling
 .reloc __recon_dramc_1_start + 0x18c, R_MIPS_26, pause_polling
 .reloc __recon_dramc_1_start + 0x1a4, R_MIPS_26, pause_polling
@@ -294,21 +294,21 @@ main:
 .reloc __recon_dramc_1_start + 0x240, R_MIPS_26, prom_print_hex
 .reloc __recon_dramc_1_start + 0x248, R_MIPS_26, prom_puts
 .reloc __recon_dramc_1_start + 0x24c, R_MIPS_LO16, $LC2
-.reloc __recon_dramc_1_start + 0x250, R_MIPS_26, 
+.reloc __recon_dramc_1_start + 0x250, R_MIPS_26, __recon_dramc_1_start
 .reloc __recon_dramc_1_start + 0x280, R_MIPS_26, pause_polling
-.reloc __recon_dramc_1_start + 0x288, R_MIPS_26, 
+.reloc __recon_dramc_1_start + 0x288, R_MIPS_26, __recon_dramc_1_start
 .reloc __recon_dramc_1_start + 0x2ac, R_MIPS_26, pause_polling
 .reloc __recon_dramc_1_start + 0x2b4, R_MIPS_HI16, dram_type
 .reloc __recon_dramc_1_start + 0x2b8, R_MIPS_LO16, dram_type
-.reloc __recon_dramc_1_start + 0x2c8, R_MIPS_26, 
+.reloc __recon_dramc_1_start + 0x2c8, R_MIPS_26, __recon_dramc_1_start
 .reloc __recon_dramc_1_start + 0x2f0, R_MIPS_26, pause_polling
-.reloc __recon_dramc_1_start + 0x2f8, R_MIPS_26, 
+.reloc __recon_dramc_1_start + 0x2f8, R_MIPS_26, __recon_dramc_1_start
 .reloc __recon_dramc_1_start + 0x35c, R_MIPS_26, prom_puts
 .reloc __recon_dramc_1_start + 0x358, R_MIPS_HI16, $LC4
 .reloc __recon_dramc_1_start + 0x360, R_MIPS_LO16, $LC4
 .reloc __recon_dramc_1_start + 0x38c, R_MIPS_26, pause_polling
 .reloc __recon_dramc_1_start + 0x398, R_MIPS_26, pause_polling
-.reloc __recon_dramc_1_start + 0x3d4, R_MIPS_26, 
+.reloc __recon_dramc_1_start + 0x3d4, R_MIPS_26, __recon_dramc_1_start
 .reloc __recon_dramc_1_start + 0x3ec, R_MIPS_26, prom_puts
 .reloc __recon_dramc_1_start + 0x3e8, R_MIPS_HI16, $LC5
 .reloc __recon_dramc_1_start + 0x3f0, R_MIPS_LO16, $LC5
@@ -322,11 +322,11 @@ main:
 .reloc __recon_dramc_1_start + 0x424, R_MIPS_26, prom_puts
 .reloc __recon_dramc_1_start + 0x124, R_MIPS_HI16, $LC2
 .reloc __recon_dramc_1_start + 0x428, R_MIPS_LO16, $LC2
-.reloc __recon_dramc_1_start + 0x42c, R_MIPS_26, 
+.reloc __recon_dramc_1_start + 0x42c, R_MIPS_26, __recon_dramc_1_start
 .reloc __recon_dramc_1_start + 0x440, R_MIPS_26, prom_puts
 .reloc __recon_dramc_1_start + 0x43c, R_MIPS_HI16, $LC6
 .reloc __recon_dramc_1_start + 0x444, R_MIPS_LO16, $LC6
-.reloc __recon_dramc_1_start + 0x448, R_MIPS_26, 
+.reloc __recon_dramc_1_start + 0x448, R_MIPS_26, __recon_dramc_1_start
 .reloc __recon_dramc_1_start + 0x454, R_MIPS_26, prom_puts
 .reloc __recon_dramc_1_start + 0x450, R_MIPS_HI16, $LC7
 .reloc __recon_dramc_1_start + 0x458, R_MIPS_LO16, $LC7
@@ -338,16 +338,16 @@ main:
 .reloc __recon_dramc_1_start + 0x4ac, R_MIPS_LO16, dram_type
 .reloc __recon_dramc_1_start + 0x4bc, R_MIPS_HI16, dram_size
 .reloc __recon_dramc_1_start + 0x4c0, R_MIPS_LO16, dram_size
-.reloc __recon_dramc_1_start + 0x4e4, R_MIPS_26, 
-.reloc __recon_dramc_1_start + 0x50c, R_MIPS_26, 
-.reloc __recon_dramc_1_start + 0x534, R_MIPS_26, 
-.reloc __recon_dramc_1_start + 0x55c, R_MIPS_26, 
-.reloc __recon_dramc_1_start + 0x580, R_MIPS_26, 
+.reloc __recon_dramc_1_start + 0x4e4, R_MIPS_26, __recon_dramc_1_start
+.reloc __recon_dramc_1_start + 0x50c, R_MIPS_26, __recon_dramc_1_start
+.reloc __recon_dramc_1_start + 0x534, R_MIPS_26, __recon_dramc_1_start
+.reloc __recon_dramc_1_start + 0x55c, R_MIPS_26, __recon_dramc_1_start
+.reloc __recon_dramc_1_start + 0x580, R_MIPS_26, __recon_dramc_1_start
 .reloc __recon_dramc_1_start + 0x58c, R_MIPS_HI16, dram_size
 .reloc __recon_dramc_1_start + 0x590, R_MIPS_LO16, dram_size
-.reloc __recon_dramc_1_start + 0x5b8, R_MIPS_26, 
-.reloc __recon_dramc_1_start + 0x5e0, R_MIPS_26, 
-.reloc __recon_dramc_1_start + 0x608, R_MIPS_26, 
+.reloc __recon_dramc_1_start + 0x5b8, R_MIPS_26, __recon_dramc_1_start
+.reloc __recon_dramc_1_start + 0x5e0, R_MIPS_26, __recon_dramc_1_start
+.reloc __recon_dramc_1_start + 0x608, R_MIPS_26, __recon_dramc_1_start
 .reloc __recon_dramc_1_start + 0x630, R_MIPS_26, prom_puts
 .reloc __recon_dramc_1_start + 0x62c, R_MIPS_HI16, $LC9
 .reloc __recon_dramc_1_start + 0x60c, R_MIPS_HI16, $LC9
@@ -386,48 +386,48 @@ main:
 .reloc __recon_dramc_1_start + 0x76c, R_MIPS_26, do_sw_rx_dq_dqs_calib
 .reloc __recon_dramc_1_start + 0x77c, R_MIPS_26, do_dle_calib
 .reloc __recon_dramc_1_start + 0x78c, R_MIPS_26, do_sw_tx_dq_dqs_calib
-.reloc __recon_dramc_1_start + 0x82c, R_MIPS_26, 
+.reloc __recon_dramc_1_start + 0x82c, R_MIPS_26, __recon_dramc_1_start
 .reloc __recon_dramc_1_start + 0x848, R_MIPS_HI16, dram_type
 .reloc __recon_dramc_1_start + 0x830, R_MIPS_LO16, dram_type
-.reloc __recon_dramc_1_start + 0x8b0, R_MIPS_26, 
+.reloc __recon_dramc_1_start + 0x8b0, R_MIPS_26, __recon_dramc_1_start
 .reloc __recon_dramc_1_start + 0x8ac, R_MIPS_HI16, dram_type
 .reloc __recon_dramc_1_start + 0x8b4, R_MIPS_LO16, dram_type
 .reloc __recon_dramc_1_start + 0x8d0, R_MIPS_HI16, dram_type
 .reloc __recon_dramc_1_start + 0x8d4, R_MIPS_LO16, dram_type
-.reloc __recon_dramc_1_start + 0x8e0, R_MIPS_26, 
+.reloc __recon_dramc_1_start + 0x8e0, R_MIPS_26, __recon_dramc_1_start
 .reloc __recon_dramc_1_start + 0x908, R_MIPS_HI16, PKG_type
 .reloc __recon_dramc_1_start + 0x8f8, R_MIPS_HI16, PKG_type
 .reloc __recon_dramc_1_start + 0x8dc, R_MIPS_HI16, PKG_type
 .reloc __recon_dramc_1_start + 0x8e4, R_MIPS_LO16, PKG_type
 .reloc __recon_dramc_1_start + 0x8fc, R_MIPS_HI16, dram_type
 .reloc __recon_dramc_1_start + 0x900, R_MIPS_LO16, dram_type
-.reloc __recon_dramc_1_start + 0x90c, R_MIPS_26, 
+.reloc __recon_dramc_1_start + 0x90c, R_MIPS_26, __recon_dramc_1_start
 .reloc __recon_dramc_1_start + 0xa9c, R_MIPS_HI16, PKG_type
 .reloc __recon_dramc_1_start + 0x910, R_MIPS_LO16, PKG_type
 .reloc __recon_dramc_1_start + 0xabc, R_MIPS_HI16, PKG_type
 .reloc __recon_dramc_1_start + 0x914, R_MIPS_LO16, PKG_type
-.reloc __recon_dramc_1_start + 0x938, R_MIPS_26, 
-.reloc __recon_dramc_1_start + 0x958, R_MIPS_26, 
+.reloc __recon_dramc_1_start + 0x938, R_MIPS_26, __recon_dramc_1_start
+.reloc __recon_dramc_1_start + 0x958, R_MIPS_26, __recon_dramc_1_start
 .reloc __recon_dramc_1_start + 0x954, R_MIPS_HI16, dram_type
 .reloc __recon_dramc_1_start + 0x95c, R_MIPS_LO16, dram_type
-.reloc __recon_dramc_1_start + 0x964, R_MIPS_26, 
+.reloc __recon_dramc_1_start + 0x964, R_MIPS_26, __recon_dramc_1_start
 .reloc __recon_dramc_1_start + 0x960, R_MIPS_HI16, dram_type
 .reloc __recon_dramc_1_start + 0x968, R_MIPS_LO16, dram_type
-.reloc __recon_dramc_1_start + 0x9c8, R_MIPS_26, 
+.reloc __recon_dramc_1_start + 0x9c8, R_MIPS_26, __recon_dramc_1_start
 .reloc __recon_dramc_1_start + 0x9e4, R_MIPS_HI16, PKG_type
 .reloc __recon_dramc_1_start + 0x9e8, R_MIPS_LO16, PKG_type
-.reloc __recon_dramc_1_start + 0xa0c, R_MIPS_26, 
-.reloc __recon_dramc_1_start + 0xa2c, R_MIPS_26, 
+.reloc __recon_dramc_1_start + 0xa0c, R_MIPS_26, __recon_dramc_1_start
+.reloc __recon_dramc_1_start + 0xa2c, R_MIPS_26, __recon_dramc_1_start
 .reloc __recon_dramc_1_start + 0xa28, R_MIPS_HI16, dram_type
 .reloc __recon_dramc_1_start + 0xa30, R_MIPS_LO16, dram_type
-.reloc __recon_dramc_1_start + 0xa38, R_MIPS_26, 
+.reloc __recon_dramc_1_start + 0xa38, R_MIPS_26, __recon_dramc_1_start
 .reloc __recon_dramc_1_start + 0xa34, R_MIPS_HI16, dram_type
 .reloc __recon_dramc_1_start + 0xa3c, R_MIPS_LO16, dram_type
-.reloc __recon_dramc_1_start + 0xaa0, R_MIPS_26, 
+.reloc __recon_dramc_1_start + 0xaa0, R_MIPS_26, __recon_dramc_1_start
 .reloc __recon_dramc_1_start + 0xb28, R_MIPS_HI16, PKG_type
 .reloc __recon_dramc_1_start + 0xaa4, R_MIPS_LO16, PKG_type
-.reloc __recon_dramc_1_start + 0xb24, R_MIPS_26, 
-.reloc __recon_dramc_1_start + 0xb4c, R_MIPS_26, 
+.reloc __recon_dramc_1_start + 0xb24, R_MIPS_26, __recon_dramc_1_start
+.reloc __recon_dramc_1_start + 0xb4c, R_MIPS_26, __recon_dramc_1_start
 .reloc __recon_dramc_1_start + 0xb48, R_MIPS_HI16, PKG_type
 .reloc __recon_dramc_1_start + 0xb50, R_MIPS_LO16, PKG_type
 .reloc __recon_dramc_1_start + 0xb58, R_MIPS_HI16, PKG_type
@@ -480,8 +480,8 @@ main:
 .reloc __recon_dramc_1_start + 0xc64, R_MIPS_LO16, $LC17
 .reloc __recon_dramc_1_start + 0xc80, R_MIPS_HI16, PKG_type
 .reloc __recon_dramc_1_start + 0xc84, R_MIPS_LO16, PKG_type
-.reloc __recon_dramc_1_start + 0xcb8, R_MIPS_26, 
-.reloc __recon_dramc_1_start + 0xce8, R_MIPS_26, 
+.reloc __recon_dramc_1_start + 0xcb8, R_MIPS_26, __recon_dramc_1_start
+.reloc __recon_dramc_1_start + 0xce8, R_MIPS_26, __recon_dramc_1_start
 .reloc __recon_dramc_1_start + 0xcf0, R_MIPS_26, check_column_bank
 .reloc __recon_dramc_1_start + 0xcf8, R_MIPS_26, calculate_dram_size
 .reloc __recon_dramc_1_start + 0xd00, R_MIPS_HI16, dram_size
@@ -490,7 +490,7 @@ main:
 .reloc __recon_dramc_1_start + 0xd44, R_MIPS_26, prom_puts
 .reloc __recon_dramc_1_start + 0xd40, R_MIPS_HI16, $LC18
 .reloc __recon_dramc_1_start + 0xd48, R_MIPS_LO16, $LC18
-.reloc __recon_dramc_1_start + 0xd4c, R_MIPS_26, 
+.reloc __recon_dramc_1_start + 0xd4c, R_MIPS_26, __recon_dramc_1_start
 .reloc __recon_dramc_1_start + 0xd70, R_MIPS_26, prom_puts
 .reloc __recon_dramc_1_start + 0xd6c, R_MIPS_HI16, $LC19
 .reloc __recon_dramc_1_start + 0xd74, R_MIPS_LO16, $LC19

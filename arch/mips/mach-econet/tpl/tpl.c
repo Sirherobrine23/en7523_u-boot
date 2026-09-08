@@ -31,12 +31,12 @@ static u32 get_be32(u32 val)
 
 static void tpl_putc(u8 ch)
 {
-	void __iomem *thr = (void __iomem *)(ECONET_UART0_BASE + 0x03);
-	void __iomem *lsr = (void __iomem *)(ECONET_UART0_BASE + 0x17);
+	void __iomem *thr = (void __iomem *)(ECONET_UART0_BASE + 0x00);
+	void __iomem *lsr = (void __iomem *)(ECONET_UART0_BASE + 0x14);
 
-	while (!(__raw_readb(lsr) & 0x20))
+	while (!(__raw_readl(lsr) & 0x20))
 		;
-	__raw_writeb(ch, thr);
+	__raw_writel(ch, thr);
 }
 
 static void tpl_hang(u8 code)
@@ -53,15 +53,15 @@ static void tpl_uart_init(void)
 {
 	void __iomem *base = (void __iomem *)ECONET_UART0_BASE;
 
-	__raw_writeb(0x80, base + 0x0f);
+	__raw_writel(0x80, base + 0x0c);
 	__raw_writel(0xea00fde8, base + 0x2c);
-	__raw_writeb(0x01, base + 0x03);
-	__raw_writeb(0x00, base + 0x07);
-	__raw_writeb(0x03, base + 0x0f);
-	__raw_writeb(0x0f, base + 0x0b);
-	__raw_writeb(0x00, base + 0x13);
-	__raw_writeb(0x00, base + 0x27);
-	__raw_writeb(0x00, base + 0x07);
+	__raw_writel(0x01, base + 0x00);
+	__raw_writel(0x00, base + 0x04);
+	__raw_writel(0x03, base + 0x0c);
+	__raw_writel(0x0f, base + 0x08);
+	__raw_writel(0x00, base + 0x10);
+	__raw_writel(0x00, base + 0x24);
+	__raw_writel(0x00, base + 0x04);
 }
 
 void __noreturn tpl_main(void)
@@ -92,8 +92,10 @@ void __noreturn tpl_main(void)
 	load = get_be32(hdr->load);
 	ep = get_be32(hdr->ep);
 
-	if (!size || (load & 0xe0000000) != 0x80000000 ||
-	    (ep & 0xe0000000) != 0x80000000 || load + size < load)
+	if (!size || size > ECONET_UBOOT_IMAGE_OFFSET -
+			   ECONET_SPL_IMAGE_OFFSET - IH_HDR_SIZE ||
+	    load != CONFIG_SPL_TEXT_BASE || ep != load ||
+	    load + size < load)
 		tpl_hang('L');
 
 	/* Write through KSEG1 so no dirty cache lines hide the SPL image. */

@@ -271,56 +271,56 @@ do_sw_tx_dq_dqs_calib:
 .byte 0x14, 0x01, 0xb5, 0x8f, 0x10, 0x01, 0xb4, 0x8f, 0x0c, 0x01, 0xb3, 0x8f, 0x08, 0x01, 0xb2, 0x8f
 .byte 0x04, 0x01, 0xb1, 0x8f, 0x00, 0x01, 0xb0, 0x8f, 0x08, 0x00, 0xe0, 0x03, 0x28, 0x01, 0xbd, 0x27
 .byte 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
-.reloc __recon_dramc_dq_dqs_cal_1_start + 0x2c, R_MIPS_HI16, 
-.reloc __recon_dramc_dq_dqs_cal_1_start + 0x30, R_MIPS_LO16, 
-.reloc __recon_dramc_dq_dqs_cal_1_start + 0xe4, R_MIPS_26, 
-.reloc __recon_dramc_dq_dqs_cal_1_start + 0x124, R_MIPS_26, 
+.reloc __recon_dramc_dq_dqs_cal_1_start + 0x2c, R_MIPS_HI16, __recon_dramc_dq_dqs_cal_9_start
+.reloc __recon_dramc_dq_dqs_cal_1_start + 0x30, R_MIPS_LO16, __recon_dramc_dq_dqs_cal_9_start
+.reloc __recon_dramc_dq_dqs_cal_1_start + 0xe4, R_MIPS_26, __recon_dramc_dq_dqs_cal_1_start
+.reloc __recon_dramc_dq_dqs_cal_1_start + 0x124, R_MIPS_26, __recon_dramc_dq_dqs_cal_1_start
 .reloc __recon_dramc_dq_dqs_cal_1_start + 0x144, R_MIPS_26, pause_polling
-.reloc __recon_dramc_dq_dqs_cal_1_start + 0x180, R_MIPS_26, 
-.reloc __recon_dramc_dq_dqs_cal_1_start + 0x1c0, R_MIPS_26, 
+.reloc __recon_dramc_dq_dqs_cal_1_start + 0x180, R_MIPS_26, __recon_dramc_dq_dqs_cal_1_start
+.reloc __recon_dramc_dq_dqs_cal_1_start + 0x1c0, R_MIPS_26, __recon_dramc_dq_dqs_cal_1_start
 .reloc __recon_dramc_dq_dqs_cal_1_start + 0x1ec, R_MIPS_LO16, PKG_type
-.reloc __recon_dramc_dq_dqs_cal_1_start + 0x22c, R_MIPS_26, 
-.reloc __recon_dramc_dq_dqs_cal_1_start + 0x2c8, R_MIPS_26, 
-.reloc __recon_dramc_dq_dqs_cal_1_start + 0x354, R_MIPS_26, 
-.reloc __recon_dramc_dq_dqs_cal_1_start + 0x394, R_MIPS_26, 
+.reloc __recon_dramc_dq_dqs_cal_1_start + 0x22c, R_MIPS_26, __recon_dramc_dq_dqs_cal_1_start
+.reloc __recon_dramc_dq_dqs_cal_1_start + 0x2c8, R_MIPS_26, __recon_dramc_dq_dqs_cal_1_start
+.reloc __recon_dramc_dq_dqs_cal_1_start + 0x354, R_MIPS_26, __recon_dramc_dq_dqs_cal_1_start
+.reloc __recon_dramc_dq_dqs_cal_1_start + 0x394, R_MIPS_26, __recon_dramc_dq_dqs_cal_1_start
 .reloc __recon_dramc_dq_dqs_cal_1_start + 0x3b4, R_MIPS_26, pause_polling
-.reloc __recon_dramc_dq_dqs_cal_1_start + 0x42c, R_MIPS_26, 
-.reloc __recon_dramc_dq_dqs_cal_1_start + 0x444, R_MIPS_26, 
+.reloc __recon_dramc_dq_dqs_cal_1_start + 0x42c, R_MIPS_26, __recon_dramc_dq_dqs_cal_1_start
+.reloc __recon_dramc_dq_dqs_cal_1_start + 0x444, R_MIPS_26, __recon_dramc_dq_dqs_cal_1_start
 .reloc __recon_dramc_dq_dqs_cal_1_start + 0x4e8, R_MIPS_HI16, PKG_type
 .reloc __recon_dramc_dq_dqs_cal_1_start + 0x4ec, R_MIPS_LO16, PKG_type
-.reloc __recon_dramc_dq_dqs_cal_1_start + 0x4fc, R_MIPS_26, 
-.reloc __recon_dramc_dq_dqs_cal_1_start + 0x514, R_MIPS_26, 
-.reloc __recon_dramc_dq_dqs_cal_1_start + 0x588, R_MIPS_26, 
-.reloc __recon_dramc_dq_dqs_cal_1_start + 0x5c8, R_MIPS_26, 
-.reloc __recon_dramc_dq_dqs_cal_1_start + 0x5f4, R_MIPS_26, 
+.reloc __recon_dramc_dq_dqs_cal_1_start + 0x4fc, R_MIPS_26, __recon_dramc_dq_dqs_cal_1_start
+.reloc __recon_dramc_dq_dqs_cal_1_start + 0x514, R_MIPS_26, __recon_dramc_dq_dqs_cal_1_start
+.reloc __recon_dramc_dq_dqs_cal_1_start + 0x588, R_MIPS_26, __recon_dramc_dq_dqs_cal_1_start
+.reloc __recon_dramc_dq_dqs_cal_1_start + 0x5c8, R_MIPS_26, __recon_dramc_dq_dqs_cal_1_start
+.reloc __recon_dramc_dq_dqs_cal_1_start + 0x5f4, R_MIPS_26, __recon_dramc_dq_dqs_cal_1_start
 .reloc __recon_dramc_dq_dqs_cal_1_start + 0xc8, R_MIPS_HI16, PKG_type
 .reloc __recon_dramc_dq_dqs_cal_1_start + 0x640, R_MIPS_LO16, PKG_type
-.reloc __recon_dramc_dq_dqs_cal_1_start + 0x670, R_MIPS_26, 
+.reloc __recon_dramc_dq_dqs_cal_1_start + 0x670, R_MIPS_26, __recon_dramc_dq_dqs_cal_1_start
 .reloc __recon_dramc_dq_dqs_cal_1_start + 0x5b4, R_MIPS_HI16, PKG_type
 .reloc __recon_dramc_dq_dqs_cal_1_start + 0x708, R_MIPS_LO16, PKG_type
-.reloc __recon_dramc_dq_dqs_cal_1_start + 0x73c, R_MIPS_26, 
-.reloc __recon_dramc_dq_dqs_cal_1_start + 0x7a4, R_MIPS_HI16, 
-.reloc __recon_dramc_dq_dqs_cal_1_start + 0x7a8, R_MIPS_LO16, 
-.reloc __recon_dramc_dq_dqs_cal_1_start + 0x8b4, R_MIPS_26, 
-.reloc __recon_dramc_dq_dqs_cal_1_start + 0x8f4, R_MIPS_26, 
+.reloc __recon_dramc_dq_dqs_cal_1_start + 0x73c, R_MIPS_26, __recon_dramc_dq_dqs_cal_1_start
+.reloc __recon_dramc_dq_dqs_cal_1_start + 0x7a4, R_MIPS_HI16, __recon_dramc_dq_dqs_cal_9_start
+.reloc __recon_dramc_dq_dqs_cal_1_start + 0x7a8, R_MIPS_LO16, __recon_dramc_dq_dqs_cal_9_start
+.reloc __recon_dramc_dq_dqs_cal_1_start + 0x8b4, R_MIPS_26, __recon_dramc_dq_dqs_cal_1_start
+.reloc __recon_dramc_dq_dqs_cal_1_start + 0x8f4, R_MIPS_26, __recon_dramc_dq_dqs_cal_1_start
 .reloc __recon_dramc_dq_dqs_cal_1_start + 0x914, R_MIPS_26, pause_polling
-.reloc __recon_dramc_dq_dqs_cal_1_start + 0xa48, R_MIPS_26, 
-.reloc __recon_dramc_dq_dqs_cal_1_start + 0xa88, R_MIPS_26, 
+.reloc __recon_dramc_dq_dqs_cal_1_start + 0xa48, R_MIPS_26, __recon_dramc_dq_dqs_cal_1_start
+.reloc __recon_dramc_dq_dqs_cal_1_start + 0xa88, R_MIPS_26, __recon_dramc_dq_dqs_cal_1_start
 .reloc __recon_dramc_dq_dqs_cal_1_start + 0xaa8, R_MIPS_26, pause_polling
-.reloc __recon_dramc_dq_dqs_cal_1_start + 0xb1c, R_MIPS_26, 
-.reloc __recon_dramc_dq_dqs_cal_1_start + 0xb30, R_MIPS_26, 
-.reloc __recon_dramc_dq_dqs_cal_1_start + 0xbb0, R_MIPS_26, 
-.reloc __recon_dramc_dq_dqs_cal_1_start + 0xbfc, R_MIPS_26, 
+.reloc __recon_dramc_dq_dqs_cal_1_start + 0xb1c, R_MIPS_26, __recon_dramc_dq_dqs_cal_1_start
+.reloc __recon_dramc_dq_dqs_cal_1_start + 0xb30, R_MIPS_26, __recon_dramc_dq_dqs_cal_1_start
+.reloc __recon_dramc_dq_dqs_cal_1_start + 0xbb0, R_MIPS_26, __recon_dramc_dq_dqs_cal_1_start
+.reloc __recon_dramc_dq_dqs_cal_1_start + 0xbfc, R_MIPS_26, __recon_dramc_dq_dqs_cal_1_start
 .reloc __recon_dramc_dq_dqs_cal_1_start + 0xcec, R_MIPS_HI16, PKG_type
 .reloc __recon_dramc_dq_dqs_cal_1_start + 0xcf0, R_MIPS_LO16, PKG_type
-.reloc __recon_dramc_dq_dqs_cal_1_start + 0xd10, R_MIPS_26, 
+.reloc __recon_dramc_dq_dqs_cal_1_start + 0xd10, R_MIPS_26, __recon_dramc_dq_dqs_cal_1_start
 .reloc __recon_dramc_dq_dqs_cal_1_start + 0xd34, R_MIPS_HI16, opt_tx_dqm
 .reloc __recon_dramc_dq_dqs_cal_1_start + 0xd38, R_MIPS_LO16, opt_tx_dqm
 .reloc __recon_dramc_dq_dqs_cal_1_start + 0xd50, R_MIPS_HI16, opt_tx_dq
 .reloc __recon_dramc_dq_dqs_cal_1_start + 0xd54, R_MIPS_LO16, opt_tx_dq
 .reloc __recon_dramc_dq_dqs_cal_1_start + 0xd44, R_MIPS_HI16, PKG_type
 .reloc __recon_dramc_dq_dqs_cal_1_start + 0xd5c, R_MIPS_LO16, PKG_type
-.reloc __recon_dramc_dq_dqs_cal_1_start + 0xdd8, R_MIPS_26, 
+.reloc __recon_dramc_dq_dqs_cal_1_start + 0xdd8, R_MIPS_26, __recon_dramc_dq_dqs_cal_1_start
 .reloc __recon_dramc_dq_dqs_cal_1_start + 0xf4c, R_MIPS_HI16, opt_tx_dqs
 .reloc __recon_dramc_dq_dqs_cal_1_start + 0xf50, R_MIPS_LO16, opt_tx_dqs
 

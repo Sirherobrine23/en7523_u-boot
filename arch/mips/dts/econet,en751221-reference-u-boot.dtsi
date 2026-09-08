@@ -36,7 +36,7 @@
 		};
 
 		ddr-blob {
-			type = "blob-ext";
+			type = "blob";
 			filename = "en751221_ddr.bin";
 			offset = <0x00008000>;
 			size = <0x00004f70>;

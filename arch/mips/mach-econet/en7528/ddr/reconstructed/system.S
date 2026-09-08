@@ -117,48 +117,47 @@ init_system:
 .byte 0x04, 0x18, 0x83, 0x7c, 0x84, 0x02, 0x43, 0xac, 0x1c, 0x00, 0xbf, 0x8f, 0x18, 0x00, 0xb2, 0x8f
 .byte 0x14, 0x00, 0xb1, 0x8f, 0x10, 0x00, 0xb0, 0x8f, 0x08, 0x00, 0xe0, 0x03, 0x20, 0x00, 0xbd, 0x27
 .byte 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
-.reloc __recon_system_1_start + 0x50, R_MIPS_26, 
-.reloc __recon_system_1_start + 0x78, R_MIPS_26, 
-.reloc __recon_system_1_start + 0xa0, R_MIPS_26, 
-.reloc __recon_system_1_start + 0xc8, R_MIPS_26, 
-.reloc __recon_system_1_start + 0xf0, R_MIPS_26, 
-.reloc __recon_system_1_start + 0x118, R_MIPS_26, 
-.reloc __recon_system_1_start + 0x140, R_MIPS_26, 
-.reloc __recon_system_1_start + 0x168, R_MIPS_26, 
-.reloc __recon_system_1_start + 0x190, R_MIPS_26, 
-.reloc __recon_system_1_start + 0x1b8, R_MIPS_26, 
-.reloc __recon_system_1_start + 0x1e0, R_MIPS_26, 
+.reloc __recon_system_1_start + 0x50, R_MIPS_26, __recon_system_1_start
+.reloc __recon_system_1_start + 0x78, R_MIPS_26, __recon_system_1_start
+.reloc __recon_system_1_start + 0xa0, R_MIPS_26, __recon_system_1_start
+.reloc __recon_system_1_start + 0xc8, R_MIPS_26, __recon_system_1_start
+.reloc __recon_system_1_start + 0xf0, R_MIPS_26, __recon_system_1_start
+.reloc __recon_system_1_start + 0x118, R_MIPS_26, __recon_system_1_start
+.reloc __recon_system_1_start + 0x140, R_MIPS_26, __recon_system_1_start
+.reloc __recon_system_1_start + 0x168, R_MIPS_26, __recon_system_1_start
+.reloc __recon_system_1_start + 0x190, R_MIPS_26, __recon_system_1_start
+.reloc __recon_system_1_start + 0x1b8, R_MIPS_26, __recon_system_1_start
+.reloc __recon_system_1_start + 0x1e0, R_MIPS_26, __recon_system_1_start
 .reloc __recon_system_1_start + 0x30c, R_MIPS_26, set_spi_ctrler_ecc
-.reloc __recon_system_1_start + 0x334, R_MIPS_26, 
-.reloc __recon_system_1_start + 0x3cc, R_MIPS_26, 
-.reloc __recon_system_1_start + 0x400, R_MIPS_26, 
-.reloc __recon_system_1_start + 0x408, R_MIPS_26, 
-.reloc __recon_system_1_start + 0x418, R_MIPS_26, 
-.reloc __recon_system_1_start + 0x420, R_MIPS_26, 
-.reloc __recon_system_1_start + 0x43c, R_MIPS_26, 
-.reloc __recon_system_1_start + 0x444, R_MIPS_26, 
-.reloc __recon_system_1_start + 0x44c, R_MIPS_26, 
+.reloc __recon_system_1_start + 0x334, R_MIPS_26, __recon_system_1_start
+.reloc __recon_system_1_start + 0x3cc, R_MIPS_26, __recon_system_1_start
+.reloc __recon_system_1_start + 0x400, R_MIPS_26, __recon_system_1_start
+.reloc __recon_system_1_start + 0x408, R_MIPS_26, __recon_system_1_start
+.reloc __recon_system_1_start + 0x418, R_MIPS_26, __recon_system_1_start
+.reloc __recon_system_1_start + 0x420, R_MIPS_26, __recon_system_1_start
+.reloc __recon_system_1_start + 0x43c, R_MIPS_26, __recon_system_1_start
+.reloc __recon_system_1_start + 0x444, R_MIPS_26, __recon_system_1_start
+.reloc __recon_system_1_start + 0x44c, R_MIPS_26, __recon_system_1_start
 .reloc __recon_system_1_start + 0x4b0, R_MIPS_26, time_polling_init
-.reloc __recon_system_1_start + 0x4d0, R_MIPS_26, 
+.reloc __recon_system_1_start + 0x4d0, R_MIPS_26, __recon_system_1_start
 .reloc __recon_system_1_start + 0x4e8, R_MIPS_26, pause_polling
-.reloc __recon_system_1_start + 0x4f8, R_MIPS_26, 
+.reloc __recon_system_1_start + 0x4f8, R_MIPS_26, __recon_system_1_start
 .reloc __recon_system_1_start + 0x504, R_MIPS_26, prom_puts
 .reloc __recon_system_1_start + 0x500, R_MIPS_HI16, $LC0
 .reloc __recon_system_1_start + 0x508, R_MIPS_LO16, $LC0
-.reloc __recon_system_1_start + 0x52c, R_MIPS_26, 
+.reloc __recon_system_1_start + 0x52c, R_MIPS_26, __recon_system_1_start
 .reloc __recon_system_1_start + 0x544, R_MIPS_26, pause_polling
-.reloc __recon_system_1_start + 0x554, R_MIPS_26, 
+.reloc __recon_system_1_start + 0x554, R_MIPS_26, __recon_system_1_start
 .reloc __recon_system_1_start + 0x560, R_MIPS_26, prom_puts
 .reloc __recon_system_1_start + 0x55c, R_MIPS_HI16, $LC1
 .reloc __recon_system_1_start + 0x564, R_MIPS_LO16, $LC1
-.reloc __recon_system_1_start + 0x580, R_MIPS_26, 
+.reloc __recon_system_1_start + 0x580, R_MIPS_26, __recon_system_1_start
 .reloc __recon_system_1_start + 0x598, R_MIPS_26, pause_polling
-.reloc __recon_system_1_start + 0x5a8, R_MIPS_26, 
+.reloc __recon_system_1_start + 0x5a8, R_MIPS_26, __recon_system_1_start
 .reloc __recon_system_1_start + 0x5b4, R_MIPS_26, prom_puts
 .reloc __recon_system_1_start + 0x5b0, R_MIPS_HI16, $LC2
 .reloc __recon_system_1_start + 0x5b8, R_MIPS_LO16, $LC2
-.reloc __recon_system_1_start + 0x5e8, R_MIPS_26, 
-
+.reloc __recon_system_1_start + 0x5e8, R_MIPS_26, __recon_system_1_start
 .section .data,"aw",@progbits
 .balign 16
 __recon_system_3_start:

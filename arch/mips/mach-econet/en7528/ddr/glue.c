@@ -4,7 +4,6 @@
 typedef unsigned char u8;
 typedef unsigned int u32;
 #define REG32(addr) (*(volatile u32 *)(addr))
-#define REG8(addr)  (*(volatile u8 *)(addr))
 
 #define ECONET_SYS_GLOBAL_PARM  0xbfb00284u
 #define ECONET_TIMER_BASE       0xbfbf0100u
@@ -22,9 +21,9 @@ static unsigned int get_hclk_mhz(void)
 
 static void serial_outc(char c)
 {
-	while (!(REG8(ECONET_UART_BASE + 0x17) & 0x20))
+	while (!(REG32(ECONET_UART_BASE + 0x14) & 0x20))
 		;
-	REG8(ECONET_UART_BASE + 0x03) = (u8)c;
+	REG32(ECONET_UART_BASE + 0x00) = (u8)c;
 }
 
 void prom_puts(const char *str)

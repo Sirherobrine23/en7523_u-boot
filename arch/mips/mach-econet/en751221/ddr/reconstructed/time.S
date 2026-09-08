@@ -54,8 +54,7 @@ pause_polling:
 .reloc __recon_time_1_start + 0xc0, R_MIPS_26, timer_Configure
 .reloc __recon_time_1_start + 0xe0, R_MIPS_26, timerSet
 .reloc __recon_time_1_start + 0x100, R_MIPS_26, get_SYS_HCLK
-.reloc __recon_time_1_start + 0x16c, R_MIPS_26, 
-
+.reloc __recon_time_1_start + 0x16c, R_MIPS_26, __recon_time_1_start
 .section .data,"aw",@progbits
 .balign 16
 __recon_time_3_start:

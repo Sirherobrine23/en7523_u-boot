@@ -12,8 +12,8 @@ ENTRY(_start)
 
 #ifdef CONFIG_TARGET_EN751221
 	/*
-	 * Preserve the legacy descriptor on EN751221. The mask ROM does not use
-	 * these fields, but keeping them makes dumps recognizable by old tools.
+	 * Retain the existing port-local descriptor. Its fields do not implement
+	 * the vendor internal-ROM ABI; see doc/board/econet/tcboot-build.rst.
 	 */
 	.org	0x0c
 	.byte	0x36, 0x35, 0x37, 0x38
@@ -82,8 +82,20 @@ reset:
 END(_start)
 
 LEAF(econet_run_ddr_blob)
-	li	t0, ECONET_TPL_SAVED_RA
-	sw	ra, 0(t0)
+	addiu	sp, sp, -48
+	sw	ra, 0(sp)
+	sw	gp, 4(sp)
+	sw	fp, 8(sp)
+	sw	s0, 12(sp)
+	sw	s1, 16(sp)
+	sw	s2, 20(sp)
+	sw	s3, 24(sp)
+	sw	s4, 28(sp)
+	sw	s5, 32(sp)
+	sw	s6, 36(sp)
+	sw	s7, 40(sp)
+	li	t0, ECONET_TPL_SAVED_SP
+	sw	sp, 0(t0)
 
 	la	t1, 1f
 	li	t0, ECONET_SCREG_WR0
@@ -96,8 +108,19 @@ LEAF(econet_run_ddr_blob)
 1:
 	li	t0, ECONET_SCREG_WR0
 	sw	zero, 0(t0)
-	li	t0, ECONET_TPL_SAVED_RA
-	lw	ra, 0(t0)
+	li	t0, ECONET_TPL_SAVED_SP
+	lw	sp, 0(t0)
+	lw	ra, 0(sp)
+	lw	gp, 4(sp)
+	lw	fp, 8(sp)
+	lw	s0, 12(sp)
+	lw	s1, 16(sp)
+	lw	s2, 20(sp)
+	lw	s3, 24(sp)
+	lw	s4, 28(sp)
+	lw	s5, 32(sp)
+	lw	s6, 36(sp)
+	lw	s7, 40(sp)
 	jr	ra
-	 nop
+	 addiu	sp, sp, 48
 END(econet_run_ddr_blob)

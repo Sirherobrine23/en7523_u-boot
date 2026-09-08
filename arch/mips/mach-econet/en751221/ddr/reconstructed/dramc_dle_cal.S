@@ -96,39 +96,39 @@ do_dle_calib:
 .byte 0x3c, 0x04, 0x00, 0x00, 0x0c, 0x00, 0x00, 0x00, 0x24, 0x84, 0x00, 0x00, 0x24, 0x02, 0xff, 0xff
 .byte 0x8f, 0xbf, 0x00, 0x14, 0x03, 0xe0, 0x00, 0x08, 0x27, 0xbd, 0x00, 0x18, 0x00, 0x00, 0x00, 0x00
 .byte 0x00, 0x00, 0x00, 0x00
-.reloc __recon_dramc_dle_cal_1_start + 0x94, R_MIPS_26, 
-.reloc __recon_dramc_dle_cal_1_start + 0xf0, R_MIPS_26, 
-.reloc __recon_dramc_dle_cal_1_start + 0x114, R_MIPS_26, 
-.reloc __recon_dramc_dle_cal_1_start + 0x11c, R_MIPS_26, 
-.reloc __recon_dramc_dle_cal_1_start + 0x178, R_MIPS_26, 
+.reloc __recon_dramc_dle_cal_1_start + 0x94, R_MIPS_26, __recon_dramc_dle_cal_1_start
+.reloc __recon_dramc_dle_cal_1_start + 0xf0, R_MIPS_26, __recon_dramc_dle_cal_1_start
+.reloc __recon_dramc_dle_cal_1_start + 0x114, R_MIPS_26, __recon_dramc_dle_cal_1_start
+.reloc __recon_dramc_dle_cal_1_start + 0x11c, R_MIPS_26, __recon_dramc_dle_cal_1_start
+.reloc __recon_dramc_dle_cal_1_start + 0x178, R_MIPS_26, __recon_dramc_dle_cal_1_start
 .reloc __recon_dramc_dle_cal_1_start + 0x198, R_MIPS_26, pause_polling
-.reloc __recon_dramc_dle_cal_1_start + 0x1b0, R_MIPS_26, 
+.reloc __recon_dramc_dle_cal_1_start + 0x1b0, R_MIPS_26, __recon_dramc_dle_cal_1_start
 .reloc __recon_dramc_dle_cal_1_start + 0x238, R_MIPS_HI16, dle_test_cases
 .reloc __recon_dramc_dle_cal_1_start + 0x23c, R_MIPS_LO16, dle_test_cases
 .reloc __recon_dramc_dle_cal_1_start + 0x240, R_MIPS_LO16, dle_test_cases
-.reloc __recon_dramc_dle_cal_1_start + 0x258, R_MIPS_HI16, 
-.reloc __recon_dramc_dle_cal_1_start + 0x25c, R_MIPS_LO16, 
-.reloc __recon_dramc_dle_cal_1_start + 0x264, R_MIPS_LO16, 
+.reloc __recon_dramc_dle_cal_1_start + 0x258, R_MIPS_HI16, __recon_dramc_dle_cal_5_start
+.reloc __recon_dramc_dle_cal_1_start + 0x25c, R_MIPS_LO16, __recon_dramc_dle_cal_5_start
+.reloc __recon_dramc_dle_cal_1_start + 0x264, R_MIPS_LO16, __recon_dramc_dle_cal_5_start
 .reloc __recon_dramc_dle_cal_1_start + 0x26c, R_MIPS_HI16, dle_result
 .reloc __recon_dramc_dle_cal_1_start + 0x270, R_MIPS_LO16, dle_result
-.reloc __recon_dramc_dle_cal_1_start + 0x280, R_MIPS_26, 
-.reloc __recon_dramc_dle_cal_1_start + 0x288, R_MIPS_LO16, 
-.reloc __recon_dramc_dle_cal_1_start + 0x290, R_MIPS_LO16, 
+.reloc __recon_dramc_dle_cal_1_start + 0x280, R_MIPS_26, __recon_dramc_dle_cal_1_start
+.reloc __recon_dramc_dle_cal_1_start + 0x288, R_MIPS_LO16, __recon_dramc_dle_cal_5_start
+.reloc __recon_dramc_dle_cal_1_start + 0x290, R_MIPS_LO16, __recon_dramc_dle_cal_5_start
 .reloc __recon_dramc_dle_cal_1_start + 0x298, R_MIPS_HI16, dle_result
 .reloc __recon_dramc_dle_cal_1_start + 0x29c, R_MIPS_LO16, dle_result
 .reloc __recon_dramc_dle_cal_1_start + 0x2e0, R_MIPS_26, dle_factor_handler
 .reloc __recon_dramc_dle_cal_1_start + 0x2e8, R_MIPS_26, dle_test
-.reloc __recon_dramc_dle_cal_1_start + 0x2f0, R_MIPS_LO16, 
-.reloc __recon_dramc_dle_cal_1_start + 0x2d8, R_MIPS_HI16, 
-.reloc __recon_dramc_dle_cal_1_start + 0x2fc, R_MIPS_LO16, 
+.reloc __recon_dramc_dle_cal_1_start + 0x2f0, R_MIPS_LO16, __recon_dramc_dle_cal_5_start
+.reloc __recon_dramc_dle_cal_1_start + 0x2d8, R_MIPS_HI16, __recon_dramc_dle_cal_5_start
+.reloc __recon_dramc_dle_cal_1_start + 0x2fc, R_MIPS_LO16, __recon_dramc_dle_cal_5_start
 .reloc __recon_dramc_dle_cal_1_start + 0x328, R_MIPS_26, dle_calib
-.reloc __recon_dramc_dle_cal_1_start + 0x324, R_MIPS_HI16, 
-.reloc __recon_dramc_dle_cal_1_start + 0x32c, R_MIPS_LO16, 
+.reloc __recon_dramc_dle_cal_1_start + 0x324, R_MIPS_HI16, __recon_dramc_dle_cal_5_start
+.reloc __recon_dramc_dle_cal_1_start + 0x32c, R_MIPS_LO16, __recon_dramc_dle_cal_5_start
 .reloc __recon_dramc_dle_cal_1_start + 0x330, R_MIPS_HI16, dle_result
 .reloc __recon_dramc_dle_cal_1_start + 0x334, R_MIPS_LO16, dle_result
 .reloc __recon_dramc_dle_cal_1_start + 0x360, R_MIPS_HI16, opt_dle_idx
 .reloc __recon_dramc_dle_cal_1_start + 0x364, R_MIPS_LO16, opt_dle_idx
-.reloc __recon_dramc_dle_cal_1_start + 0x374, R_MIPS_26, 
+.reloc __recon_dramc_dle_cal_1_start + 0x374, R_MIPS_26, __recon_dramc_dle_cal_1_start
 .reloc __recon_dramc_dle_cal_1_start + 0x370, R_MIPS_HI16, opt_dle_idx
 .reloc __recon_dramc_dle_cal_1_start + 0x378, R_MIPS_LO16, opt_dle_idx
 .reloc __recon_dramc_dle_cal_1_start + 0x388, R_MIPS_HI16, opt_dle_idx
@@ -136,7 +136,7 @@ do_dle_calib:
 .reloc __recon_dramc_dle_cal_1_start + 0x390, R_MIPS_HI16, opt_dle_value
 .reloc __recon_dramc_dle_cal_1_start + 0x398, R_MIPS_LO16, opt_dle_value
 .reloc __recon_dramc_dle_cal_1_start + 0x39c, R_MIPS_26, dle_factor_handler
-.reloc __recon_dramc_dle_cal_1_start + 0x3a4, R_MIPS_26, 
+.reloc __recon_dramc_dle_cal_1_start + 0x3a4, R_MIPS_26, __recon_dramc_dle_cal_1_start
 .reloc __recon_dramc_dle_cal_1_start + 0x3b0, R_MIPS_26, prom_puts
 .reloc __recon_dramc_dle_cal_1_start + 0x3ac, R_MIPS_HI16, $LC0
 .reloc __recon_dramc_dle_cal_1_start + 0x3b4, R_MIPS_LO16, $LC0

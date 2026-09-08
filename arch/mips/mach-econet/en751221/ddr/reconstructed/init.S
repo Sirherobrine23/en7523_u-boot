@@ -128,17 +128,17 @@ prom_print_dec:
 .byte 0x8f, 0xbf, 0x00, 0x24, 0x8f, 0xb4, 0x00, 0x20, 0x8f, 0xb3, 0x00, 0x1c, 0x8f, 0xb2, 0x00, 0x18
 .byte 0x8f, 0xb1, 0x00, 0x14, 0x8f, 0xb0, 0x00, 0x10, 0x03, 0xe0, 0x00, 0x08, 0x27, 0xbd, 0x00, 0x28
 .byte 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
-.reloc __recon_init_1_start + 0x98, R_MIPS_26, 
-.reloc __recon_init_1_start + 0xd4, R_MIPS_26, 
-.reloc __recon_init_1_start + 0x180, R_MIPS_26, 
-.reloc __recon_init_1_start + 0x21c, R_MIPS_26, 
+.reloc __recon_init_1_start + 0x98, R_MIPS_26, __recon_init_1_start
+.reloc __recon_init_1_start + 0xd4, R_MIPS_26, __recon_init_1_start
+.reloc __recon_init_1_start + 0x180, R_MIPS_26, __recon_init_1_start
+.reloc __recon_init_1_start + 0x21c, R_MIPS_26, __recon_init_1_start
 .reloc __recon_init_1_start + 0x36c, R_MIPS_26, get_SYS_HCLK
-.reloc __recon_init_1_start + 0x428, R_MIPS_26, 
+.reloc __recon_init_1_start + 0x428, R_MIPS_26, __recon_init_1_start
 .reloc __recon_init_1_start + 0x494, R_MIPS_26, serial_outc
 .reloc __recon_init_1_start + 0x49c, R_MIPS_26, serial_outc
-.reloc __recon_init_1_start + 0x4a4, R_MIPS_26, 
+.reloc __recon_init_1_start + 0x4a4, R_MIPS_26, __recon_init_1_start
 .reloc __recon_init_1_start + 0x500, R_MIPS_26, serial_outc
-.reloc __recon_init_1_start + 0x508, R_MIPS_26, 
+.reloc __recon_init_1_start + 0x508, R_MIPS_26, __recon_init_1_start
 .reloc __recon_init_1_start + 0x588, R_MIPS_26, serial_outc
 
 .section .data,"aw",@progbits
