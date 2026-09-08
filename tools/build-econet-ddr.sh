@@ -14,6 +14,13 @@ case "$soc" in
   cc_default=mips-linux-gnu-
   out="$objtree/en751221_ddr.bin"
   ;;
+ en751627)
+  dir="$srctree/arch/mips/mach-econet/en751627/ddr"
+  endian=-EB
+  emulation=elf32ltsmip
+  cc_default=mips-linux-gnu-
+  out="$objtree/en751627_ddr.bin"
+  ;;
  en7528)
   dir="$srctree/arch/mips/mach-econet/en7528/ddr"
   endian=-EL
@@ -29,7 +36,7 @@ case "$soc" in
   out="$objtree/en7580_ddr.bin"
   ;;
  *)
-  echo "usage: $0 {en751221|en7528|en7580}" >&2
+  echo "usage: $0 {en751221|en751627|en7528|en7580}" >&2
   exit 2
   ;;
 esac
