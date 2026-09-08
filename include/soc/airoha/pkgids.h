@@ -12,14 +12,40 @@
 
 #define AIROHA_PKG_ID_NAME(_id) [(_id)] = #_id
 
+#define AIROHA_NP_SCU_BASE		0x1fb00000
+#define AIROHA_NP_SCU_SIZE		0x960
+#define AIROHA_CHIP_SCU_BASE		0x1fa20000
+#define AIROHA_CHIP_SCU_SIZE		0x360
+#define AIROHA_EFUSE_BASE		0x1fbf8000
+
 #define AIROHA_NP_SCU_PDIDR		0x05c
 #define AIROHA_NP_SCU_HIR		0x064
 #define AIROHA_NP_SCU_SCREG_WR1	0x284
+#define AIROHA_NP_SCU_MT751020_CFG	0x0f8
+
+#define AIROHA_CHIP_SCU_751627_PKG	0x174
+#define AIROHA_CHIP_SCU_7526C_PKG	0x1ec
+
+#define AIROHA_EFUSE_VERIFY_DATA0	0x214
+#define AIROHA_EFUSE_VERIFY_DATA1	0x218
 
 #define AIROHA_NP_SCU_HIR_MASK		GENMASK(31, 16)
 #define AIROHA_NP_SCU_PDIDR_MASK	GENMASK(15, 0)
 #define AIROHA_NP_SCU_PACKAGE_ID_MASK	GENMASK(3, 0)
 #define AIROHA_NP_SCU_PACKAGE_ID_EXT	BIT(7)
+
+#define AIROHA_CHIP_SCU_751627_QFP	BIT(15)
+#define AIROHA_CHIP_SCU_7526C_FP	BIT(10)
+
+#define AIROHA_EFUSE_PKG_7526C_MASK		0x3c
+#define AIROHA_EFUSE_PKG_MASK_751627		0xc0000
+#define AIROHA_EFUSE_REMARK_BIT_751627		BIT(0)
+#define AIROHA_EFUSE_PKG_REMARK_SHIFT_751627	2
+#define AIROHA_EFUSE_PKG_MASK			GENMASK(5, 0)
+#define AIROHA_EFUSE_REMARK_BIT			BIT(6)
+#define AIROHA_EFUSE_PKG_REMARK_SHIFT		7
+#define AIROHA_EFUSE_DDR3_BIT			BIT(23)
+#define AIROHA_EFUSE_DDR3_REMARK_BIT		BIT(24)
 
 enum airoha_pkg {
 	/* AN7583 */
@@ -56,6 +82,29 @@ enum airoha_pkg {
 	MT751020_PKG = 0x5,
 };
 
+/*
+ * Raw MIPS eFuse package encodings from the vendor SDK. These values are
+ * family-relative and therefore may overlap.
+ */
+enum airoha_mips_efuse_pkg_id {
+	AIROHA_EFUSE_EN7527H = 0x0,
+	AIROHA_EFUSE_EN7527G = 0x0,
+	AIROHA_EFUSE_EN7561G = 0xc0000,
+	AIROHA_EFUSE_EN7516G = 0x80000,
+
+	AIROHA_EFUSE_EN7526F = 0x00,
+	AIROHA_EFUSE_EN7521F = 0x10,
+	AIROHA_EFUSE_EN7521S = 0x20,
+	AIROHA_EFUSE_EN7512 = 0x04,
+	AIROHA_EFUSE_EN7526D = 0x01,
+	AIROHA_EFUSE_EN7526FT = 0x11,
+	AIROHA_EFUSE_EN7513 = 0x05,
+	AIROHA_EFUSE_EN7526G = 0x02,
+	AIROHA_EFUSE_EN7521G = 0x12,
+	AIROHA_EFUSE_EN7513G = 0x06,
+	AIROHA_EFUSE_EN7586 = 0x0a,
+};
+
 enum airoha_pkg_ids {
 	/*EN7523*/
 	EN7529DU,
@@ -86,8 +135,8 @@ enum airoha_pkg_ids {
 	EN7528HU,
 	EN7528DU,
 	EN7561DU,
-	EN7526FHEN7528DU,
-	EN7521GEN7528DU,
+	EN7526FH,
+	EN7521G,
 
 	/* EN7580 */
 	EN7580GT,
@@ -176,8 +225,22 @@ enum airoha_pkg_ids {
 	AN7583FS,
 	AN7583FF,
 
+	/* MIPS variants missing from the vendor chipId_t table */
+	EN7561HU,
+	EN7528GT_EN7580,
+	EN7527H,
+	EN7586,
+	MT7510,
+	MT7511,
+
 	END_PACKAGE_ID = 0xFFFFFFFF,
 };
+
+/* Compatibility with vendor/legacy detector identifiers. */
+#define EN7526FH_EN7528DU	EN7526FH
+#define EN7521G_EN7528DU	EN7521G
+#define EN7526FHEN7528DU	EN7526FH
+#define EN7521GEN7528DU	EN7521G
 
 static const char *const airoha_pkg_id_names[] = {
 	/* EN7523 */
@@ -209,8 +272,8 @@ static const char *const airoha_pkg_id_names[] = {
 	AIROHA_PKG_ID_NAME(EN7528HU),
 	AIROHA_PKG_ID_NAME(EN7528DU),
 	AIROHA_PKG_ID_NAME(EN7561DU),
-	AIROHA_PKG_ID_NAME(EN7526FHEN7528DU),
-	AIROHA_PKG_ID_NAME(EN7521GEN7528DU),
+	AIROHA_PKG_ID_NAME(EN7526FH),
+	AIROHA_PKG_ID_NAME(EN7521G),
 
 	/* EN7580 */
 	AIROHA_PKG_ID_NAME(EN7580GT),
@@ -292,6 +355,14 @@ static const char *const airoha_pkg_id_names[] = {
 	AIROHA_PKG_ID_NAME(AN7583FD),
 	AIROHA_PKG_ID_NAME(AN7583FS),
 	AIROHA_PKG_ID_NAME(AN7583FF),
+
+	/* MIPS variants */
+	AIROHA_PKG_ID_NAME(EN7561HU),
+	AIROHA_PKG_ID_NAME(EN7528GT_EN7580),
+	AIROHA_PKG_ID_NAME(EN7527H),
+	AIROHA_PKG_ID_NAME(EN7586),
+	AIROHA_PKG_ID_NAME(MT7510),
+	AIROHA_PKG_ID_NAME(MT7511),
 };
 
 static inline const char *airoha_pkg_id_name(enum airoha_pkg_ids id)
@@ -318,6 +389,46 @@ airoha_pkg_id_range_name(u32 pkgid, enum airoha_pkg_ids first,
 		return NULL;
 
 	return airoha_pkg_id_names[id];
+}
+
+static inline u32 airoha_efuse_pkgid(u32 value)
+{
+	if (value & AIROHA_EFUSE_REMARK_BIT)
+		value >>= AIROHA_EFUSE_PKG_REMARK_SHIFT;
+
+	return value & AIROHA_EFUSE_PKG_MASK;
+}
+
+static inline u32 airoha_efuse_pkgid_751627(u32 value)
+{
+	if (value & AIROHA_EFUSE_REMARK_BIT_751627)
+		value >>= AIROHA_EFUSE_PKG_REMARK_SHIFT_751627;
+
+	return value & AIROHA_EFUSE_PKG_MASK_751627;
+}
+
+static inline bool airoha_efuse_is_ddr3(u32 value)
+{
+	if (value & AIROHA_EFUSE_REMARK_BIT)
+		return !!(value & AIROHA_EFUSE_DDR3_REMARK_BIT);
+
+	return !!(value & AIROHA_EFUSE_DDR3_BIT);
+}
+
+static inline bool airoha_efuse_is_enp_mod(u32 value)
+{
+	if (value & BIT(3))
+		return !!(value & BIT(5));
+
+	return !!(value & BIT(1));
+}
+
+static inline bool airoha_efuse_is_ens_mod(u32 value)
+{
+	if (value & BIT(3))
+		return !!(value & BIT(6));
+
+	return !!(value & BIT(2));
 }
 
 static inline enum airoha_pkg airoha_pkg_from_id(u32 id)
@@ -415,20 +526,178 @@ airoha_soc_variant_name(enum airoha_pkg pkg, u32 pkgid)
 	case EN7523_PKG:
 		return airoha_pkg_id_range_name(pkgid, EN7529DU, EN7523DTM);
 	case EN7528_PKG:
-		return airoha_pkg_id_range_name(pkgid, EN7528HU,
-						EN7521GEN7528DU);
+		switch (pkgid) {
+		case 0x0:
+			return airoha_pkg_id_name(EN7528HU);
+		case 0x1:
+			return airoha_pkg_id_name(EN7528DU);
+		case 0x2:
+			return airoha_pkg_id_name(EN7561DU);
+		case 0x3:
+			return airoha_pkg_id_name(EN7526FH);
+		case 0x4:
+			return airoha_pkg_id_name(EN7561HU);
+		case 0x7:
+			return airoha_pkg_id_name(EN7521G);
+		default:
+			return NULL;
+		}
 	case EN7580_PKG:
-		return airoha_pkg_id_range_name(pkgid, EN7580GT, EN7580);
+		switch (pkgid) {
+		case 0x0:
+			return airoha_pkg_id_name(EN7580GT);
+		case 0x1:
+			return airoha_pkg_id_name(EN7580ST);
+		case 0x2:
+			return airoha_pkg_id_name(EN7580GAT);
+		case 0x3:
+			return airoha_pkg_id_name(EN7565);
+		case 0x4:
+			return airoha_pkg_id_name(EN7528GT_EN7580);
+		default:
+			return NULL;
+		}
+	/*
+	 * EN7516/EN7527, EN7526C/EN7522 and EN7512/EN7521 do not
+	 * have a linear SCREG_WR1 package-id encoding. Decode them from
+	 * the MIPS eFuse registers with airoha_soc_variant_name_mips().
+	 */
 	case EN751627_PKG:
-		return airoha_pkg_id_range_name(pkgid, EN7516G, EN751627);
 	case EN7526C_PKG:
-		return airoha_pkg_id_range_name(pkgid, EN7521FCUD, EN751221);
 	case EN751221_PKG:
-		return airoha_pkg_id_range_name(pkgid, EN7512, EN751221);
 	case MT751020_PKG:
-		return airoha_pkg_id_range_name(pkgid, MT7520S, MT7525G);
+		return NULL;
 	default:
 		return NULL;
+	}
+}
+
+static inline const char *
+airoha_soc_variant_name_efuse(enum airoha_pkg pkg, u32 efuse0, u32 efuse1,
+			      u32 chip_scu_174, u32 chip_scu_1ec)
+{
+	u32 efuse_pkg;
+
+	switch (airoha_pkg_from_id(pkg)) {
+	case EN751627_PKG:
+		efuse_pkg = airoha_efuse_pkgid_751627(efuse0);
+
+		if (efuse_pkg == AIROHA_EFUSE_EN7516G)
+			return airoha_pkg_id_name(EN7516G);
+
+		if (efuse_pkg == AIROHA_EFUSE_EN7561G &&
+		    !(chip_scu_174 & AIROHA_CHIP_SCU_751627_QFP))
+			return airoha_pkg_id_name(EN7561G);
+
+		if (efuse_pkg == AIROHA_EFUSE_EN7527H) {
+			if (chip_scu_174 & AIROHA_CHIP_SCU_751627_QFP)
+				return airoha_pkg_id_name(EN7527H);
+
+			return airoha_pkg_id_name(EN7527G);
+		}
+
+		return NULL;
+
+	case EN7526C_PKG:
+		efuse_pkg = airoha_efuse_pkgid(efuse0) &
+			     AIROHA_EFUSE_PKG_7526C_MASK;
+
+		if (efuse_pkg == AIROHA_EFUSE_EN7521F) {
+			if (airoha_efuse_is_ddr3(efuse0))
+				return airoha_pkg_id_name(EN7521FCUD);
+
+			return airoha_pkg_id_name(EN7521F);
+		}
+
+		if (efuse_pkg == AIROHA_EFUSE_EN7521S)
+			return airoha_pkg_id_name(EN7521S);
+
+		if (efuse_pkg == AIROHA_EFUSE_EN7526F) {
+			bool ft_c;
+
+			ft_c = efuse0 & AIROHA_EFUSE_REMARK_BIT ?
+			       !!(efuse1 & BIT(10)) :
+			       !!(efuse1 & BIT(9));
+
+			if (ft_c)
+				return airoha_pkg_id_name(EN7526FT_C);
+
+			if (chip_scu_1ec & AIROHA_CHIP_SCU_7526C_FP)
+				return airoha_pkg_id_name(EN7526FP);
+
+			return airoha_pkg_id_name(EN7526F);
+		}
+
+		return NULL;
+
+	case EN751221_PKG:
+		switch (airoha_efuse_pkgid(efuse0)) {
+		case AIROHA_EFUSE_EN7526F:
+			return airoha_pkg_id_name(EN7526F);
+		case AIROHA_EFUSE_EN7526D:
+			return airoha_pkg_id_name(EN7526D);
+		case AIROHA_EFUSE_EN7526G:
+			return airoha_pkg_id_name(EN7526G);
+		case AIROHA_EFUSE_EN7512:
+			return airoha_pkg_id_name(EN7512);
+		case AIROHA_EFUSE_EN7513:
+			return airoha_pkg_id_name(EN7513);
+		case AIROHA_EFUSE_EN7513G:
+			return airoha_pkg_id_name(EN7513G);
+		case AIROHA_EFUSE_EN7586:
+			return airoha_pkg_id_name(EN7586);
+		case AIROHA_EFUSE_EN7521F:
+			return airoha_pkg_id_name(EN7521F);
+		case AIROHA_EFUSE_EN7526FT:
+			return airoha_pkg_id_name(EN7526FT);
+		case AIROHA_EFUSE_EN7521G:
+			return airoha_pkg_id_name(EN7521G);
+		case AIROHA_EFUSE_EN7521S:
+			return airoha_pkg_id_name(EN7521S);
+		default:
+			return NULL;
+		}
+	default:
+		return NULL;
+	}
+}
+
+static inline const char *
+airoha_soc_variant_name_mt751020(u32 np_scu_cfg, u32 efuse0)
+{
+	bool enp = airoha_efuse_is_enp_mod(efuse0);
+	bool ens = airoha_efuse_is_ens_mod(efuse0);
+
+	switch (np_scu_cfg & 0x3) {
+	case 0x0:
+		return airoha_pkg_id_name(enp ? MT7510 : MT7511);
+	case 0x2:
+		if (ens)
+			return airoha_pkg_id_name(MT7520S);
+		return airoha_pkg_id_name(enp ? MT7520 : MT7525);
+	case 0x3:
+		return airoha_pkg_id_name(enp ? MT7520G : MT7525G);
+	default:
+		return NULL;
+	}
+}
+
+static inline const char *
+airoha_soc_variant_name_mips(enum airoha_pkg pkg, u32 pkgid,
+			     u32 np_scu_cfg, u32 chip_scu_174,
+			     u32 chip_scu_1ec, u32 efuse0, u32 efuse1)
+{
+	switch (airoha_pkg_from_id(pkg)) {
+	case EN751627_PKG:
+	case EN7526C_PKG:
+	case EN751221_PKG:
+		return airoha_soc_variant_name_efuse(pkg, efuse0, efuse1,
+						      chip_scu_174,
+						      chip_scu_1ec);
+	case MT751020_PKG:
+		return airoha_soc_variant_name_mt751020(np_scu_cfg, efuse0);
+	default:
+		return airoha_soc_variant_name(pkg, pkgid);
 	}
 }
 
@@ -473,6 +742,38 @@ airoha_soc_name_from_regs(u32 hir, u32 pkgid, u32 pdidr)
 	return "unknown";
 }
 
+static inline const char *
+airoha_soc_name_from_mips_regs(u32 hir, u32 pkgid, u32 pdidr,
+			       u32 np_scu_cfg, u32 chip_scu_174,
+			       u32 chip_scu_1ec, u32 efuse0, u32 efuse1)
+{
+	enum airoha_pkg hir_pkg = airoha_pkg_from_id(hir);
+	enum airoha_pkg pdidr_pkg = airoha_pkg_from_id(pdidr);
+	const char *name;
+
+	name = airoha_soc_variant_name_mips(hir_pkg, pkgid, np_scu_cfg,
+					     chip_scu_174, chip_scu_1ec,
+					     efuse0, efuse1);
+	if (name)
+		return name;
+
+	name = airoha_soc_variant_name_mips(pdidr_pkg, pkgid, np_scu_cfg,
+					     chip_scu_174, chip_scu_1ec,
+					     efuse0, efuse1);
+	if (name)
+		return name;
+
+	name = airoha_pkg_family_name(hir_pkg);
+	if (name)
+		return name;
+
+	name = airoha_pkg_family_name(pdidr_pkg);
+	if (name)
+		return name;
+
+	return "unknown";
+}
+
 static inline u32 airoha_pkgid_from_screg(u32 value)
 {
 	u32 pkgid = FIELD_GET(AIROHA_NP_SCU_PACKAGE_ID_MASK, value);
@@ -481,6 +782,66 @@ static inline u32 airoha_pkgid_from_screg(u32 value)
 		pkgid |= BIT(4);
 
 	return pkgid;
+}
+
+/*
+ * Direct-MMIO helper for MIPS boot code/early platform code.
+ *
+ * In U-Boot on MIPS the caller can pass uncached KSEG1 mappings, e.g.
+ * (void __iomem *)CKSEG1ADDR(AIROHA_NP_SCU_BASE).
+ */
+static inline const char *
+airoha_soc_name_from_mips_mem(void __iomem *np_scu, void __iomem *chip_scu,
+			      void __iomem *efuse)
+{
+	u32 hir, pdidr, pkgid, np_scu_cfg = 0;
+	u32 chip_scu_174 = 0, chip_scu_1ec = 0;
+	u32 efuse0 = 0, efuse1 = 0;
+	enum airoha_pkg pkg;
+
+	hir = FIELD_GET(AIROHA_NP_SCU_HIR_MASK,
+			readl(np_scu + AIROHA_NP_SCU_HIR));
+	pdidr = FIELD_GET(AIROHA_NP_SCU_PDIDR_MASK,
+			  readl(np_scu + AIROHA_NP_SCU_PDIDR));
+	pkgid = airoha_pkgid_from_screg(readl(np_scu +
+					      AIROHA_NP_SCU_SCREG_WR1));
+
+	pkg = airoha_pkg_from_id(hir);
+	if (!pkg)
+		pkg = airoha_pkg_from_id(pdidr);
+
+	switch (pkg) {
+	case EN751627_PKG:
+		if (!chip_scu || !efuse)
+			return airoha_pkg_family_name(pkg);
+		chip_scu_174 = readl(chip_scu + AIROHA_CHIP_SCU_751627_PKG);
+		efuse0 = readl(efuse + AIROHA_EFUSE_VERIFY_DATA0);
+		break;
+	case EN7526C_PKG:
+		if (!chip_scu || !efuse)
+			return airoha_pkg_family_name(pkg);
+		chip_scu_1ec = readl(chip_scu + AIROHA_CHIP_SCU_7526C_PKG);
+		efuse0 = readl(efuse + AIROHA_EFUSE_VERIFY_DATA0);
+		efuse1 = readl(efuse + AIROHA_EFUSE_VERIFY_DATA1);
+		break;
+	case EN751221_PKG:
+		if (!efuse)
+			return airoha_pkg_family_name(pkg);
+		efuse0 = readl(efuse + AIROHA_EFUSE_VERIFY_DATA0);
+		break;
+	case MT751020_PKG:
+		if (!efuse)
+			return airoha_pkg_family_name(pkg);
+		np_scu_cfg = readl(np_scu + AIROHA_NP_SCU_MT751020_CFG);
+		efuse0 = readl(efuse + AIROHA_EFUSE_VERIFY_DATA0);
+		break;
+	default:
+		break;
+	}
+
+	return airoha_soc_name_from_mips_regs(hir, pkgid, pdidr, np_scu_cfg,
+					      chip_scu_174, chip_scu_1ec,
+					      efuse0, efuse1);
 }
 
 /*

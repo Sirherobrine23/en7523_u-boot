@@ -20,24 +20,6 @@ DECLARE_GLOBAL_DATA_PTR;
 #define EN7528_SYS_GLOBAL_PARM				0xbfb00284UL
 #define NP_SCU_BASE		((void __iomem *)CKSEG1ADDR(0x1fb00000))
 
-int print_cpuinfo(void)
-{
-	u32 hir = get_pkg_mem(NP_SCU_BASE);
-	u32 pdidr = get_pdidr_mem(NP_SCU_BASE);
-	u32 pkgid = get_pkgid_mem(NP_SCU_BASE);
-	const char *soc_name = airoha_soc_name_from_regs(hir, pkgid, pdidr);
-
-	if (pkgid != END_PACKAGE_ID) {
-		printf("SoC:   Airoha %s\n", soc_name);
-	} else {
-		printf("SoC:   Airoha %s\n",
-		       IS_ENABLED(CONFIG_TARGET_EN751627) ?
-		       "EN7516/EN7527" : "EN7528");
-	}
-
-	return 0;
-}
-
 int dram_init(void)
 {
 	u32 value, size_mb;
