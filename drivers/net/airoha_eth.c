@@ -1570,6 +1570,10 @@ static int en751221_qdma_init(struct airoha_qdma *qdma)
 		      GLOBAL_CFG_IRQ0_EN_MASK |
 		      FIELD_PREP(GLOBAL_CFG_MAX_ISSUE_NUM_MASK, 3);
 
+		/* Vendor 7512_eth.c: native BE descriptors require bit 27. */
+		if (qdma->eth->soc->dscp_byte_swap)
+			cfg |= GLOBAL_CFG_DSCP_BYTE_SWAP_MASK;
+
 		airoha_qdma_wr(qdma, EN751221_REG_RX_PROTECT_CFG,
 			       EN7528_RX_PROTECT_CFG);
 		for (i = 0; i < EN751221_NUM_TXQ_DIS_CFG; i++)
@@ -2650,8 +2654,8 @@ static int en751221_eth_send(struct udevice *dev, void *packet, int length)
 		   FIELD_PREP(EN751221_TXMSG_CHANNEL_MASK, 0) |
 		   FIELD_PREP(EN751221_TXMSG_QUEUE_MASK, 0));
 	/*
-	 * The EN751627 little-endian LAN TX message layout is also used by
-	 * EN7528: fport is bits [21:19], while VLAN/offload fields stay zero.
+	 * Vendor BE/LE bitfield declarations put fport in bits [21:19] on
+	 * both EN751627 and EN7528; VLAN/offload fields stay zero.
 	 * GDM1 therefore produces word 1 = 0x00080000.
 	 */
 	WRITE_ONCE(desc->msg1,
@@ -3134,6 +3138,16 @@ static const struct airoha_eth_soc_data en751221_data = {
 	.switch_compatible = "econet,en751221-switch",
 };
 
+/* Same QDMA/ring/switch profile, with native big-endian descriptors. */
+static const struct airoha_eth_soc_data en751627_data = {
+	.version = 0x7528,
+	.gen1 = true,
+	.legacy_qdma = true,
+	.late_probe = true,
+	.dscp_byte_swap = true,
+	.switch_compatible = "airoha,en751627-switch",
+};
+
 static const struct airoha_eth_soc_data en7528_data = {
 	.version = 0x7528,
 	.gen1 = true,
@@ -3158,6 +3172,9 @@ static const struct airoha_eth_soc_data an7583_data = {
 static const struct udevice_id airoha_eth_ids[] = {
 	{ .compatible = "econet,en751221-eth",
 	  .data = (ulong)&en751221_data,
+	},
+	{ .compatible = "econet,en751627-eth",
+	  .data = (ulong)&en751627_data,
 	},
 	{ .compatible = "econet,en7528-eth",
 	  .data = (ulong)&en7528_data,

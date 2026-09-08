@@ -6,6 +6,15 @@ config TARGET_EN751221
 	select SYSCON
 	select MIPS_TUNE_34KC
 
+config TARGET_EN751627
+	bool "Airoha EN7516/EN7527 SoC (big-endian)"
+	select SYSCON
+	select MIPS_TUNE_1004KC
+	select MIPS_SKIP_CP0_COUNT_CLEAR
+	help
+	  EN7516/EN7527 shares the EN7528 peripheral and CPU support.
+	  This target uses the big-endian vendor first-stage handoff.
+
 config TARGET_EN7528
 	bool "Airoha EN7528 SoC"
 	select SYSCON
@@ -26,17 +35,17 @@ config SYS_VENDOR
 
 config SYS_SOC
 	default "en751221" if TARGET_EN751221
-	default "en7528" if TARGET_EN7528
+	default "en7528" if TARGET_EN7528 || TARGET_EN751627
 	default "en7580" if TARGET_EN7580
 
 config SYS_BOARD
 	default "en7512" if TARGET_EN751221
-	default "en7528" if TARGET_EN7528
+	default "en7528" if TARGET_EN7528 || TARGET_EN751627
 	default "en7580" if TARGET_EN7580
 
 config SYS_CONFIG_NAME
 	default "en7512" if TARGET_EN751221
-	default "en7528" if TARGET_EN7528
+	default "en7528" if TARGET_EN7528 || TARGET_EN751627
 	default "en7580" if TARGET_EN7580
 
 config SYS_MALLOC_F_LEN
@@ -110,5 +119,13 @@ config BOARD_EN7528_REFERENCE
 	  Build U-Boot proper for the EcoNet EN7528 reference board, as found
 	  on the DASAN H660GM-A.  Like the XC220-G3V it is chainloaded after a
 	  previous stage has trained DDR, but boots from SPI-NAND.
+
+config BOARD_EN751627_REFERENCE
+	bool "Airoha EN7516/EN7527 reference board (chainloaded)"
+	depends on SYS_BIG_ENDIAN
+	select TARGET_EN751627
+	help
+	  Build U-Boot proper with integrated Ethernet and SPI-NAND support.
+	  A preceding stage must initialize DDR, CPU clocks and switch PHYs.
 
 endmenu

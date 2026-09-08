@@ -24,7 +24,7 @@ int board_late_init(void)
 	ret = uclass_get_device_by_driver(UCLASS_MISC,
 					  DM_DRIVER_GET(airoha_eth), &dev);
 	if (ret && ret != -ENODEV)
-		printf("EN7528 Ethernet probe failed: %d\n", ret);
+		printf("EN751627/EN7528 Ethernet probe failed: %d\n", ret);
 
 	return 0;
 }
