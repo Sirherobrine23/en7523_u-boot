@@ -19,6 +19,10 @@ void __noreturn board_init_f(ulong dummy)
 static ulong econet_spl_read(struct spl_load_info *load, ulong offset,
 			     ulong count, void *buf)
 {
+	if (offset >= ECONET_BOOT_IMAGE_SIZE ||
+	    count > ECONET_BOOT_IMAGE_SIZE - offset)
+		return 0;
+
 	if (econet_sfc_read(offset, buf, count))
 		return 0;
 

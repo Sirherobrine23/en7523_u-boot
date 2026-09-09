@@ -17,9 +17,10 @@ case "$soc" in
  en751627)
   dir="$srctree/arch/mips/mach-econet/en751627/ddr"
   endian=-EB
-  emulation=elf32ltsmip
+  emulation=elf32btsmip
   cc_default=mips-linux-gnu-
   out="$objtree/en751627_ddr.bin"
+  prebuilt="$dir/en751627_ddr.bin"
   ;;
  en7528)
   dir="$srctree/arch/mips/mach-econet/en7528/ddr"
@@ -40,6 +41,19 @@ case "$soc" in
   exit 2
   ;;
 esac
+
+if [ -n "${prebuilt:-}" ]; then
+ expected_size=$((0xd050))
+ actual_size=$(wc -c < "$prebuilt")
+ if [ "$actual_size" -ne "$expected_size" ]; then
+  echo "error: EN751627 DDR payload has size $actual_size, expected $expected_size" >&2
+  exit 1
+ fi
+ cp "$prebuilt" "$out.tmp"
+ mv -f "$out.tmp" "$out"
+ printf '%s\n' "$out"
+ exit 0
+fi
 
 cross="${CROSS_COMPILE:-$cc_default}"
 cc="${cross}gcc"

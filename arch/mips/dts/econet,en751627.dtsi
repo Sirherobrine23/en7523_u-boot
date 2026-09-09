@@ -17,7 +17,7 @@
 	native-endian;
 };
 
-&uart1 {
+&uart0 {
 	big-endian;
 };
 

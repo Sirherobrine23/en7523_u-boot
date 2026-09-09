@@ -7,25 +7,59 @@
 	.set noreorder
 
 ENTRY(_start)
-	b	reset
-	 mtc0	zero, CP0_COUNT
+	/* Match the vendor TCBoot reset vector. */
+	j	reset
+	 nop
+
+	/*
+	 * Common EcoNet/Airoha TCBoot descriptor. Raw bytes at +0x0c must be
+	 * "6578" for both endian modes.  The vendor 128 KiB EN751221 layout
+	 * treats the image at 0x10000 as bootram, while the newer 256 KiB layout
+	 * treats the executable loader at 0x10000 as lzma.img.  Binman creates
+	 * the fixed placement and tools/econet_tcboot_image.py patches the actual
+	 * end address and CRC words after the image is assembled.
+	 */
+	.org	0x08
+	.word	ECONET_TCBOOT_HEADER_LEN
+	.ascii	"6578"
+#ifdef CONFIG_TARGET_EN751221
+	.word	0	/* lzma_flash_start_addr */
+	.word	0	/* lzma_flash_end_addr */
+	.word	ECONET_SPL_IMAGE_OFFSET	/* bootram_flash_start_addr */
+	.word	0	/* bootram_flash_end_addr, finalized after Binman */
+#else
+	.word	ECONET_SPL_IMAGE_OFFSET	/* lzma_flash_start_addr */
+	.word	0	/* lzma_flash_end_addr, finalized after Binman */
+	.word	0	/* bootram_flash_start_addr */
+	.word	0	/* bootram_flash_end_addr */
+#endif
+	.word	0
+	.word	ECONET_TCBOOT_CHIP_FLASH_INFO
+	.word	ECONET_TCBOOT_WORD28
+	.word	ECONET_TCBOOT_WORD2C
+	.word	ECONET_DDR_BLOB_ADDR
+	.word	CONFIG_SPL_TEXT_BASE
+	.word	0	/* verify_start_addr: unsigned boot */
+	.word	0	/* verify_end_addr: unsigned boot */
+	.word	0	/* efuse_clk_width */
+	.word	0
 
 #ifdef CONFIG_TARGET_EN751221
-	/*
-	 * Retain the existing port-local descriptor. Its fields do not implement
-	 * the vendor internal-ROM ABI; see doc/board/econet/tcboot-build.rst.
-	 */
-	.org	0x0c
-	.byte	0x36, 0x35, 0x37, 0x38
-	.word	ECONET_DDR_BLOB_OFFSET
-	.word	ECONET_DDR_BLOB_OFFSET + ECONET_DDR_BLOB_SIZE
-	.word	ECONET_SPL_IMAGE_OFFSET
-	.word	ECONET_UBOOT_IMAGE_OFFSET
-#endif
-
-	/* Vendor reset code leaves this area free and enters at offset 0x48. */
+	/* The older EN751221 reset image enters at +0x48. */
 	.org	0x48
+#else
+	.word	0	/* move_data_int start */
+	.word	0	/* move_data_int end */
+	.word	0	/* boot2 start */
+	.word	0	/* boot2 end */
+	.word	ECONET_DDR_BLOB_OFFSET	/* spram_flash_start_addr */
+	.word	ECONET_DDR_BLOB_OFFSET + ECONET_DDR_BLOB_SIZE
+	.org	0x60
+#endif
 reset:
+#ifndef CONFIG_MIPS_SKIP_CP0_COUNT_CLEAR
+	mtc0	zero, CP0_COUNT
+#endif
 	/* Disable interrupts and force KSEG0 uncached before DRAM exists. */
 	mfc0	t0, CP0_STATUS
 	li	t1, ~(ST0_IE | ST0_KSU)
@@ -63,8 +97,16 @@ reset:
 	sw	zero, 0x00(t0)
 	sw	zero, 0x04(t0)
 
-	/* Enable PBUS access to the 48 KiB FE SRAM. */
+	/* Enable PBUS access to the FE SRAM window. */
 	li	t0, ECONET_FE_SRAM_SEL
+#ifdef CONFIG_TARGET_EN7528
+	/*
+	 * Vendor start.o clears 0xbfb00954 before enabling the FE SRAM
+	 * selector at 0xbfb00958.  Do this before touching 0x9fa3xxxx.
+	 */
+	sw	zero, -4(t0)
+	sync
+#endif
 	lw	t1, 0(t0)
 	ori	t1, t1, 1
 	sw	t1, 0(t0)
@@ -102,7 +144,7 @@ LEAF(econet_run_ddr_blob)
 	sw	t1, 0(t0)
 	sync
 
-	li	t9, ECONET_DDR_BLOB_ADDR
+	li	t9, ECONET_DDR_BLOB_ENTRY
 	jr	t9
 	 nop
 1:

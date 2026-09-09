@@ -7,12 +7,16 @@
  * training stage is linked at the beginning of the cached alias.
  */
 #define EN7580_DDR_BLOB_ADDR		0x9fa30000
-#define EN7580_DDR_BLOB_OFFSET		0x00010000
+#define EN7580_DDR_BLOB_ENTRY	EN7580_DDR_BLOB_ADDR
+#define EN7580_DDR_BLOB_OFFSET		0x00004000
 #define EN7580_DDR_BLOB_SIZE		0x0000b000
 
-/* Keep the first 128 KiB reserved for TPL and the RAM-training payload. */
-#define EN7580_SPL_IMAGE_OFFSET		0x00020000
+/* Keep TPL and the RAM-training payload below the 0xff00 constant-data area. */
+#define EN7580_SPL_IMAGE_OFFSET		0x00010000
 #define EN7580_UBOOT_IMAGE_OFFSET	0x00060000
+
+#define EN7580_TPL_STACK_ADDR	0xbfa3bff0
+#define EN7580_TPL_SAVED_SP		0xbfa3bffc
 
 #define EN7580_SYS_GLOBAL_PARM		0xbfb00284
 #define EN7580_DRAM_SIZE_MASK		0xfff00000

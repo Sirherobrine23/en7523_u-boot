@@ -31,12 +31,25 @@ static u32 get_be32(u32 val)
 
 static void tpl_putc(u8 ch)
 {
+#ifdef CONFIG_TARGET_EN7528
+	/*
+	 * EN7528 LE UART registers use the byte lane at +3.
+	 * The vendor boot code uses THR +0x03 and LSR +0x17.
+	 */
+	void __iomem *thr = (void __iomem *)(ECONET_UART0_BASE + 0x03);
+	void __iomem *lsr = (void __iomem *)(ECONET_UART0_BASE + 0x17);
+
+	while (!(__raw_readb(lsr) & 0x20))
+		;
+	__raw_writeb(ch, thr);
+#else
 	void __iomem *thr = (void __iomem *)(ECONET_UART0_BASE + 0x00);
 	void __iomem *lsr = (void __iomem *)(ECONET_UART0_BASE + 0x14);
 
 	while (!(__raw_readl(lsr) & 0x20))
 		;
 	__raw_writel(ch, thr);
+#endif
 }
 
 static void tpl_hang(u8 code)
@@ -64,6 +77,33 @@ static void tpl_uart_init(void)
 	__raw_writel(0x00, base + 0x04);
 }
 
+#ifdef CONFIG_TARGET_EN7528
+/*
+ * DRAM bring-up test for EN7528 SPI NOR.
+ *
+ * The BootROM exposes the beginning of the NOR through the reset/XIP alias
+ * at CONFIG_TPL_TEXT_BASE (0xbfc00000).  Do not switch the SFC to manual
+ * mode while executing from that mapping.  Copy the DDR payload directly
+ * from XIP to FE SRAM instead.
+ *
+ * This is intentionally a bring-up path only.  It stops after DDR training
+ * and does not load SPL.
+ */
+static void tpl_en7528_copy_ddr_xip(void)
+{
+	const volatile u8 *src =
+		(const volatile u8 *)(CONFIG_TPL_TEXT_BASE +
+				      ECONET_DDR_BLOB_OFFSET);
+	volatile u8 *dst = (volatile u8 *)ECONET_DDR_BLOB_ADDR;
+	u32 i;
+
+	for (i = 0; i < ECONET_DDR_BLOB_SIZE; i++)
+		dst[i] = src[i];
+
+	__asm__ volatile("sync" : : : "memory");
+}
+#endif
+
 void __noreturn tpl_main(void)
 {
 	struct econet_legacy_header *hdr =
@@ -71,6 +111,36 @@ void __noreturn tpl_main(void)
 	void (*entry)(void);
 	u32 load, size, ep;
 	int ret;
+
+#ifdef CONFIG_TARGET_EN7528
+	/*
+	 * Do not call econet_sfc_init() here.
+	 *
+	 * We are still executing from the SPI NOR XIP mapping.  Entering
+	 * SF_MANUAL_EN at this point would remove the backing store for the
+	 * following instruction fetches.
+	 */
+	tpl_en7528_copy_ddr_xip();
+
+	/*
+	 * The DDR payload initializes its own UART and should produce the
+	 * familiar:
+	 *
+	 *   QFP IC
+	 *   DDR3 init.
+	 *   ...
+	 *   7528DRAMC ...
+	 */
+	econet_run_ddr_blob();
+
+	/* DDR returned successfully. UART has now been initialized by it. */
+	tpl_putc('D');
+	tpl_putc('\r');
+	tpl_putc('\n');
+
+	for (;;)
+		;
+#endif
 
 	tpl_uart_init();
 	if (econet_sfc_init())
@@ -92,7 +162,7 @@ void __noreturn tpl_main(void)
 	load = get_be32(hdr->load);
 	ep = get_be32(hdr->ep);
 
-	if (!size || size > ECONET_UBOOT_IMAGE_OFFSET -
+	if (!size || size > ECONET_SPL_IMAGE_LIMIT -
 			   ECONET_SPL_IMAGE_OFFSET - IH_HDR_SIZE ||
 	    load != CONFIG_SPL_TEXT_BASE || ep != load ||
 	    load + size < load)
