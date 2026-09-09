@@ -22,22 +22,24 @@ DECLARE_GLOBAL_DATA_PTR;
 
 int dram_init(void)
 {
-	u32 value, size_mb;
+	u32 value, size_units, size_mb;
 
 	/*
-	 * The vendor first stage stores the calibrated DRAM size in MiB in the
-	 * SYS_GLOBAL_PARM bitfield. EN751627 (big-endian) places dram_size in
-	 * bits [11:0]; EN7528 (little-endian) places it in bits [31:20].
-	 * The MMIO word itself is native-endian on both variants.
+	 * SYS_GLOBAL_PARM stores DRAM size in units of 16 MiB.
+	 *
+	 * Keep the existing endian-specific field placement here. This matches
+	 * the vendor GET_DRAM_SIZE() contract, which returns dram_size << 4.
 	 */
 	value = __raw_readl((void __iomem *)EN7528_SYS_GLOBAL_PARM);
 	if (IS_ENABLED(CONFIG_TARGET_EN751627))
-		size_mb = value & GENMASK(11, 0);
+		size_units = value & GENMASK(11, 0);
 	else
-		size_mb = (value >> 20) & GENMASK(11, 0);
+		size_units = (value >> 20) & GENMASK(11, 0);
 
-	debug("EN751627/EN7528 DRAM: global-param=%08x size=%u MiB\n",
-	      value, size_mb);
+	size_mb = size_units << 4;
+
+	debug("EN751627/EN7528 DRAM: global-param=%08x units=%u size=%u MiB\n",
+	      value, size_units, size_mb);
 
 	if (size_mb < 32 || size_mb > 512) {
 		printf("Invalid EN751627/EN7528 calibrated DRAM size: %u MiB\n",
