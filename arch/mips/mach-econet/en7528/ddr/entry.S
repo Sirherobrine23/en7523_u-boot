@@ -6,6 +6,9 @@
 	.globl ddr_entry
 	.type ddr_entry, @function
 ddr_entry:
+	/* boot2 jumps here without a C stack; use the top of FE SRAM. */
+	li $sp, 0xbfa3fff0
+	move $fp, $sp
 	la $8, __bss_start
 	la $9, _end
 1:

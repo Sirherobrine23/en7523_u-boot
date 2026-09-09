@@ -9,7 +9,9 @@ DDR calibration ELF used by the VX830v SDK::
 The source ELF is MIPS32r2 big-endian, loads at ``0x9fa30000`` and enters at
 ``0x9fa30280``.  Its LOAD segment has a file size of ``0xd050`` bytes.  The
 stage returns through the address saved in NP-SCU ``SCREG_WR0`` (0xbfb00280),
-which is the handoff used by the EcoNet TPL wrapper.
+which is the handoff used by the SDK boot2 stage. The new flash packer adds
+a jump in the initial zero prefix to enter at +0x280; it does not modify
+this on-disk LOAD image.
 
 SHA256 of the extracted LOAD bytes::
 

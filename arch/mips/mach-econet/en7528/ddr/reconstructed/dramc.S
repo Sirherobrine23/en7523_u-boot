@@ -311,11 +311,11 @@ main:
 .reloc __recon_dramc_1_start + 0x65c, R_MIPS_26, prom_puts
 .reloc __recon_dramc_1_start + 0x66c, R_MIPS_26, prom_print_hex
 .reloc __recon_dramc_1_start + 0x674, R_MIPS_26, prom_puts
-.reloc __recon_dramc_1_start + 0x6b0, R_MIPS_26, do_dqs_gw_calib_1
+.reloc __recon_dramc_1_start + 0x6b0, R_MIPS_26, trace_do_dqs_gw_calib_1
 .reloc __recon_dramc_1_start + 0x6c0, R_MIPS_26, dle_factor_handler
-.reloc __recon_dramc_1_start + 0x6c8, R_MIPS_26, do_sw_rx_dq_dqs_calib
-.reloc __recon_dramc_1_start + 0x6d8, R_MIPS_26, do_dle_calib
-.reloc __recon_dramc_1_start + 0x6e8, R_MIPS_26, do_sw_tx_dq_dqs_calib
+.reloc __recon_dramc_1_start + 0x6c8, R_MIPS_26, trace_do_sw_rx_dq_dqs_calib
+.reloc __recon_dramc_1_start + 0x6d8, R_MIPS_26, trace_do_dle_calib
+.reloc __recon_dramc_1_start + 0x6e8, R_MIPS_26, trace_do_sw_tx_dq_dqs_calib
 .reloc __recon_dramc_1_start + 0x74c, R_MIPS_26, __recon_dramc_1_start
 .reloc __recon_dramc_1_start + 0x768, R_MIPS_HI16, PKG_type
 .reloc __recon_dramc_1_start + 0x770, R_MIPS_LO16, PKG_type
@@ -330,8 +330,8 @@ main:
 .reloc __recon_dramc_1_start + 0x7d4, R_MIPS_HI16, dram_type
 .reloc __recon_dramc_1_start + 0x7d8, R_MIPS_LO16, dram_type
 .reloc __recon_dramc_1_start + 0x7dc, R_MIPS_26, pause_polling
-.reloc __recon_dramc_1_start + 0x7e4, R_MIPS_26, en7512_dramc_init
-.reloc __recon_dramc_1_start + 0x7f4, R_MIPS_26, dramc_calib
+.reloc __recon_dramc_1_start + 0x7e4, R_MIPS_26, trace_en7512_dramc_init
+.reloc __recon_dramc_1_start + 0x7f4, R_MIPS_26, trace_dramc_calib
 .reloc __recon_dramc_1_start + 0x804, R_MIPS_26, prom_puts
 .reloc __recon_dramc_1_start + 0x800, R_MIPS_HI16, $LC7
 .reloc __recon_dramc_1_start + 0x808, R_MIPS_LO16, $LC7
@@ -372,7 +372,7 @@ main:
 .reloc __recon_dramc_1_start + 0x8c4, R_MIPS_26, prom_puts
 .reloc __recon_dramc_1_start + 0x8c0, R_MIPS_HI16, $LC12
 .reloc __recon_dramc_1_start + 0x8c8, R_MIPS_LO16, $LC12
-.reloc __recon_dramc_1_start + 0x8e4, R_MIPS_26, check_column_bank
+.reloc __recon_dramc_1_start + 0x8e4, R_MIPS_26, trace_check_column_bank
 .reloc __recon_dramc_1_start + 0x8ec, R_MIPS_HI16, PKG_type
 .reloc __recon_dramc_1_start + 0x8f0, R_MIPS_LO16, PKG_type
 .reloc __recon_dramc_1_start + 0x918, R_MIPS_26, __recon_dramc_1_start

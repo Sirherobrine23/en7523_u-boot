@@ -1389,6 +1389,37 @@ define deprecated
 
 endef
 
+# Build the standalone EN751627/EN7528 flash entry, without TPL or SPL.
+ifeq ($(CONFIG_ECONET_FLASH_BOOT),y)
+econet-flash-soc-$(CONFIG_TARGET_EN751627) := en751627
+econet-flash-soc-$(CONFIG_TARGET_EN7528) := en7528
+econet-flash-soc := $(econet-flash-soc-y)
+econet-flash-src := $(abspath $(srctree))
+econet-flash-dir := $(econet-flash-src)/arch/mips/mach-econet/flash
+econet-flash-ddr-dir := $(econet-flash-src)/arch/mips/mach-econet/$(econet-flash-soc)/ddr
+quiet_cmd_econet_flash = TCBOOT  $@
+cmd_econet_flash = srctree="$(abspath $(srctree))" objtree="$(CURDIR)" \
+	CROSS_COMPILE="$(CROSS_COMPILE)" $(CONFIG_SHELL) \
+	$(srctree)/tools/build-econet-ddr.sh $(econet-flash-soc) && \
+	srctree="$(abspath $(srctree))" objtree="$(CURDIR)" \
+	CROSS_COMPILE="$(CROSS_COMPILE)" UBOOT_LOAD_ADDR=$(CONFIG_TEXT_BASE) \
+	PYTHON3="$(PYTHON3)" $(CONFIG_SHELL) \
+	$(srctree)/tools/build-econet-flash.sh $(econet-flash-soc)
+
+tcboot.bin: u-boot.img $(wildcard $(econet-flash-dir)/*.[chS]) \
+	$(wildcard $(econet-flash-dir)/*.lds) \
+	$(wildcard $(econet-flash-dir)/$(econet-flash-soc)/*.S) \
+	$(wildcard $(econet-flash-ddr-dir)/reconstructed/*.S) \
+	$(wildcard $(econet-flash-ddr-dir)/*) \
+	$(econet-flash-src)/arch/mips/mach-econet/early_sfc.c \
+	$(econet-flash-src)/tools/build-econet-flash.sh \
+	$(econet-flash-src)/tools/build-econet-ddr.sh \
+	$(econet-flash-src)/tools/econet_flash_image.py FORCE
+	$(call if_changed,econet_flash)
+targets += tcboot.bin
+all: tcboot.bin
+endif
+
 # Build the EcoNet DDR payload before Binman consumes it, including O= builds.
 ifeq ($(CONFIG_ARCH_ECONET)$(CONFIG_TPL),yy)
 econet-ddr-soc-$(CONFIG_TARGET_EN751221) := en751221

@@ -16,11 +16,12 @@ Use a GNU MIPS toolchain capable of generating big-endian MIPS32r2 code::
    make O=build/en751627 en751627_reference_defconfig
    make O=build/en751627 CROSS_COMPILE=mips-linux-gnu- -j4
 
-The result is ``build/en751627/u-boot.bin`` with an appended device tree,
-linked at 0x81000000. This is a RAM-loaded U-Boot proper image. A preceding
-stage must initialize DDR, CPU/cache state, SPI clocks and switch PHYs.
-It is not a replacement flash image for tcboot: this target has no EN751627
-TPL/SPL or cold-boot DDR training implementation.
+``build/en751627/u-boot.bin`` remains a RAM-loaded image with an appended
+device tree, linked at 0x81000000. ``build/en751627/tcboot.bin`` is the 1 MiB
+flash image: SDK entry/CPS setup, DDR calibration and a raw loader occupy
+the first 128 KiB, followed by the U-Boot uImage. See ``tcboot-build.rst``
+for the layout, build inputs and physical NAND/ECC limitations. Peripheral
+bring-up, including switch PHY initialization, still needs board validation.
 
 Hardware description
 --------------------
