@@ -1,19 +1,18 @@
 #!/usr/bin/env python3
 # SPDX-License-Identifier: GPL-2.0+
-"""Merge EN7512 manufacturing information into a U-Boot image."""
+"""Merge EN751221 manufacturing information into a finalized U-Boot image."""
 
 import argparse
 from pathlib import Path
 
-MINFO_OFFSET = 0xFF00
-MINFO_SIZE = 0x100
+from econet_tcboot_image import finalize_image
 
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description=(
-            "copy the 256-byte TCBoot manufacturing block at 0xff00 "
-            "from a stock bootloader into u-boot-en7512.bin"
+            "copy the 256-byte 128 KiB TCBoot manufacturing block at 0xff00 "
+            "from a stock EN751221 bootloader and refresh the TCBoot CRC"
         )
     )
     parser.add_argument("--image", required=True, type=Path,
@@ -29,14 +28,12 @@ def main() -> None:
     args = parse_args()
     image = bytearray(args.image.read_bytes())
     stock = args.stock.read_bytes()
-    end = MINFO_OFFSET + MINFO_SIZE
 
-    if len(image) < end:
-        raise SystemExit(f"input image is too small: {len(image):#x} < {end:#x}")
-    if len(stock) < end:
-        raise SystemExit(f"stock image is too small: {len(stock):#x} < {end:#x}")
+    try:
+        finalize_image(image, "en751221", stock)
+    except ValueError as exc:
+        raise SystemExit(f"en7512 image: {exc}") from exc
 
-    image[MINFO_OFFSET:end] = stock[MINFO_OFFSET:end]
     args.output.write_bytes(image)
 
 

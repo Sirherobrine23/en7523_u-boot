@@ -1400,27 +1400,40 @@ econet-ddr-soc := $(econet-ddr-soc-y)
 econet-ddr-dir := $(srctree)/arch/mips/mach-econet/$(econet-ddr-soc)/ddr
 econet-ddr-image := $(econet-ddr-soc)_ddr.bin
 econet-ddr-script := $(abspath $(srctree)/tools/build-econet-ddr.sh)
+econet-tcboot-script := $(abspath $(srctree)/tools/econet_tcboot_image.py)
+econet-boot-image-$(CONFIG_TARGET_EN751221) := u-boot-en7512.bin
+econet-boot-image-$(CONFIG_TARGET_EN751627) := u-boot-en751627.bin
+econet-boot-image-$(CONFIG_TARGET_EN7528) := u-boot-en7528.bin
+econet-boot-image-$(CONFIG_TARGET_EN7580) := u-boot-en7580.bin
+econet-boot-image := $(econet-boot-image-y)
 
 quiet_cmd_econet_ddr = DDR     $@
 cmd_econet_ddr = srctree="$(abspath $(srctree))" \
 	objtree="$(CURDIR)" CROSS_COMPILE="$(CROSS_COMPILE)" \
 	$(CONFIG_SHELL) $(econet-ddr-script) $(econet-ddr-soc)
+quiet_cmd_econet_tcboot = TCBOOT  $(econet-boot-image)
+cmd_econet_tcboot = $(PYTHON3) $(econet-tcboot-script) \
+	--soc $(econet-ddr-soc) --image $(econet-boot-image)
 
 $(econet-ddr-image): $(wildcard $(econet-ddr-dir)/reconstructed/*.S) \
 		     $(wildcard $(econet-ddr-dir)/*.c) \
 		     $(wildcard $(econet-ddr-dir)/*.S) \
-		     $(econet-ddr-dir)/ddr.lds \
+		     $(wildcard $(econet-ddr-dir)/*.bin) \
+		     $(wildcard $(econet-ddr-dir)/ddr.lds) \
 		     $(econet-ddr-script) FORCE
 	$(call if_changed,econet_ddr)
 
 targets += $(econet-ddr-image)
-.binman_stamp: $(econet-ddr-image)
+.binman_stamp: $(econet-ddr-image) $(econet-tcboot-script)
 endif
 
 # Timestamp file to make sure that binman always runs
 .binman_stamp: $(INPUTS-y) FORCE
 ifeq ($(CONFIG_BINMAN),y)
 	$(call if_changed,binman)
+ifeq ($(CONFIG_ARCH_ECONET)$(CONFIG_TPL),yy)
+	$(call cmd,econet_tcboot)
+endif
 endif
 	@touch $@
 

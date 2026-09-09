@@ -13,9 +13,11 @@ config TARGET_EN751627
 	select SYSCON
 	select MIPS_TUNE_1004KC
 	select MIPS_SKIP_CP0_COUNT_CLEAR
+	select BINMAN
+	select SPL_LOADER_SUPPORT if SPL
 	help
-	  EN7516/EN7527 shares the EN7528 peripheral and CPU support.
-	  This target uses the big-endian vendor first-stage handoff.
+	  EN7516/EN7527 shares most peripheral support with EN7528 but boots
+	  big-endian and uses its own DDR-training payload and TCBoot metadata.
 
 config TARGET_EN7528
 	bool "Airoha EN7528 SoC"
@@ -118,16 +120,18 @@ config BOARD_EN7528_REFERENCE
 	bool "EcoNet EN7528 reference board (DASAN H660GM-A)"
 	select TARGET_EN7528
 	help
-	  Build U-Boot proper for the EcoNet EN7528 reference board, as found
-	  on the DASAN H660GM-A.  Like the XC220-G3V it is chainloaded after a
-	  previous stage has trained DDR, but boots from SPI-NAND.
+	  Build the experimental TPL/SPL replacement image for the EcoNet
+	  EN7528 reference board, as found on the DASAN H660GM-A. TPL runs
+	  from the reset mapping, executes the reconstructed DDR-training
+	  payload from FE SRAM and then loads SPL and U-Boot from SPI-NAND.
 
 config BOARD_EN751627_REFERENCE
-	bool "Airoha EN7516/EN7527 reference board (chainloaded)"
+	bool "Airoha EN7516/EN7527 reference board"
 	depends on SYS_BIG_ENDIAN
 	select TARGET_EN751627
 	help
-	  Build U-Boot proper with integrated Ethernet and SPI-NAND support.
-	  A preceding stage must initialize DDR, CPU clocks and switch PHYs.
+	  Build the experimental TPL/SPL cold-boot replacement image for
+	  EN7516/EN7527. TPL executes the GPL DDR-training payload from FE SRAM,
+	  then loads SPL and U-Boot proper from SPI-NAND.
 
 endmenu
