@@ -84,6 +84,8 @@ void pause_polling(int usec)
 	}
 }
 
+extern void init_system(int is_bootext);
+
 int spram_preprocess(void)
 {
 	/* Cold boot cannot inherit the chainloader's UART configuration. */
@@ -95,7 +97,15 @@ int spram_preprocess(void)
 	REG32(ECONET_UART_BASE + 0x08) = 0x0f;
 	REG32(ECONET_UART_BASE + 0x10) = 0;
 	REG32(ECONET_UART_BASE + 0x24) = 0;
+
+	/*
+	 * Match the normal-flash vendor path.  init_system(0) sets up the
+	 * EN7528 system clock and loads both eFuse macros before DRAM
+	 * detection reads the package and DDR type shadows.
+	 */
+	init_system(0);
 	time_polling_init();
+
 	return 0;
 }
 
