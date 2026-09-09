@@ -66,14 +66,17 @@ config ARCH_BMIPS
 config ARCH_ECONET
 	bool "Support Airoha MIPS platforms"
 	select HAS_FIXED_TIMER_FREQUENCY
+	select CLK
 	select DM
+	select DM_RESET
 	select DM_SERIAL
+	select PINCTRL
+	select PINMUX
+	select RESET_AIROHA
 	select AIROHA_SERIAL
 	select AIROHA_ETH
 	select OF_CONTROL
 	select ROM_EXCEPTION_VECTORS
-	select SUPPORT_BIG_ENDIAN
-	select SUPPORT_LITTLE_ENDIAN
 	select SUPPORTS_CPU_MIPS32_R2
 	select SUPPORT_SPL
 	select SPL_SKIP_LOWLEVEL_INIT if SPL

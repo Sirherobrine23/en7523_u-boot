@@ -1,15 +1,20 @@
 menu "Airoha MIPS platforms"
 	depends on ARCH_ECONET
 
+choice
+	prompt "Airoha MIPS SoC"
+
 config TARGET_EN751221
 	bool "Airoha EN751221 SoC"
+	select SUPPORT_BIG_ENDIAN
 	select SYSCON
 	select MIPS_TUNE_34KC
 	select BINMAN
 	select SPL_LOADER_SUPPORT if SPL
 
 config TARGET_EN751627
-	bool "Airoha EN7516/EN7527 SoC (big-endian)"
+	bool "Airoha EN751627 SoC"
+	select SUPPORT_BIG_ENDIAN
 	select SYSCON
 	select MIPS_TUNE_1004KC
 	select MIPS_SKIP_CP0_COUNT_CLEAR
@@ -20,6 +25,7 @@ config TARGET_EN751627
 
 config TARGET_EN7528
 	bool "Airoha EN7528 SoC"
+	select SUPPORT_LITTLE_ENDIAN
 	select SYSCON
 	select MIPS_TUNE_1004KC
 	select MIPS_SKIP_CP0_COUNT_CLEAR
@@ -27,6 +33,7 @@ config TARGET_EN7528
 
 config TARGET_EN7580
 	bool "Airoha EN7580 SoC"
+	select SUPPORT_LITTLE_ENDIAN
 	select SYSCON
 	select MIPS_TUNE_1004KC
 	select MIPS_SKIP_CP0_COUNT_CLEAR
@@ -36,9 +43,11 @@ config TARGET_EN7580
 	  Select support for the little-endian MIPS32r2 EN7580 family.
 	  Initial support targets direct TPL/SPL bring-up on the XGZ030.
 
+endchoice
+
 config ECONET_FLASH_BOOT
 	bool "Build the unsigned 128 KiB flash entry and raw U-Boot loader"
-	depends on TARGET_EN751627 || TARGET_EN7528
+	depends on TARGET_EN751627 || TARGET_EN7528 || TARGET_EN7580
 	depends on !SPL && !TPL
 	default y
 	help
@@ -97,48 +106,5 @@ config TPL_MAX_SIZE
 
 config BUILD_TARGET
 	default "u-boot.img"
-
-config BOARD_EN7512_REFERENCE
-	bool "EN7512/EN7521 reference board"
-	select TARGET_EN751221
-	help
-	  Build a boot image compatible with the EN7512/EN7521 TCBoot flow.
-	  TPL initializes the serial flash controller, executes the legacy DDR
-	  calibration stage from FE SRAM and loads SPL into DDR.
-
-config BOARD_EN7580_XGZ030
-	bool "XGZ030 (EN7580, experimental TPL/SPL)"
-	select TARGET_EN7580
-	help
-	  Experimental direct-boot target for the XGZ030 EN7580 platform.
-	  TPL runs from the reset mapping, loads the GPL RAM-training payload
-	  into FE SRAM and then loads SPL into DRAM. The DDR and CPS bring-up
-	  paths are not yet validated on hardware.
-
-config BOARD_EN7528_TPLINK_XC220_G3V
-	bool "TP-Link XC220-G3V (EN7528)"
-	select TARGET_EN7528
-	help
-	  Build U-Boot proper for the TP-Link XC220-G3V. This target assumes a
-	  previous boot stage has initialized DDR and the integrated switch PHYs.
-	  u-boot.bin remains usable for serial chainloading. The optional
-	  ECONET_FLASH_BOOT image initializes DDR and loads it from SPI-NOR.
-
-config BOARD_EN7528_REFERENCE
-	bool "EcoNet EN7528 reference board (DASAN H660GM-A)"
-	select TARGET_EN7528
-	help
-	  Build U-Boot for the EcoNet EN7528 reference board. ECONET_FLASH_BOOT
-	  uses the SDK reset/move_data/boot2 stages, initializes DDR in FE SRAM
-	  and runs a raw loader in DRAM to read U-Boot from offset 0x20000.
-
-config BOARD_EN751627_REFERENCE
-	bool "Airoha EN7516/EN7527 reference board"
-	depends on SYS_BIG_ENDIAN
-	select TARGET_EN751627
-	help
-	  Build U-Boot for EN7516/EN7527. ECONET_FLASH_BOOT uses the SDK
-	  reset/move_data/boot2 stages and DDR calibration, then loads U-Boot
-	  from offset 0x20000 with an uncompressed loader in DRAM.
 
 endmenu
