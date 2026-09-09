@@ -6,11 +6,12 @@ dtb-$(CONFIG_TARGET_AP152) += ap152.dtb
 dtb-$(CONFIG_TARGET_MALTA) += mti,malta.dtb
 dtb-$(CONFIG_TARGET_PIC32MZDASK) += pic32mzda_sk.dtb
 dtb-$(CONFIG_TARGET_XILFPGA) += nexys4ddr.dtb
-dtb-$(CONFIG_BOARD_EN7512_REFERENCE) += econet,en751221-reference.dtb
-dtb-$(CONFIG_BOARD_EN7528_TPLINK_XC220_G3V) += econet,en7528-tplink-xc220-g3v.dtb
-dtb-$(CONFIG_BOARD_EN751627_REFERENCE) += econet,en751627-reference.dtb
-dtb-$(CONFIG_BOARD_EN7528_REFERENCE) += econet,en7528-reference.dtb
-dtb-$(CONFIG_BOARD_EN7580_XGZ030) += econet,en7580-xgz030.dtb
+dtb-$(CONFIG_TARGET_EN751221) += econet,en751221-reference.dtb
+dtb-$(CONFIG_TARGET_EN751627) += econet,en751627-reference.dtb
+dtb-$(CONFIG_TARGET_EN7528) += \
+	econet,en7528-reference.dtb \
+	econet,en7528-tplink-xc220-g3v.dtb
+dtb-$(CONFIG_TARGET_EN7580) += econet,en7580-xgz030.dtb
 dtb-$(CONFIG_BOARD_BROADCOM_BCM968380GERG) += brcm,bcm968380gerg.dtb
 dtb-$(CONFIG_BOARD_COMTREND_AR5315U) += comtrend,ar-5315u.dtb
 dtb-$(CONFIG_BOARD_COMTREND_AR5387UN) += comtrend,ar-5387un.dtb
