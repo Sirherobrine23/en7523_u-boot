@@ -13,7 +13,6 @@ config TARGET_EN751627
 	select SYSCON
 	select MIPS_TUNE_1004KC
 	select MIPS_SKIP_CP0_COUNT_CLEAR
-	select BINMAN
 	select SPL_LOADER_SUPPORT if SPL
 	help
 	  EN7516/EN7527 shares most peripheral support with EN7528 but boots
@@ -24,7 +23,6 @@ config TARGET_EN7528
 	select SYSCON
 	select MIPS_TUNE_1004KC
 	select MIPS_SKIP_CP0_COUNT_CLEAR
-	select BINMAN
 	select SPL_LOADER_SUPPORT if SPL
 
 config TARGET_EN7580
@@ -37,6 +35,16 @@ config TARGET_EN7580
 	help
 	  Select support for the little-endian MIPS32r2 EN7580 family.
 	  Initial support targets direct TPL/SPL bring-up on the XGZ030.
+
+config ECONET_FLASH_BOOT
+	bool "Build the unsigned 128 KiB flash entry and raw U-Boot loader"
+	depends on TARGET_EN751627 || TARGET_EN7528
+	depends on !SPL && !TPL
+	default y
+	help
+	  Build tcboot.bin from SDK reset/move_data/boot2, DDR calibration and
+	  a small uncompressed loader. U-Boot proper starts at flash offset
+	  0x20000; the complete image occupies 1 MiB.
 
 config SYS_VENDOR
 	default "econet"
@@ -108,30 +116,29 @@ config BOARD_EN7580_XGZ030
 	  paths are not yet validated on hardware.
 
 config BOARD_EN7528_TPLINK_XC220_G3V
-	bool "TP-Link XC220-G3V (EN7528, chainloaded)"
+	bool "TP-Link XC220-G3V (EN7528)"
 	select TARGET_EN7528
 	help
 	  Build U-Boot proper for the TP-Link XC220-G3V. This target assumes a
 	  previous boot stage has initialized DDR and the integrated switch PHYs.
-	  It intentionally produces a plain u-boot.bin for one-time serial loading,
-	  after which Ethernet/TFTP and the 16 MiB SPI-NOR can be used.
+	  u-boot.bin remains usable for serial chainloading. The optional
+	  ECONET_FLASH_BOOT image initializes DDR and loads it from SPI-NOR.
 
 config BOARD_EN7528_REFERENCE
 	bool "EcoNet EN7528 reference board (DASAN H660GM-A)"
 	select TARGET_EN7528
 	help
-	  Build the experimental TPL/SPL replacement image for the EcoNet
-	  EN7528 reference board, as found on the DASAN H660GM-A. TPL runs
-	  from the reset mapping, executes the reconstructed DDR-training
-	  payload from FE SRAM and then loads SPL and U-Boot from SPI-NAND.
+	  Build U-Boot for the EcoNet EN7528 reference board. ECONET_FLASH_BOOT
+	  uses the SDK reset/move_data/boot2 stages, initializes DDR in FE SRAM
+	  and runs a raw loader in DRAM to read U-Boot from offset 0x20000.
 
 config BOARD_EN751627_REFERENCE
 	bool "Airoha EN7516/EN7527 reference board"
 	depends on SYS_BIG_ENDIAN
 	select TARGET_EN751627
 	help
-	  Build the experimental TPL/SPL cold-boot replacement image for
-	  EN7516/EN7527. TPL executes the GPL DDR-training payload from FE SRAM,
-	  then loads SPL and U-Boot proper from SPI-NAND.
+	  Build U-Boot for EN7516/EN7527. ECONET_FLASH_BOOT uses the SDK
+	  reset/move_data/boot2 stages and DDR calibration, then loads U-Boot
+	  from offset 0x20000 with an uncompressed loader in DRAM.
 
 endmenu

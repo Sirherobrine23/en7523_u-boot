@@ -4,12 +4,16 @@
  * Reconstructed from the vendor TCBoot move_data stage.
  */
 
+#ifdef ECONET_STANDALONE_BOOT
+#include "flash/loader.h"
+#else
 #include <linux/bitops.h>
 #include <linux/errno.h>
 #include <linux/kernel.h>
 #include <linux/types.h>
 #include <asm/io.h>
 #include <mach/boot.h>
+#endif
 
 #define SF_READ_IDLE_EN		0x004
 #define SF_MTX_MODE_TOG		0x014
@@ -320,6 +324,10 @@ static int sf_nor_read(u32 offset, u8 *dst, size_t len, bool addr4b,
 int econet_sfc_read(u32 offset, void *dst, size_t len)
 {
 	u32 strap = __raw_readl(sf_reg(SF_STRAP));
+	u32 page_size = NAND_PAGE_SIZE;
+#ifdef ECONET_STANDALONE_BOOT
+	u32 shift;
+#endif
 	u8 *buf = dst;
 	int ret;
 
@@ -327,10 +335,18 @@ int econet_sfc_read(u32 offset, void *dst, size_t len)
 		return sf_nor_read(offset, buf, len, strap & SF_STRAP_ADDR_4B,
 				   strap & SF_STRAP_DUMMY_APPEND);
 
+	/* move_data detects the NAND page shift during cold boot. */
+#ifdef ECONET_STANDALONE_BOOT
+	shift = __raw_readl((void *)0xbfa40020);
+
+	if (shift < 11 || shift > 13)
+		return -EINVAL;
+	page_size = 1U << shift;
+#endif
 	while (len) {
-		u32 page = offset / NAND_PAGE_SIZE;
-		u32 column = offset % NAND_PAGE_SIZE;
-		size_t chunk = NAND_PAGE_SIZE - column;
+		u32 page = offset / page_size;
+		u32 column = offset % page_size;
+		size_t chunk = page_size - column;
 
 		if (chunk > len)
 			chunk = len;
