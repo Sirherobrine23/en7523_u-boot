@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
-/* Minimal runtime used by the reconstructed EN7528 DDR calibration code. */
+/* Minimal runtime used by the readable EN7528 DDR calibration code. */
 
 typedef unsigned char u8;
 typedef unsigned int u32;
@@ -109,9 +109,8 @@ int spram_preprocess(void)
 	return 0;
 }
 
-int spram_postprocess(void)
+void spram_postprocess(void)
 {
-	return 0;
 }
 
 /* Temporary cold-boot diagnostics: preserve each calibration return value. */
