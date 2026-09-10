@@ -1399,8 +1399,9 @@ econet-flash-dir := $(econet-flash-src)/arch/mips/mach-econet/flash
 econet-flash-ddr-dir := $(econet-flash-src)/arch/mips/mach-econet/$(econet-flash-soc)/ddr
 quiet_cmd_econet_flash = TCBOOT  $@
 cmd_econet_flash = srctree="$(abspath $(srctree))" objtree="$(CURDIR)" \
-	CROSS_COMPILE="$(CROSS_COMPILE)" $(CONFIG_SHELL) \
-	$(srctree)/tools/build-econet-ddr.sh $(econet-flash-soc) && \
+	CROSS_COMPILE="$(CROSS_COMPILE)" \
+	ECONET_EN7528_READABLE_DDR="$(CONFIG_ECONET_EN7528_READABLE_DDR)" \
+	$(CONFIG_SHELL) $(srctree)/tools/build-econet-ddr.sh $(econet-flash-soc) && \
 	srctree="$(abspath $(srctree))" objtree="$(CURDIR)" \
 	CROSS_COMPILE="$(CROSS_COMPILE)" UBOOT_LOAD_ADDR=$(CONFIG_TEXT_BASE) \
 	PYTHON3="$(PYTHON3)" $(CONFIG_SHELL) \
@@ -1410,6 +1411,7 @@ tcboot.bin: u-boot.img $(wildcard $(econet-flash-dir)/*.[chS]) \
 	$(wildcard $(econet-flash-dir)/*.lds) \
 	$(wildcard $(econet-flash-dir)/$(econet-flash-soc)/*.S) \
 	$(wildcard $(econet-flash-ddr-dir)/reconstructed/*.S) \
+	$(wildcard $(econet-flash-ddr-dir)/readable/*) \
 	$(wildcard $(econet-flash-ddr-dir)/*) \
 	$(econet-flash-src)/arch/mips/mach-econet/early_sfc.c \
 	$(econet-flash-src)/tools/build-econet-flash.sh \
@@ -1441,12 +1443,14 @@ econet-boot-image := $(econet-boot-image-y)
 quiet_cmd_econet_ddr = DDR     $@
 cmd_econet_ddr = srctree="$(abspath $(srctree))" \
 	objtree="$(CURDIR)" CROSS_COMPILE="$(CROSS_COMPILE)" \
+	ECONET_EN7528_READABLE_DDR="$(CONFIG_ECONET_EN7528_READABLE_DDR)" \
 	$(CONFIG_SHELL) $(econet-ddr-script) $(econet-ddr-soc)
 quiet_cmd_econet_tcboot = TCBOOT  $(econet-boot-image)
 cmd_econet_tcboot = $(PYTHON3) $(econet-tcboot-script) \
 	--soc $(econet-ddr-soc) --image $(econet-boot-image)
 
 $(econet-ddr-image): $(wildcard $(econet-ddr-dir)/reconstructed/*.S) \
+		     $(wildcard $(econet-ddr-dir)/readable/*) \
 		     $(wildcard $(econet-ddr-dir)/*.c) \
 		     $(wildcard $(econet-ddr-dir)/*.S) \
 		     $(wildcard $(econet-ddr-dir)/*.bin) \
