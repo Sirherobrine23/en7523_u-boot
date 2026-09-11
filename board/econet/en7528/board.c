@@ -21,7 +21,7 @@ int board_late_init(void)
 		return 0;
 
 	/* Probe only after the serial console is available for diagnostics. */
-	ret = uclass_get_device_by_driver(UCLASS_MISC,
+	ret = uclass_get_device_by_driver(UCLASS_SIMPLE_BUS,
 					  DM_DRIVER_GET(airoha_eth), &dev);
 	if (ret)
 		printf("EN751627/EN7528 Ethernet probe failed: %d\n", ret);

@@ -608,6 +608,7 @@ struct airoha_eth_soc_data {
 	bool direct_reset;
 	bool late_probe;
 	bool dscp_byte_swap;
+	bool switch_mdio;
 	int num_xsi_rsts;
 	const char * const *xsi_rsts_names;
 	const char *switch_compatible;
@@ -2440,8 +2441,8 @@ static int airoha_eth_probe(struct udevice *dev)
 	if (ret)
 		return ret;
 
-	/* Airoha switch mdio PHYs maybe used by several GDM devices */
-	if (!data->econet && data->version != 0x7528) {
+	/* Switch MDIO PHYs may be used by several GDM devices. */
+	if (data->switch_mdio) {
 		mdio_dev = airoha_switch_mdio_init(dev);
 		if (!IS_ERR_OR_NULL(mdio_dev))
 			eth->switch_mdio_dev = mdio_dev;
@@ -2502,9 +2503,6 @@ static int airoha_eth_port_probe(struct udevice *dev)
 		return -EINVAL;
 #endif
 	} else {
-		if (eth->soc->econet)
-			return 0;
-
 		/*
 		 * GDM1 device connected to airoha switch. Probe airoha switch
 		 * mdio to be able set/query states of corresponding LAN ports.
@@ -3158,6 +3156,7 @@ static const struct airoha_eth_soc_data en7523_data = {
 	.version = 0x7523,
 	.xsi_rsts_names = en7523_xsi_rsts_names,
 	.num_xsi_rsts = ARRAY_SIZE(en7523_xsi_rsts_names),
+	.switch_mdio = true,
 	.switch_compatible = "airoha,en7523-switch",
 };
 
@@ -3169,6 +3168,7 @@ static const struct airoha_eth_soc_data en751221_data = {
 	.direct_reset = true,
 	.late_probe = true,
 	.dscp_byte_swap = true,
+	.switch_mdio = true,
 	.switch_compatible = "econet,en751221-switch",
 };
 
@@ -3194,6 +3194,7 @@ static const struct airoha_eth_soc_data en7581_data = {
 	.version = 0x7581,
 	.xsi_rsts_names = en7581_xsi_rsts_names,
 	.num_xsi_rsts = ARRAY_SIZE(en7581_xsi_rsts_names),
+	.switch_mdio = true,
 	.switch_compatible = "airoha,en7581-switch",
 };
 
@@ -3201,6 +3202,7 @@ static const struct airoha_eth_soc_data an7583_data = {
 	.version = 0x7583,
 	.xsi_rsts_names = an7583_xsi_rsts_names,
 	.num_xsi_rsts = ARRAY_SIZE(an7583_xsi_rsts_names),
+	.switch_mdio = true,
 	.switch_compatible = "airoha,an7583-switch",
 };
 
@@ -3247,7 +3249,7 @@ U_BOOT_DRIVER(airoha_eth_port) = {
 
 U_BOOT_DRIVER(airoha_eth) = {
 	.name = "airoha-eth",
-	.id = UCLASS_MISC,
+	.id = UCLASS_SIMPLE_BUS,
 	.of_match = airoha_eth_ids,
 	.probe = airoha_eth_probe,
 	.bind = airoha_eth_bind,
