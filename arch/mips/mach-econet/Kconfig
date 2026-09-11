@@ -47,7 +47,6 @@ endchoice
 
 config ECONET_FLASH_BOOT
 	bool "Build the unsigned 128 KiB flash entry and raw U-Boot loader"
-	depends on TARGET_EN751627 || TARGET_EN7528 || TARGET_EN7580
 	depends on !SPL && !TPL
 	default y
 	help

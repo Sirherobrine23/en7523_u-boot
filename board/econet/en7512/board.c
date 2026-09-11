@@ -25,7 +25,7 @@ int board_late_init(void)
 	 * driver model is being initialized. Probe it after the console is
 	 * usable and just before initr_net() enumerates UCLASS_ETH devices.
 	 */
-	ret = uclass_get_device_by_driver(UCLASS_MISC,
+	ret = uclass_get_device_by_driver(UCLASS_SIMPLE_BUS,
 					  DM_DRIVER_GET(airoha_eth), &dev);
 	if (ret && ret != -ENODEV)
 		printf("EN751221 Ethernet probe failed: %d\n", ret);
