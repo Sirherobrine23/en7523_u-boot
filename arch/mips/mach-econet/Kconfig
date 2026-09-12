@@ -9,7 +9,6 @@ config TARGET_EN751221
 	select SUPPORT_BIG_ENDIAN
 	select SYSCON
 	select MIPS_TUNE_34KC
-	select BINMAN
 	select SPL_LOADER_SUPPORT if SPL
 
 config TARGET_EN751627
