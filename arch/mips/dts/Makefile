@@ -10,6 +10,7 @@ dtb-$(CONFIG_TARGET_EN751221) += econet,en751221-reference.dtb
 dtb-$(CONFIG_TARGET_EN751627) += econet,en751627-reference.dtb
 dtb-$(CONFIG_TARGET_EN7528) += \
 	econet,en7528-reference.dtb \
+	econet,en751221-nokia_g240g-e.dts \
 	econet,en7528-tplink-xc220-g3v.dtb
 dtb-$(CONFIG_TARGET_EN7580) += econet,en7580-xgz030.dtb
 dtb-$(CONFIG_BOARD_BROADCOM_BCM968380GERG) += brcm,bcm968380gerg.dtb

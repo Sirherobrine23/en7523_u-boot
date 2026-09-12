@@ -1,0 +1,149 @@
+// SPDX-License-Identifier: GPL-2.0+
+/dts-v1/;
+
+#include "econet,en751221.dtsi"
+
+/ {
+	model = "Airoha EN751221 reference board";
+	compatible = "econet,en751221-reference", "econet,en751221";
+
+	chosen {
+		stdout-path = "serial0:115200n8";
+	};
+
+	keys {
+		compatible = "gpio-keys";
+
+		reset {
+			label = "reset";
+			linux,code = <KEY_RESTART>;
+			gpios = <&pinctrl 0 GPIO_ACTIVE_LOW>;
+			debounce-interval = <60>;
+		};
+
+		wps5 {
+			label = "led";
+			linux,code = <BTN_0>;
+			gpios = <&pinctrl 5 GPIO_ACTIVE_LOW>;
+			debounce-interval = <60>;
+		};
+	};
+
+	leds {
+		compatible = "gpio-leds";
+
+		/* Power Green */
+		power_green: led@6 {
+			color = <LED_COLOR_ID_GREEN>;
+			function = LED_FUNCTION_STATUS;
+			function-enumerator = <6>;
+			gpios = <&pinctrl 6 GPIO_ACTIVE_LOW>;
+		};
+
+		/* Power Red */
+		power_red: led@9 {
+			color = <LED_COLOR_ID_RED>;
+			function = LED_FUNCTION_STATUS;
+			function-enumerator = <9>;
+			gpios = <&pinctrl 9 GPIO_ACTIVE_LOW>;
+		};
+
+		/* xPON/Internet */
+		pon_led: led@2 {
+			color = <LED_COLOR_ID_RED>;
+			function = LED_FUNCTION_STATUS;
+			function-enumerator = <2>;
+			gpios = <&pinctrl 2 GPIO_ACTIVE_LOW>;
+		};
+
+		/* USB */
+		led@11 {
+			color = <LED_COLOR_ID_GREEN>;
+			function = LED_FUNCTION_USB;
+			function-enumerator = <11>;
+			gpios = <&pinctrl 11 GPIO_ACTIVE_LOW>;
+		};
+
+		/* AUTH */
+		pon_los: led@24 {
+			color = <LED_COLOR_ID_GREEN>;
+			function = LED_FUNCTION_STATUS;
+			function-enumerator = <24>;
+			gpios = <&pinctrl 24 GPIO_ACTIVE_LOW>;
+		};
+
+		/* FXS1 */
+		led@25 {
+			color = <LED_COLOR_ID_GREEN>;
+			function = LED_FUNCTION_STATUS;
+			function-enumerator = <25>;
+			gpios = <&pinctrl 25 GPIO_ACTIVE_LOW>;
+		};
+
+		/* FXS2 */
+		led@26 {
+			color = <LED_COLOR_ID_GREEN>;
+			function = LED_FUNCTION_STATUS;
+			function-enumerator = <26>;
+			gpios = <&pinctrl 26 GPIO_ACTIVE_LOW>;
+		};
+
+		/* Internet */
+		led@28 {
+			color = <LED_COLOR_ID_GREEN>;
+			function = LED_FUNCTION_STATUS;
+			function-enumerator = <28>;
+			gpios = <&pinctrl 28 GPIO_ACTIVE_LOW>;
+		};
+
+		/* VoIP */
+		led@29 {
+			color = <LED_COLOR_ID_GREEN>;
+			function = LED_FUNCTION_STATUS;
+			function-enumerator = <29>;
+			gpios = <&pinctrl 29 GPIO_ACTIVE_LOW>;
+		};
+	};
+};
+
+&uart0 {
+	status = "okay";
+};
+
+&eth {
+	status = "okay";
+};
+
+&gdm1 {
+	status = "okay";
+};
+
+&switch0 {
+	status = "okay";
+};
+
+
+&spi0 {
+	status = "okay";
+
+	nand: nand@0 {
+		compatible = "spi-nand";
+		reg = <0>;
+
+		partitions {
+			compatible = "fixed-partitions";
+			#address-cells = <1>;
+			#size-cells = <1>;
+	
+			partition@0 {
+				label = "u-boot";
+				reg = <0x000000 0x100000>;
+			};
+	
+			partition@100000 {
+				label = "ubi";
+				reg = <0x100000 0x000000>;
+			};
+		};
+	};
+};
