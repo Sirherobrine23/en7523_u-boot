@@ -45,6 +45,21 @@ config TARGET_EN7580
 
 endchoice
 
+config ECONET_BOOTROM_CHAINLOADER
+	bool "Build the BootROM XMODEM chainloader"
+	depends on TARGET_EN751221
+	default y
+	help
+	  Build en751221-chainloader.bin, a ~10 KiB standalone loader for the
+	  EN751221 internal BootROM recovery path.
+
+	  The BootROM downloads it to 0x80009000 over XMODEM and jumps there;
+	  it then pulls an unmodified u-boot.bin over XMODEM into
+	  CONFIG_TEXT_BASE and jumps to it. Nothing in U-Boot proper changes,
+	  and DRAM is already calibrated by the BootROM at that point.
+
+	  See arch/mips/mach-econet/chainloader/README.rst.
+
 config ECONET_FLASH_BOOT
 	bool "Build the unsigned 128 KiB flash entry and raw U-Boot loader"
 	depends on !SPL && !TPL
