@@ -1422,6 +1422,27 @@ targets += tcboot.bin
 all: tcboot.bin
 endif
 
+# Build the EN751221 BootROM XMODEM chainloader.
+ifeq ($(CONFIG_ECONET_BOOTROM_CHAINLOADER),y)
+econet-chain-soc := en751221
+econet-chain-src := $(abspath $(srctree))
+econet-chain-dir := $(econet-chain-src)/arch/mips/mach-econet/chainloader
+econet-chain-image := $(econet-chain-soc)-chainloader.bin
+quiet_cmd_econet_chainloader = CHAIN   $@
+cmd_econet_chainloader = srctree="$(abspath $(srctree))" objtree="$(CURDIR)" \
+	CROSS_COMPILE="$(CROSS_COMPILE)" UBOOT_LOAD_ADDR=$(CONFIG_TEXT_BASE) \
+	PYTHON3="$(PYTHON3)" $(CONFIG_SHELL) \
+	$(econet-chain-src)/tools/build-econet-chainloader.sh $(econet-chain-soc)
+
+$(econet-chain-image): $(wildcard $(econet-chain-dir)/*.[cS]) \
+	$(econet-chain-dir)/chainloader.lds \
+	$(econet-chain-src)/tools/build-econet-chainloader.sh \
+	$(econet-chain-src)/tools/econet_chainloader_image.py FORCE
+	$(call if_changed,econet_chainloader)
+targets += $(econet-chain-image)
+all: $(econet-chain-image)
+endif
+
 # Build the EcoNet DDR payload before Binman consumes it, including O= builds.
 ifeq ($(CONFIG_ARCH_ECONET)$(CONFIG_TPL),yy)
 econet-ddr-soc-$(CONFIG_TARGET_EN751221) := en751221
