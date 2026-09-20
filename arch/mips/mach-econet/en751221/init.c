@@ -39,12 +39,13 @@ static void en751221_clear_bootrom_recovery_latch(void)
 #define EN751221_INTC_IPSR(n)	(0x10 + 4 * (n))
 
 /*
- * Interrupt priority table of the interrupt controller, as the BootROM leaves
- * it on the XMODEM recovery path (the OEM bootloader programmed the same
- * thing on the flash path). One byte per priority slot, each naming an
- * interrupt source. Linux's en751221 intc driver never programs these
- * registers; with the table left at zero no source reaches the CPU and the
- * kernel stops in calibrate_delay(), waiting for its first timer tick.
+ * Interrupt priority table observed after BootROM XMODEM recovery on the
+ * XR500v. One byte per priority slot, each naming an interrupt source.
+ * Older Linux EN751221 interrupt-controller drivers rely on this table
+ * being initialized before handoff: with it left at zero, the tested kernel
+ * stops in calibrate_delay(), waiting for its first timer tick. Newer
+ * kernels initialize the table themselves. Keep this fallback for kernels
+ * that do not, without replacing an existing nonzero table.
  */
 static const u32 en751221_intc_ipsr[] = {
 	0x1f1e1d13, 0x16150111, 0x0008090a, 0x0b0c0d0f,
