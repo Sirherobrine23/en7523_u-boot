@@ -42,21 +42,24 @@ config TARGET_EN7580
 endchoice
 
 config SYS_VENDOR
-	default "econet"
+	default "airoha"
 
 config SYS_SOC
 	default "en751221" if TARGET_EN751221
-	default "en7528" if TARGET_EN7528 || TARGET_EN751627
+	default "en751627" if TARGET_EN751627
+	default "en7528" if TARGET_EN7528
 	default "en7580" if TARGET_EN7580
 
 config SYS_BOARD
 	default "en7512" if TARGET_EN751221
-	default "en7528" if TARGET_EN7528 || TARGET_EN751627
+	default "en751627" if TARGET_EN751627
+	default "en7528" if TARGET_EN7528
 	default "en7580" if TARGET_EN7580
 
 config SYS_CONFIG_NAME
 	default "en7512" if TARGET_EN751221
-	default "en7528" if TARGET_EN7528 || TARGET_EN751627
+	default "en751627" if TARGET_EN751627
+	default "en7528" if TARGET_EN7528
 	default "en7580" if TARGET_EN7580
 
 config SYS_MALLOC_F_LEN
@@ -78,6 +81,6 @@ config TEXT_BASE
 	default 0x81000000
 
 config BUILD_TARGET
-	default "u-boot.img"
+	default "u-boot.bin"
 
 endmenu
