@@ -10,7 +10,7 @@ bootloaderfile=openwrt-airoha-en7528-tplink_xc220-g3v-uboot-bootloader.bin
 boot_tftp=tftpboot $loadaddr $bootfile && bootm $loadaddr#$bootconf
 nor_read_openwrt=mtd read firmware $loadaddr 0x0 0x800000 && iminfo $loadaddr
 
-boot_openwrt=led $bootled_pwr blink 255; ( run nor_read_openwrt || echo Install openwrt ; run boot_tftp ) && bootm $loadaddr#$bootconf ; led $bootled_pwr on
+boot_openwrt=led $bootled_pwr blink 255; run nor_read_openwrt && bootm $loadaddr#$bootconf; echo Install openwrt ; run boot_tftp ; led $bootled_pwr on
 
 upgrade_uboot=\
   mw.b 0x89400000 0xff 0x100000 && tftpboot 0x89400000 ${bootloaderfile} && \
