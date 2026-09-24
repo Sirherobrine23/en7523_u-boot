@@ -1,0 +1,18 @@
+loadaddr=0x89400000
+ipaddr=192.168.1.1
+serverip=192.168.1.10
+
+bootconf=config-1
+bootfile=openwrt-airoha-en7528-en7528_generic-initramfs-kernel.bin
+
+boot_tftp=tftpboot $loadaddr $bootfile && bootm $loadaddr#$bootconf
+
+bootcmd=run boot_tftp
+bootdelay=3
+bootmenu_confirm_return=askenv - Press ENTER to return to menu ; bootmenu 20
+bootmenu_default=0
+bootmenu_delay=3
+bootmenu_title=      34m( ( ( mOpenWrt34m ) ) )
+bootmenu_0=Run default boot command.=run boot_tftp
+bootmenu_1=Boot system via TFTP.=run boot_tftp ; run bootmenu_confirm_return
+bootmenu_5=Reboot.=reset
