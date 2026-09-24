@@ -16,6 +16,7 @@ config TARGET_EN751627
 	select SUPPORT_BIG_ENDIAN
 	select SYSCON
 	select MIPS_TUNE_1004KC
+	select PINCTRL_AIROHA_EN751627
 	select MIPS_SKIP_CP0_COUNT_CLEAR
 	help
 	  EN7516/EN7527 shares most peripheral support with EN7528 but boots
@@ -34,6 +35,7 @@ config TARGET_EN7580
 	select SUPPORT_LITTLE_ENDIAN
 	select SYSCON
 	select MIPS_TUNE_1004KC
+	select PINCTRL_AIROHA_EN7580
 	select MIPS_SKIP_CP0_COUNT_CLEAR
 	help
 	  Select support for the little-endian MIPS32r2 EN7580 family.
