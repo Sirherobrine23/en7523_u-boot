@@ -8,11 +8,11 @@ bootfile=openwrt-airoha-en751221-tplink_archer-xr500v-v1-initramfs-kernel.bin
 bootloaderfile=openwrt-airoha-en751221-tplink_archer-xr500v-v1-uboot-bootloader.bin
 
 boot_tftp=tftpboot $loadaddr $bootfile && bootm $loadaddr#$bootconf
-ubi_read_openwrt=ubi read $loadaddr fit && iminfo $loadaddr
+ubi_read_openwrt=ubi read $loadaddr fit
 
-set_ethaddr=ubi read 0x89f00000 misc 0x480000 && bin2mac ethaddr 0x89f0f100 6
+set_ethaddr=ubi read 0x89f00000 misc 0x10000 && bin2mac ethaddr 0x89f0f100 6
 
-boot_openwrt=led $bootled blink 255; run set_ethaddr; if run ubi_read_openwrt; then bootm $loadaddr#$bootconf; else echo Install openwrt; run boot_tftp; fi; led $bootled on
+boot_openwrt=led $bootled blink 255; run set_ethaddr; if run ubi_read_openwrt; then bootm $loadaddr#$bootconf; fi; echo Install openwrt; run boot_tftp; led $bootled on
 boot_ubi=ubi part ubi && run boot_openwrt
 
 upgrade_uboot=\
@@ -49,7 +49,7 @@ format_ubi_part=\
   fi
 
 bootcmd=run boot_ubi
-bootdelay=3
+bootdelay=1
 bootmenu_confirm_return=askenv - Press ENTER to return to menu ; bootmenu 20
 bootmenu_default=0
 bootmenu_delay=3
