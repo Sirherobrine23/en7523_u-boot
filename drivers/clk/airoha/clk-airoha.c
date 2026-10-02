@@ -23,6 +23,7 @@
 #include <dt-bindings/clock/en7523-clk.h>
 #include <dt-bindings/clock/econet,en751221-scu.h>
 #include <dt-bindings/clock/econet,en7528-scu.h>
+#include <dt-bindings/clock/econet,en7580-scu.h>
 
 #define REG_GSW_CLK_DIV_SEL		0x1b4
 #define REG_EMI_CLK_DIV_SEL		0x1b8
@@ -78,6 +79,15 @@
 #define EN7581_MAX_CLKS			9
 #define EN7583_MAX_CLKS			11
 
+/* EN7580 SPI clock: 400 MHz / (2 * divider), enabled by bit 0. */
+#define EN7580_REG_SPI_DIV		0x1b8
+#define EN7580_SPI_DIV_MASK		GENMASK(15, 8)
+#define EN7580_SPI_CLK_EN		BIT(0)
+#define EN7580_SPI_BASE			400000000UL
+#define EN7580_REG_SAVE_INFO		0x284
+#define EN7580_SYS_CLK_MASK		GENMASK(19, 10)
+#define EN7580_MAX_CLKS			4
+
 struct airoha_clk_desc {
 	int id;
 	const char *name;
@@ -119,6 +129,7 @@ struct airoha_clk_priv {
 
 struct airoha_clk_soc_data {
 	u32 num_clocks;
+	enum airoha_pkg version;
 	const struct airoha_clk_desc *descs;
 	const struct airoha_econet_clk_data *econet;
 };
@@ -628,6 +639,34 @@ static int airoha_econet_pcie_enable(struct airoha_clk_priv *priv)
 	return 0;
 }
 
+static ulong en7580_clk_get_rate(struct airoha_clk_priv *priv, unsigned int id)
+{
+	u32 val;
+	int ret;
+
+	switch (id) {
+	case EN7580_CLK_SPI:
+		ret = regmap_read(priv->chip_scu_map, EN7580_REG_SPI_DIV, &val);
+		if (ret)
+			return ret;
+		val = (val & EN7580_SPI_DIV_MASK) >> 8;
+		return val ? EN7580_SPI_BASE / (2 * val) : 0;
+	case EN7580_CLK_BUS:
+	case EN7580_CLK_CPU:
+		/* Boot ROM records the bus frequency in MHz at NP-SCU + 0x284. */
+		ret = regmap_read(priv->scu_map, EN7580_REG_SAVE_INFO, &val);
+		if (ret)
+			return ret;
+		val = (val & EN7580_SYS_CLK_MASK) >> 10;
+		return val * 1000000UL * (id == EN7580_CLK_CPU ? 5 : 1);
+	case EN7580_CLK_PCIE:
+		/* Gate only; the SDK does not provide a reference-clock rate. */
+		return 0;
+	default:
+		return -EINVAL;
+	}
+}
+
 static int airoha_clk_enable(struct clk *clk)
 {
 	struct airoha_clk_priv *priv = dev_get_priv(clk->dev);
@@ -636,6 +675,13 @@ static int airoha_clk_enable(struct clk *clk)
 
 	if (id >= data->num_clocks)
 		return -EINVAL;
+
+	if (data->version == EN7580_PKG && id == EN7580_CLK_PCIE)
+		return airoha_econet_pcie_enable(priv);
+
+	if (data->version == EN7580_PKG && id == EN7580_CLK_SPI)
+		return regmap_set_bits(priv->chip_scu_map, EN7580_REG_SPI_DIV,
+				      EN7580_SPI_CLK_EN);
 
 	if (data->econet && id == EN751221_CLK_PCIE)
 		return airoha_econet_pcie_enable(priv);
@@ -646,6 +692,17 @@ static int airoha_clk_enable(struct clk *clk)
 static int airoha_clk_disable(struct clk *clk)
 {
 	struct airoha_clk_priv *priv = dev_get_priv(clk->dev);
+
+	if (clk->id >= priv->data->num_clocks)
+		return -EINVAL;
+
+	if (priv->data->version == EN7580_PKG && clk->id == EN7580_CLK_PCIE)
+		return regmap_clear_bits(priv->scu_map, REG_PCI_CONTROL,
+					 REG_PCI_CONTROL_REFCLK_EN1);
+
+	if (priv->data->version == EN7580_PKG && clk->id == EN7580_CLK_SPI)
+		return regmap_clear_bits(priv->chip_scu_map, EN7580_REG_SPI_DIV,
+					 EN7580_SPI_CLK_EN);
 
 	if (priv->data->econet && clk->id == EN751221_CLK_PCIE)
 		return regmap_clear_bits(priv->scu_map, REG_PCI_CONTROL,
@@ -669,6 +726,9 @@ static ulong airoha_clk_get_rate(struct clk *clk)
 		dev_err(clk->dev, "Invalid clk ID %d\n", id);
 		return 0;
 	}
+
+	if (data->version == EN7580_PKG)
+		return en7580_clk_get_rate(priv, id);
 
 	if (data->econet)
 		return airoha_econet_clk_get_rate(priv, id);
@@ -734,6 +794,27 @@ static ulong airoha_clk_set_rate(struct clk *clk, ulong rate)
 	if (id >= data->num_clocks) {
 		dev_err(clk->dev, "Invalid clk ID %d\n", id);
 		return 0;
+	}
+
+	if (data->version == EN7580_PKG) {
+		if (id != EN7580_CLK_SPI)
+			return -EOPNOTSUPP;
+		if (!rate || rate > EN7580_SPI_BASE / 2)
+			return -EINVAL;
+		/* Round down so the flash clock never exceeds the requested rate. */
+		div = DIV_ROUND_UP(EN7580_SPI_BASE / 2, rate);
+		if (div > 255)
+			return -EINVAL;
+		ret = regmap_read(map, EN7580_REG_SPI_DIV, &val);
+		if (ret)
+			return ret;
+		/* The SDK disables the clock before replacing its divider. */
+		ret = regmap_write(map, EN7580_REG_SPI_DIV, val & ~GENMASK(15, 0));
+		if (ret)
+			return ret;
+		val = (val & ~GENMASK(15, 0)) | (div << 8) | EN7580_SPI_CLK_EN;
+		ret = regmap_write(map, EN7580_REG_SPI_DIV, val);
+		return ret ? ret : EN7580_SPI_BASE / (2 * div);
 	}
 
 	if (data->econet) {
@@ -876,16 +957,19 @@ static int airoha_clk_bind(struct udevice *dev)
 }
 
 static const struct airoha_clk_soc_data en7523_data = {
+	.version = EN7523_PKG,
 	.num_clocks = ARRAY_SIZE(en7523_base_clks),
 	.descs = en7523_base_clks,
 };
 
 static const struct airoha_clk_soc_data en7581_data = {
+	.version = EN7581_PKG,
 	.num_clocks = ARRAY_SIZE(en7581_base_clks),
 	.descs = en7581_base_clks,
 };
 
 static const struct airoha_clk_soc_data an7583_data = {
+	.version = AN7583_PKG,
 	.num_clocks = ARRAY_SIZE(an7583_base_clks),
 	.descs = an7583_base_clks,
 };
@@ -904,6 +988,7 @@ static const struct airoha_econet_clk_data en751221_econet_data = {
 };
 
 static const struct airoha_clk_soc_data en751221_data = {
+	.version = EN751221_PKG,
 	.num_clocks = EN751221_MAX_CLKS,
 	.econet = &en751221_econet_data,
 };
@@ -920,8 +1005,14 @@ static const struct airoha_econet_clk_data en7528_econet_data = {
 };
 
 static const struct airoha_clk_soc_data en7528_data = {
+	.version = EN7528_PKG,
 	.num_clocks = EN7528_MAX_CLKS,
 	.econet = &en7528_econet_data,
+};
+
+static const struct airoha_clk_soc_data en7580_data = {
+	.version = EN7580_PKG,
+	.num_clocks = EN7580_MAX_CLKS,
 };
 
 static const struct udevice_id airoha_clk_ids[] = {
@@ -930,6 +1021,9 @@ static const struct udevice_id airoha_clk_ids[] = {
 	},
 	{ .compatible = "airoha,en7528-scu",
 	  .data = (ulong)&en7528_data,
+	},
+	{ .compatible = "airoha,en7580-scu",
+	  .data = (ulong)&en7580_data,
 	},
 	{ .compatible = "airoha,en7523-scu",
 	  .data = (ulong)&en7523_data,

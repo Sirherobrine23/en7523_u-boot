@@ -33,3 +33,11 @@
 		spi-rx-bus-width = <1>;
 	};
 };
+
+&eth {
+	status = "okay";
+};
+
+&switch {
+	status = "okay";
+};

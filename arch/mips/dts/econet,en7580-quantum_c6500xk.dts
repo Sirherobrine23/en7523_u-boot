@@ -22,9 +22,6 @@
 	status = "okay";
 };
 
-&spi0 {
-	status = "okay";
-
 /*
 [    3.222338] 0x000000000000-0x000000200000 : "bootloader"
 [    3.242515] 0x000000200000-0x000000400000 : "dsd"
@@ -34,7 +31,9 @@
 [    3.500182] 0x00001c400000-0x00001c600000 : "uenv"
 [    3.517237] 0x00001d5c0000-0x00001d740000 : "art"
 */
-	
+&spi0 {
+	status = "okay";
+
 	flash@0 {
 		compatible = "spi-nand";
 		reg = <0>;
@@ -47,40 +46,99 @@
 			#address-cells = <1>;
 			#size-cells = <1>;
 
-			bootloader@0 {
-				label = "tcboot";
+			partition@0 {
+				label = "bootloader";
 				reg = <0x00000000 0x00200000>;
 				read-only;
 			};
 
-			dsd@200000 {
+			partition@200000 {
 				label = "dsd";
 				reg = <0x00200000 0x00200000>;
+				read-only;
+
+				nvmem-layout {
+					compatible = "fixed-layout";
+					#address-cells = <1>;
+					#size-cells = <1>;
+
+					ble_mac: mac-address@6c {
+						compatible = "mac-base";
+						reg = <0x006c 0x11>;
+						#nvmem-cell-cells = <1>;
+					};
+
+					clei_code: clei-code@88 {
+						reg = <0x0088 0x0a>;
+					};
+
+					gpon_serial: gpon-serial-number@98 {
+						reg = <0x0098 0x0c>;
+					};
+
+					lan_mac: mac-address@ad {
+						compatible = "mac-base";
+						reg = <0x00ad 0x11>;
+						#nvmem-cell-cells = <1>;
+					};
+
+					manufacturer: manufacturer@cc {
+						reg = <0x00cc 0x06>;
+					};
+
+					hw_serial: serial-number@e1 {
+						reg = <0x00e1 0x11>;
+					};
+
+					/* Stored as ASCII: "4C:BA:7D:58:54:F2". */
+					wan_mac: mac-address@fb {
+						compatible = "mac-base";
+						reg = <0x00fb 0x11>;
+						#nvmem-cell-cells = <1>;
+					};
+
+					/* Vendor BLE provisioning value, stored as 32 ASCII hex digits. */
+					ble_random: ble-random@116 {
+						reg = <0x0116 0x20>;
+					};
+				};
 			};
 
-			tclinux@400000 {
+			partition@400000 {
 				label = "tclinux";
-				reg = <0x00400000 0x00400000>;
+				reg = <0x00400000 0x04000000>;
 			};
 
-			tclinux_slave@440000 {
+			partition@4400000 {
 				label = "tclinux_slave";
-				reg = <0x00440000 0x00400000>;
+				reg = <0x04400000 0x04000000>;
 			};
 
-			system@840000 {
+			partition@8400000 {
 				label = "system";
-				reg = <0x00840000 0x01400000>;
+				reg = <0x08400000 0x14000000>;
 			};
 
-			uenv@1c400000 {
+			partition@1c400000 {
 				label = "uenv";
-				reg = <0x01c40000 0x00200000>;
+				reg = <0x1c400000 0x00200000>;
 			};
 
-			art@1d5c0000 {
+			partition@1d5c0000 {
 				label = "art";
 				reg = <0x1d5c0000 0x00180000>;
+				read-only;
+
+				nvmem-layout {
+					compatible = "fixed-layout";
+					#address-cells = <1>;
+					#size-cells = <1>;
+
+					/* Vendor EN7572 BOB calibration block, 160 bytes. */
+					en7573_bob: calibration@60160 {
+						reg = <0x060160 0x00a0>;
+					};
+				};
 			};
 		};
 	};

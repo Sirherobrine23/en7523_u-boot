@@ -48,38 +48,22 @@
 #define AIROHA_EFUSE_DDR3_REMARK_BIT		BIT(24)
 
 enum airoha_pkg {
-	/* AN7583 */
-	AN7583_PKG = 0x10,
-
-	/* AM7552 */
-	AN7552_PKG = 0xf,
-
-	/* EN7581 */
-	EN7581_PKG = 0xe,
-
-	/* EN7523 */
-	EN7523_PKG = 0xc,
-
-	/* EN7528 */
-	EN7528_PKG = 0xb,
-
-	/* EN7580 */
-	EN7580_PKG = 0xa,
-
-	/* EN7516, EN7527 */
-	EN751627_PKG = 0x9,
-
-	/* EN7526c, EN7522 */
-	EN7526C_PKG = 0x8,
-
-	/* EN7512, EN7521 */
-	EN751221_PKG = 0x7,
-
-	/* MT7505 */
-	MT7505_PKG = 0x6,
-
-	/* MT7510, MT7520 */
-	MT751020_PKG = 0x5,
+	TC3169_PKG = 0x00,		/**/
+	TC3182_PKG = 0x01,		/**/
+	RT65168_PKG = 0x02,		/**/
+	RT63165_PKG = 0x03,		/**/
+	RT63365_PKG = 0x04,		/**/
+	MT751020_PKG = 0x05,	/* MT7510, MT7520 */
+	MT7505_PKG = 0x06,		/* MT7505 */
+	EN751221_PKG = 0x07,	/* EN7512, EN7521 */
+	EN7526C_PKG = 0x08,		/* EN7526C, EN7522 */
+	EN751627_PKG = 0x09,	/* EN7516, EN7527 */
+	EN7580_PKG = 0x0a,		/* EN7580 */
+	EN7528_PKG = 0x0b,		/* EN7528 */
+	EN7523_PKG = 0x0c,		/* EN7523 */
+	EN7581_PKG = 0x0e,		/* EN7581 */
+	AN7552_PKG = 0x0f,		/* AN7552 */
+	AN7583_PKG = 0x10,		/* AN7583 */
 };
 
 /*
