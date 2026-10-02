@@ -579,7 +579,7 @@ static int airoha_gpio_request_enable(struct airoha_pinctrl *pinctrl,
 		map = mux->mux == AIROHA_FUNC_MUX ?
 			pinctrl->chip_scu : pinctrl->regmap;
 		err = regmap_update_bits(map, mux->reg.offset,
-					 mux->reg.mask, 0);
+					 mux->reg.mask, mux->val);
 		if (err)
 			return err;
 	}

@@ -58,7 +58,7 @@
 
 				gpio-controller;
 				#gpio-cells = <2>;
-				gpio-ranges = <&pinctrl 0 0 42>;
+				gpio-ranges = <&pinctrl 0 0 46>;
 			};
 		};
 

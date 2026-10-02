@@ -88,6 +88,7 @@ struct airoha_pinctrl_gpio_mux {
 	u32 pin;
 	enum airoha_pinctrl_mux_func mux;
 	struct airoha_pinctrl_reg reg;
+	u32 val;
 };
 
 struct airoha_pinctrl_gpiochip {
