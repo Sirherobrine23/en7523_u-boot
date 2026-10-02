@@ -129,9 +129,9 @@ struct airoha_clk_priv {
 
 struct airoha_clk_soc_data {
 	u32 num_clocks;
+	enum airoha_pkg version;
 	const struct airoha_clk_desc *descs;
 	const struct airoha_econet_clk_data *econet;
-	bool en7580;
 };
 
 static const u32 gsw_base[] = { 400000000, 500000000 };
@@ -676,10 +676,10 @@ static int airoha_clk_enable(struct clk *clk)
 	if (id >= data->num_clocks)
 		return -EINVAL;
 
-	if (data->en7580 && id == EN7580_CLK_PCIE)
+	if (data->version == EN7580_PKG && id == EN7580_CLK_PCIE)
 		return airoha_econet_pcie_enable(priv);
 
-	if (data->en7580 && id == EN7580_CLK_SPI)
+	if (data->version == EN7580_PKG && id == EN7580_CLK_SPI)
 		return regmap_set_bits(priv->chip_scu_map, EN7580_REG_SPI_DIV,
 				      EN7580_SPI_CLK_EN);
 
@@ -696,11 +696,11 @@ static int airoha_clk_disable(struct clk *clk)
 	if (clk->id >= priv->data->num_clocks)
 		return -EINVAL;
 
-	if (priv->data->en7580 && clk->id == EN7580_CLK_PCIE)
+	if (priv->data->version == EN7580_PKG && clk->id == EN7580_CLK_PCIE)
 		return regmap_clear_bits(priv->scu_map, REG_PCI_CONTROL,
 					 REG_PCI_CONTROL_REFCLK_EN1);
 
-	if (priv->data->en7580 && clk->id == EN7580_CLK_SPI)
+	if (priv->data->version == EN7580_PKG && clk->id == EN7580_CLK_SPI)
 		return regmap_clear_bits(priv->chip_scu_map, EN7580_REG_SPI_DIV,
 					 EN7580_SPI_CLK_EN);
 
@@ -727,7 +727,7 @@ static ulong airoha_clk_get_rate(struct clk *clk)
 		return 0;
 	}
 
-	if (data->en7580)
+	if (data->version == EN7580_PKG)
 		return en7580_clk_get_rate(priv, id);
 
 	if (data->econet)
@@ -796,7 +796,7 @@ static ulong airoha_clk_set_rate(struct clk *clk, ulong rate)
 		return 0;
 	}
 
-	if (data->en7580) {
+	if (data->version == EN7580_PKG) {
 		if (id != EN7580_CLK_SPI)
 			return -EOPNOTSUPP;
 		if (!rate || rate > EN7580_SPI_BASE / 2)
@@ -957,16 +957,19 @@ static int airoha_clk_bind(struct udevice *dev)
 }
 
 static const struct airoha_clk_soc_data en7523_data = {
+	.version = EN7523_PKG,
 	.num_clocks = ARRAY_SIZE(en7523_base_clks),
 	.descs = en7523_base_clks,
 };
 
 static const struct airoha_clk_soc_data en7581_data = {
+	.version = EN7581_PKG,
 	.num_clocks = ARRAY_SIZE(en7581_base_clks),
 	.descs = en7581_base_clks,
 };
 
 static const struct airoha_clk_soc_data an7583_data = {
+	.version = AN7583_PKG,
 	.num_clocks = ARRAY_SIZE(an7583_base_clks),
 	.descs = an7583_base_clks,
 };
@@ -985,6 +988,7 @@ static const struct airoha_econet_clk_data en751221_econet_data = {
 };
 
 static const struct airoha_clk_soc_data en751221_data = {
+	.version = EN751221_PKG,
 	.num_clocks = EN751221_MAX_CLKS,
 	.econet = &en751221_econet_data,
 };
@@ -1001,27 +1005,25 @@ static const struct airoha_econet_clk_data en7528_econet_data = {
 };
 
 static const struct airoha_clk_soc_data en7528_data = {
+	.version = EN7528_PKG,
 	.num_clocks = EN7528_MAX_CLKS,
 	.econet = &en7528_econet_data,
 };
 
 static const struct airoha_clk_soc_data en7580_data = {
+	.version = EN7580_PKG,
 	.num_clocks = EN7580_MAX_CLKS,
-	.en7580 = true,
 };
 
 static const struct udevice_id airoha_clk_ids[] = {
-	{ .compatible = "airoha,en7580-scu",
-	  .data = (ulong)&en7580_data,
-	},
-	{ .compatible = "econet,en7580-scu",
-	  .data = (ulong)&en7580_data,
-	},
 	{ .compatible = "airoha,en751221-scu",
 	  .data = (ulong)&en751221_data,
 	},
 	{ .compatible = "airoha,en7528-scu",
 	  .data = (ulong)&en7528_data,
+	},
+	{ .compatible = "airoha,en7580-scu",
+	  .data = (ulong)&en7580_data,
 	},
 	{ .compatible = "airoha,en7523-scu",
 	  .data = (ulong)&en7523_data,
