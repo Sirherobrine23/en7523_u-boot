@@ -3,5 +3,8 @@
 #define _DT_BINDINGS_CLOCK_ECONET_EN7580_SCU_H_
 
 #define EN7580_CLK_SPI		0
+#define EN7580_CLK_BUS		1
+#define EN7580_CLK_CPU		2
+#define EN7580_CLK_PCIE		3
 
 #endif
