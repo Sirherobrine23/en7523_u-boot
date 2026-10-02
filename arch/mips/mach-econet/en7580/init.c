@@ -15,6 +15,7 @@
 DECLARE_GLOBAL_DATA_PTR;
 
 #define EN7580_RESET_CONTROL		0xbfb00040UL
+#define EN7580_LOWMEM_MAX_MB		448U
 #define NP_SCU_BASE			((void __iomem *)CKSEG1ADDR(0x1fb00000))
 
 int dram_init(void)
@@ -34,6 +35,20 @@ int dram_init(void)
 	if (size_mb < 32 || size_mb > 2048) {
 		printf("Invalid EN7580 calibrated DRAM size: %u MiB\n", size_mb);
 		return -EINVAL;
+	}
+
+	/*
+	 * EN7580 has a hole in the direct-mapped KSEG0/KSEG1 window above
+	 * 448 MiB. The 0x1c000000..0x1fffffff physical range contains SoC
+	 * MMIO, so relocating U-Boot near the top of a 512 MiB linear bank
+	 * would place executable code over peripheral registers. Vendor code
+	 * exposes memory above 448 MiB through a separate highmem/TLB mapping.
+	 * Keep U-Boot proper in directly addressable low memory for now.
+	 */
+	if (size_mb > EN7580_LOWMEM_MAX_MB) {
+		debug("EN7580 DRAM: limiting lowmem from %u MiB to %u MiB\n",
+		      size_mb, EN7580_LOWMEM_MAX_MB);
+		size_mb = EN7580_LOWMEM_MAX_MB;
 	}
 
 	gd->ram_size = (phys_size_t)size_mb * SZ_1M;
