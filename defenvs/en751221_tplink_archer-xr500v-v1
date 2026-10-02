@@ -48,7 +48,13 @@ format_ubi_part=\
     echo "OEM backups missing or invalid: nothing erased"; \
   fi
 
-bootcmd=run boot_ubi
+# format_ubi_part leaves ubootenv/ubootenv2 empty. Save this environment in
+# both of them on the first boot: until then Linux's fw_setenv finds no valid
+# copy and would store its own generic default environment (bootcmd=run
+# distro_bootcmd) instead, and U-Boot would stop booting OpenWrt. _init_env
+# removes itself, so a saved environment never runs it again.
+_init_env=setenv _init_env; saveenv; saveenv
+bootcmd=if env exists _init_env; then run _init_env; fi; run boot_ubi
 bootdelay=1
 bootmenu_confirm_return=askenv - Press ENTER to return to menu ; bootmenu 20
 bootmenu_default=0
