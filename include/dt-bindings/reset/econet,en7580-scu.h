@@ -7,4 +7,11 @@
 #define EN7580_FE_QDMA2_RST	2
 #define EN7580_GSW_RST		3
 
+#define EN7580_XPON_PHY_RST	4
+#define EN7580_XSI_PHY_RST	5
+#define EN7580_XPON_MAC_RST	6
+#define EN7580_PCIE0_RST		7
+#define EN7580_PCIE1_RST		8
+#define EN7580_PCIE_HB_RST	9
+
 #endif
