@@ -1,0 +1,99 @@
+// SPDX-License-Identifier: GPL-2.0+
+/dts-v1/;
+
+#include "econet,en7580.dtsi"
+
+/ {
+	model = "Quantum C6500XK";
+	compatible = "quantum,c6500xk", "econet,en7580", "airoha,en7580";
+
+	/* The RAM-training stage replaces this size during U-Boot startup. */
+	memory@0 {
+		device_type = "memory";
+		reg = <0x00000000 0x10000000>;
+	};
+
+	chosen {
+		stdout-path = "serial0:115200n8";
+	};
+};
+
+&uart0 {
+	status = "okay";
+};
+
+&spi0 {
+	status = "okay";
+
+/*
+[    3.222338] 0x000000000000-0x000000200000 : "bootloader"
+[    3.242515] 0x000000200000-0x000000400000 : "dsd"
+[    3.348448] 0x000000400000-0x000004400000 : "tclinux"
+[    3.462141] 0x000004400000-0x000008400000 : "tclinux_slave"
+[    3.481968] 0x000008400000-0x00001c400000 : "system"
+[    3.500182] 0x00001c400000-0x00001c600000 : "uenv"
+[    3.517237] 0x00001d5c0000-0x00001d740000 : "art"
+*/
+	
+	flash@0 {
+		compatible = "spi-nand";
+		reg = <0>;
+		spi-max-frequency = <50000000>;
+		spi-tx-bus-width = <1>;
+		spi-rx-bus-width = <2>;
+
+		partitions {
+			compatible = "fixed-partitions";
+			#address-cells = <1>;
+			#size-cells = <1>;
+
+			bootloader@0 {
+				label = "tcboot";
+				reg = <0x00000000 0x00200000>;
+				read-only;
+			};
+
+			dsd@200000 {
+				label = "dsd";
+				reg = <0x00200000 0x00200000>;
+			};
+
+			tclinux@400000 {
+				label = "tclinux";
+				reg = <0x00400000 0x00400000>;
+			};
+
+			tclinux_slave@440000 {
+				label = "tclinux_slave";
+				reg = <0x00440000 0x00400000>;
+			};
+
+			system@840000 {
+				label = "system";
+				reg = <0x00840000 0x01400000>;
+			};
+
+			uenv@1c400000 {
+				label = "uenv";
+				reg = <0x01c40000 0x00200000>;
+			};
+
+			art@1d5c0000 {
+				label = "art";
+				reg = <0x1d5c0000 0x00180000>;
+			};
+		};
+	};
+};
+
+&eth {
+	status = "okay";
+};
+
+&gdm1 {
+	status = "okay";
+};
+
+&switch {
+	status = "okay";
+};
