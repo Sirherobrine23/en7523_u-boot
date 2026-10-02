@@ -327,6 +327,7 @@
 #define EN751221_TXMSG_CHANNEL_MASK	GENMASK(10, 3)
 #define EN751221_TXMSG_QUEUE_MASK	GENMASK(2, 0)
 #define EN751221_TXMSG_FPORT_MASK	GENMASK(21, 19)
+#define EN7580_TXMSG_FPORT_MASK		GENMASK(23, 21)
 #define EN751221_FPORT_GDM1		1
 
 /*
@@ -833,6 +834,15 @@ static void *en751221_dma_alloc_control(struct airoha_qdma *qdma, size_t size,
 	return airoha_dma_alloc_uncached(size, dma_addr);
 }
 
+static void *airoha_qdma_alloc_control(struct airoha_qdma *qdma, size_t size,
+				       unsigned long *dma_addr)
+{
+	if (qdma->eth->soc->version == 0x7580)
+		return airoha_dma_alloc_uncached(size, dma_addr);
+
+	return airoha_dma_alloc_coherent(size, dma_addr);
+}
+
 static bool airoha_is_gen1(struct airoha_eth *eth)
 {
 	return eth->soc->gen1;
@@ -1065,6 +1075,7 @@ static int airoha_get_fe_port(struct airoha_gdm_port *port)
 	case 0x7512:
 	case 0x7528:
 		return EN751221_FPORT_GDM1;
+	case 0x7580:
 	case 0x7523:
 		/* FIXME: GDM1 is the only supported port */
 		return FE_PSE_PORT_GDM1;
@@ -1740,12 +1751,12 @@ static int airoha_qdma_init_rx_queue(struct airoha_queue *q,
 	q->head = 0;
 	q->rx_pkt_offset = qdma->eth->soc->version == 0x7528 ? 2 : 0;
 
-	q->desc = airoha_dma_alloc_coherent(q->ndesc * sizeof(*q->desc), &dma_addr);
+	q->desc = airoha_qdma_alloc_control(qdma, q->ndesc * sizeof(*q->desc), &dma_addr);
 	if (!q->desc)
 		return -ENOMEM;
 
 	memset(q->desc, 0, q->ndesc * sizeof(*q->desc));
-	dma_map_single(q->desc, q->ndesc * sizeof(*q->desc), DMA_TO_DEVICE);
+	dma_map_unaligned(q->desc, q->ndesc * sizeof(*q->desc), DMA_TO_DEVICE);
 
 	airoha_qdma_wr(qdma, REG_RX_RING_BASE(qid), dma_addr);
 	airoha_qdma_rmw(qdma, REG_RX_RING_SIZE(qid),
@@ -1787,12 +1798,12 @@ static int airoha_qdma_init_tx_queue(struct airoha_queue *q,
 	q->ndesc = size;
 	q->head = 0;
 
-	q->desc = airoha_dma_alloc_coherent(q->ndesc * sizeof(*q->desc), &dma_addr);
+	q->desc = airoha_qdma_alloc_control(qdma, q->ndesc * sizeof(*q->desc), &dma_addr);
 	if (!q->desc)
 		return -ENOMEM;
 
 	memset(q->desc, 0, q->ndesc * sizeof(*q->desc));
-	dma_map_single(q->desc, q->ndesc * sizeof(*q->desc), DMA_TO_DEVICE);
+	dma_map_unaligned(q->desc, q->ndesc * sizeof(*q->desc), DMA_TO_DEVICE);
 
 	airoha_qdma_wr(qdma, REG_TX_RING_BASE(qid), dma_addr);
 	airoha_qdma_rmw(qdma, REG_TX_CPU_IDX(qid), TX_RING_CPU_IDX_MASK,
@@ -1809,7 +1820,7 @@ static int airoha_qdma_tx_irq_init(struct airoha_tx_irq_queue *irq_q,
 	int id = irq_q - &qdma->q_tx_irq[0];
 	unsigned long dma_addr;
 
-	irq_q->q = airoha_dma_alloc_coherent(size * sizeof(u32), &dma_addr);
+	irq_q->q = airoha_qdma_alloc_control(qdma, size * sizeof(u32), &dma_addr);
 	if (!irq_q->q)
 		return -ENOMEM;
 
@@ -1817,7 +1828,7 @@ static int airoha_qdma_tx_irq_init(struct airoha_tx_irq_queue *irq_q,
 	irq_q->size = size;
 	irq_q->qdma = qdma;
 
-	dma_map_single(irq_q->q, size * sizeof(u32), DMA_TO_DEVICE);
+	dma_map_unaligned(irq_q->q, size * sizeof(u32), DMA_TO_DEVICE);
 
 	airoha_qdma_wr(qdma, REG_TX_IRQ_BASE(id), dma_addr);
 	airoha_qdma_rmw(qdma, REG_TX_IRQ_CFG(id), TX_IRQ_DEPTH_MASK,
@@ -1854,12 +1865,12 @@ static int airoha_qdma_init_hfwd_queues(struct airoha_qdma *qdma)
 	int size;
 
 	size = HW_DSCP_NUM * sizeof(struct airoha_qdma_fwd_desc);
-	qdma->hfwd.desc = airoha_dma_alloc_coherent(size, &dma_addr);
+	qdma->hfwd.desc = airoha_qdma_alloc_control(qdma, size, &dma_addr);
 	if (!qdma->hfwd.desc)
 		return -ENOMEM;
 
 	memset(qdma->hfwd.desc, 0, size);
-	dma_map_single(qdma->hfwd.desc, size, DMA_TO_DEVICE);
+	dma_map_unaligned(qdma->hfwd.desc, size, DMA_TO_DEVICE);
 
 	airoha_qdma_wr(qdma, REG_FWD_DSCP_BASE, dma_addr);
 
@@ -1951,6 +1962,15 @@ static int airoha_qdma_init(struct udevice *dev,
 	err = airoha_qdma_init_hfwd_queues(qdma);
 	if (err)
 		return err;
+
+	if (eth->soc->version == 0x7580) {
+		qdma->tx_bounce_size = ALIGN(ETH_ZLEN, ARCH_DMA_MINALIGN);
+		qdma->tx_bounce =
+			airoha_dma_alloc_coherent(qdma->tx_bounce_size,
+						  &qdma->tx_bounce_dma);
+		if (!qdma->tx_bounce)
+			return -ENOMEM;
+	}
 
 	err = airoha_qdma_hw_init(qdma);
 	if (err)
@@ -2602,6 +2622,29 @@ static int airoha_switch_init(struct udevice *dev, struct airoha_eth *eth)
 			  airoha_switch_rr(eth, SWITCH_SYS_CTRL));
 		return 0;
 	}
+	if (data->version == 0x7580) {
+		int port;
+
+		airoha_switch_wr(eth, SWITCH_MFC,
+				 SWITCH_BC_FFP | SWITCH_UNM_FFP | SWITCH_UNU_FFP |
+				 SWITCH_CPU_EN | FIELD_PREP(SWITCH_CPU_PORT, 6));
+		airoha_switch_wr(eth, SWITCH_PMCR(6),
+				 SWITCH_IPG_CFG_SHORT | SWITCH_MAC_MODE |
+				 SWITCH_FORCE_MODE | SWITCH_MAC_TX_EN |
+				 SWITCH_MAC_RX_EN | SWITCH_BKOFF_EN |
+				 SWITCH_BKPR_EN | SWITCH_FORCE_RX_FC |
+				 SWITCH_FORCE_TX_FC | SWITCH_FORCE_SPD_1000 |
+				 SWITCH_FORCE_DPX | SWITCH_FORCE_LNK);
+		/* Clear inherited VLAN isolation and special tagging on LAN/CPU. */
+		for (port = 0; port <= 6; port++) {
+			airoha_switch_wr(eth, SWITCH_PCR(port), EN7528_TCBOOT_PCR);
+			airoha_switch_wr(eth, SWITCH_PVC(port), EN7528_TCBOOT_PVC);
+			airoha_switch_wr(eth, SWITCH_PPBV1(port), EN7528_TCBOOT_PPBV1);
+		}
+		airoha_switch_wr(eth, SWITCH_PHY_POLL, 0x7f7f8c08);
+		return 0;
+	}
+
 	if (data->econet) {
 		u32 pmcr;
 
@@ -3365,17 +3408,24 @@ static int airoha_eth_send(struct udevice *dev, void *packet, int length)
 		return en751221_eth_send(dev, packet, length);
 
 	/*
-	 * Newer GDMs pad short frames in hardware. EN7528 keeps the older
+	 * Newer GDMs pad short frames in hardware. EN7528/EN7580 keep the older
 	 * GDM1 forwarding register layout used by TCBoot, where bit 28 is
 	 * part of the jumbo-length field rather than GDM_PAD_EN. Pad short
 	 * frames in software before handing them to QDMA.
 	 */
-	if (qdma->eth->soc->version == 0x7528 && length < ETH_ZLEN) {
+	if (qdma->eth->soc->version == 0x7580 && length < ETH_ZLEN) {
+		memcpy(qdma->tx_bounce, packet, length);
+		memset(qdma->tx_bounce + length, 0, ETH_ZLEN - length);
+		packet = qdma->tx_bounce;
+		length = ETH_ZLEN;
+	} else if (qdma->eth->soc->version == 0x7528 && length < ETH_ZLEN) {
 		memset((u8 *)packet + length, 0, ETH_ZLEN - length);
 		length = ETH_ZLEN;
 	}
 
 	dma_addr = dma_map_single(packet, length, DMA_TO_DEVICE);
+	if (qdma->eth->soc->version == 0x7580)
+		dma_addr = virt_to_phys(packet);
 
 	qid = 0;
 	q = &qdma->q_tx[qid];
@@ -3385,8 +3435,12 @@ static int airoha_eth_send(struct udevice *dev, void *packet, int length)
 	fport = airoha_get_fe_port(port);
 
 	msg0 = 0;
-	msg1 = FIELD_PREP(QDMA_ETH_TXMSG_FPORT_MASK, fport) |
-	       FIELD_PREP(QDMA_ETH_TXMSG_METER_MASK, 0x7f);
+	if (qdma->eth->soc->version == 0x7580)
+		msg1 = FIELD_PREP(EN7580_TXMSG_FPORT_MASK, fport) |
+		       FIELD_PREP(QDMA_ETH_TXMSG_METER_MASK, 0x7f);
+	else
+		msg1 = FIELD_PREP(QDMA_ETH_TXMSG_FPORT_MASK, fport) |
+		       FIELD_PREP(QDMA_ETH_TXMSG_METER_MASK, 0x7f);
 
 	val = FIELD_PREP(QDMA_DESC_LEN_MASK, length);
 	WRITE_ONCE(desc->ctrl, cpu_to_le32(val));
@@ -3395,8 +3449,7 @@ static int airoha_eth_send(struct udevice *dev, void *packet, int length)
 	WRITE_ONCE(desc->data, cpu_to_le32(val));
 	WRITE_ONCE(desc->msg0, cpu_to_le32(msg0));
 	WRITE_ONCE(desc->msg1, cpu_to_le32(msg1));
-	WRITE_ONCE(desc->msg2, cpu_to_le32(qdma->eth->soc->version == 0x7528 ?
-					      0 : 0xffff));
+	WRITE_ONCE(desc->msg2, cpu_to_le32(airoha_is_gen1(qdma->eth) ? 0 : 0xffff));
 	WRITE_ONCE(desc->msg3, cpu_to_le32(0));
 
 	dma_map_unaligned(desc, sizeof(*desc), DMA_TO_DEVICE);
@@ -3406,7 +3459,8 @@ static int airoha_eth_send(struct udevice *dev, void *packet, int length)
 			FIELD_PREP(TX_RING_CPU_IDX_MASK, index));
 
 	for (i = 0; i < 100; i++) {
-		dma_unmap_unaligned(virt_to_phys(desc), sizeof(*desc),
+		dma_unmap_unaligned(qdma->eth->soc->version == 0x7580 ?
+				    (dma_addr_t)desc : virt_to_phys(desc), sizeof(*desc),
 				    DMA_FROM_DEVICE);
 		if (desc->ctrl & QDMA_DESC_DONE_MASK)
 			break;
@@ -3444,14 +3498,17 @@ static int airoha_eth_recv(struct udevice *dev, int flags, uchar **packetp)
 	q = &qdma->q_rx[qid];
 	desc = &q->desc[q->head];
 
-	dma_unmap_unaligned(virt_to_phys(desc), sizeof(*desc),
+	dma_unmap_unaligned(qdma->eth->soc->version == 0x7580 ?
+			    (dma_addr_t)desc : virt_to_phys(desc), sizeof(*desc),
 			    DMA_FROM_DEVICE);
 
 	if (!(desc->ctrl & QDMA_DESC_DONE_MASK))
 		return -EAGAIN;
 
 	length = FIELD_GET(QDMA_DESC_LEN_MASK, desc->ctrl);
-	dma_unmap_single(desc->addr, length + q->rx_pkt_offset,
+	dma_unmap_single(qdma->eth->soc->version == 0x7580 ?
+			 (dma_addr_t)phys_to_virt(le32_to_cpu(desc->addr)) :
+			 desc->addr, length + q->rx_pkt_offset,
 			 DMA_FROM_DEVICE);
 
 	*packetp = (uchar *)phys_to_virt(desc->addr) + q->rx_pkt_offset;
@@ -3578,6 +3635,13 @@ static const struct airoha_eth_soc_data en7528_data = {
 	.switch_compatible = "airoha,en7528-switch",
 };
 
+static const struct airoha_eth_soc_data en7580_data = {
+	.version = 0x7580,
+	.gen1 = true,
+	.switch_mdio = true,
+	.switch_compatible = "airoha,en7580-switch",
+};
+
 static const struct airoha_eth_soc_data en7581_data = {
 	.version = 0x7581,
 	.xsi_rsts_names = en7581_xsi_rsts_names,
@@ -3602,6 +3666,9 @@ static const struct udevice_id airoha_eth_ids[] = {
 	},
 	{ .compatible = "econet,en7528-eth",
 	  .data = (ulong)&en7528_data,
+	},
+	{ .compatible = "econet,en7580-eth",
+	  .data = (ulong)&en7580_data,
 	},
 	{ .compatible = "airoha,en7523-eth",
 	  .data = (ulong)&en7523_data,

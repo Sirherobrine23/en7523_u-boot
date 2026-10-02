@@ -18,6 +18,7 @@
 #include <dt-bindings/reset/airoha,an7583-reset.h>
 #include <dt-bindings/reset/econet,en751221-scu.h>
 #include <dt-bindings/reset/econet,en7528-scu.h>
+#include <dt-bindings/reset/econet,en7580-scu.h>
 
 #define RST_NR_PER_BANK			32
 
@@ -90,6 +91,13 @@ static const u16 en7523_rst_map[] = {
 	[EN7523_PCIE1_RST]		= RST_NR_PER_BANK + 27,
 	[EN7523_PCIE_HB_RST]		= RST_NR_PER_BANK + 29,
 	[EN7523_XPON_MAC_RST]		= RST_NR_PER_BANK + 31,
+};
+
+static const u16 en7580_rst_map[] = {
+	[EN7580_FE_RST]			= RST_NR_PER_BANK + 21,
+	[EN7580_FE_QDMA1_RST]		= RST_NR_PER_BANK + 1,
+	[EN7580_FE_QDMA2_RST]		= RST_NR_PER_BANK + 2,
+	[EN7580_GSW_RST]			= RST_NR_PER_BANK + 23,
 };
 
 static const u16 en751221_rst_map[] = {
@@ -344,6 +352,11 @@ static int airoha_reset_probe(struct udevice *dev)
 	    ofnode_device_is_compatible(node, "econet,en7528-scu"))
 		return reset_init(dev, en751221_rst_map, en751221_rst_ofs,
 				  ARRAY_SIZE(en751221_rst_map));
+
+	if (ofnode_device_is_compatible(node, "airoha,en7580-scu") ||
+	    ofnode_device_is_compatible(node, "econet,en7580-scu"))
+		return reset_init(dev, en7580_rst_map, en7581_rst_ofs,
+				  ARRAY_SIZE(en7580_rst_map));
 
 	if (ofnode_device_is_compatible(node, "airoha,en7523-scu"))
 		return reset_init(dev, en7523_rst_map, en7581_rst_ofs,
