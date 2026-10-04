@@ -575,6 +575,7 @@ struct airoha_queue {
 	u16 head;
 	u16 tail;
 	uchar *rx_spare;
+	uchar *rx_uncached;
 
 	int ndesc;
 	int rx_buf_len;
@@ -1732,10 +1733,12 @@ static void airoha_qdma_reset_rx_desc(struct airoha_queue *q, int index)
 	u32 val;
 
 	desc = &q->desc[index];
-	rx_packet = net_rx_packets[index];
+	rx_packet = q->rx_uncached ?
+		q->rx_uncached + index * PKTSIZE_ALIGN : net_rx_packets[index];
 	index = (index + 1) % q->ndesc;
 
-	dma_map_single(rx_packet, PKTSIZE_ALIGN, DMA_TO_DEVICE);
+	if (!q->rx_uncached)
+		dma_map_single(rx_packet, PKTSIZE_ALIGN, DMA_TO_DEVICE);
 
 	WRITE_ONCE(desc->msg0, cpu_to_le32(0));
 	WRITE_ONCE(desc->msg1, cpu_to_le32(0));
@@ -1761,7 +1764,7 @@ static int airoha_qdma_init_rx_queue(struct airoha_queue *q,
 				     struct airoha_qdma *qdma, int ndesc)
 {
 	int qid = q - &qdma->q_rx[0];
-	unsigned long dma_addr;
+	unsigned long dma_addr, rx_dma_addr;
 
 	q->ndesc = ndesc;
 	q->head = 0;
@@ -1770,6 +1773,15 @@ static int airoha_qdma_init_rx_queue(struct airoha_queue *q,
 	q->desc = airoha_qdma_alloc_control(qdma, q->ndesc * sizeof(*q->desc), &dma_addr);
 	if (!q->desc)
 		return -ENOMEM;
+
+	if (qdma->eth->soc->version == 0x7580) {
+		/* Keep payload DMA outside the inherited cached KSEG0 mapping. */
+		q->rx_uncached =
+			airoha_dma_alloc_uncached(ndesc * PKTSIZE_ALIGN,
+						  &rx_dma_addr);
+		if (!q->rx_uncached)
+			return -ENOMEM;
+	}
 
 	memset(q->desc, 0, q->ndesc * sizeof(*q->desc));
 	dma_map_unaligned(q->desc, q->ndesc * sizeof(*q->desc), DMA_TO_DEVICE);
@@ -1980,9 +1992,9 @@ static int airoha_qdma_init(struct udevice *dev,
 		return err;
 
 	if (eth->soc->version == 0x7580) {
-		qdma->tx_bounce_size = ALIGN(ETH_ZLEN, ARCH_DMA_MINALIGN);
+		qdma->tx_bounce_size = PKTSIZE_ALIGN;
 		qdma->tx_bounce =
-			airoha_dma_alloc_coherent(qdma->tx_bounce_size,
+			airoha_dma_alloc_uncached(qdma->tx_bounce_size,
 						  &qdma->tx_bounce_dma);
 		if (!qdma->tx_bounce)
 			return -ENOMEM;
@@ -3414,6 +3426,32 @@ static int en751221_eth_free_pkt(struct udevice *dev, uchar *packet)
 	return 0;
 }
 
+/* Use aligned word stores on the uncached bus and zero-pad short frames. */
+static int en7580_prepare_tx(struct airoha_qdma *qdma, const void *packet,
+			     int length)
+{
+	const u8 *src = packet;
+	u32 *dst = qdma->tx_bounce;
+	int padded, offset;
+
+	if (length <= 0 || (size_t)length > qdma->tx_bounce_size)
+		return -EMSGSIZE;
+
+	padded = max(length, ETH_ZLEN);
+	for (offset = 0; offset < padded; offset += sizeof(u32)) {
+		u32 word = 0;
+
+		if (offset < length)
+			memcpy(&word, src + offset,
+			       min_t(int, sizeof(word), length - offset));
+		WRITE_ONCE(dst[offset / sizeof(u32)], word);
+	}
+	/* Publish the uncached payload stores before QDMA gets its descriptor. */
+	wmb();
+
+	return padded;
+}
+
 static int airoha_eth_send(struct udevice *dev, void *packet, int length)
 {
 	struct airoha_gdm_port *port = dev_get_priv(dev);
@@ -3430,25 +3468,19 @@ static int airoha_eth_send(struct udevice *dev, void *packet, int length)
 	if (airoha_uses_legacy_qdma(qdma->eth))
 		return en751221_eth_send(dev, packet, length);
 
-	/*
-	 * Newer GDMs pad short frames in hardware. EN7528/EN7580 keep the older
-	 * GDM1 forwarding register layout used by TCBoot, where bit 28 is
-	 * part of the jumbo-length field rather than GDM_PAD_EN. Pad short
-	 * frames in software before handing them to QDMA.
-	 */
-	if (qdma->eth->soc->version == 0x7580 && length < ETH_ZLEN) {
-		memcpy(qdma->tx_bounce, packet, length);
-		memset(qdma->tx_bounce + length, 0, ETH_ZLEN - length);
-		packet = qdma->tx_bounce;
-		length = ETH_ZLEN;
-	} else if (qdma->eth->soc->version == 0x7528 && length < ETH_ZLEN) {
-		memset((u8 *)packet + length, 0, ETH_ZLEN - length);
-		length = ETH_ZLEN;
+	if (qdma->eth->soc->version == 0x7580) {
+		/* Cache maintenance does not reach DMA-visible RAM after chainload. */
+		length = en7580_prepare_tx(qdma, packet, length);
+		if (length < 0)
+			return length;
+		dma_addr = qdma->tx_bounce_dma;
+	} else {
+		if (qdma->eth->soc->version == 0x7528 && length < ETH_ZLEN) {
+			memset((u8 *)packet + length, 0, ETH_ZLEN - length);
+			length = ETH_ZLEN;
+		}
+		dma_addr = dma_map_single(packet, length, DMA_TO_DEVICE);
 	}
-
-	dma_addr = dma_map_single(packet, length, DMA_TO_DEVICE);
-	if (qdma->eth->soc->version == 0x7580)
-		dma_addr = virt_to_phys(packet);
 
 	qid = 0;
 	q = &qdma->q_tx[qid];
@@ -3528,13 +3560,17 @@ static int airoha_eth_recv(struct udevice *dev, int flags, uchar **packetp)
 	if (!(desc->ctrl & QDMA_DESC_DONE_MASK))
 		return -EAGAIN;
 
-	length = FIELD_GET(QDMA_DESC_LEN_MASK, desc->ctrl);
-	dma_unmap_single(qdma->eth->soc->version == 0x7580 ?
-			 (dma_addr_t)phys_to_virt(le32_to_cpu(desc->addr)) :
-			 desc->addr, length + q->rx_pkt_offset,
-			 DMA_FROM_DEVICE);
+	length = FIELD_GET(QDMA_DESC_LEN_MASK, le32_to_cpu(desc->ctrl));
 
-	*packetp = (uchar *)phys_to_virt(desc->addr) + q->rx_pkt_offset;
+	if (qdma->eth->soc->version == 0x7580) {
+		/* Read the bytes QDMA wrote, without an inherited cached alias. */
+		*packetp = EN7528_RX_UNCACHED(phys_to_virt(le32_to_cpu(desc->addr)));
+	} else {
+		dma_unmap_single(desc->addr, length + q->rx_pkt_offset,
+				 DMA_FROM_DEVICE);
+		*packetp = (uchar *)phys_to_virt(desc->addr);
+	}
+	*packetp += q->rx_pkt_offset;
 
 	return length;
 }
