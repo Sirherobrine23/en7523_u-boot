@@ -22,16 +22,10 @@ int dram_init(void)
 {
 	u32 value, size_mb;
 
-	/*
-	 * The vendor RAM-training stage records the calibrated DRAM size in
-	 * MiB in SYS_GLOBAL_PARM[31:20]. Keep this contract while the training
-	 * code is still provided by the GPL relocatable objects.
-	 */
 	value = readl((void __iomem *)EN7580_SYS_GLOBAL_PARM);
 	size_mb = (value & EN7580_DRAM_SIZE_MASK) >> EN7580_DRAM_SIZE_SHIFT;
 
 	debug("EN7580 DRAM: global-param=%08x size=%u MiB\n", value, size_mb);
-
 	if (size_mb < 32 || size_mb > 2048) {
 		printf("Invalid EN7580 calibrated DRAM size: %u MiB\n", size_mb);
 		return -EINVAL;
@@ -45,26 +39,36 @@ int dram_init(void)
 	 * exposes memory above 448 MiB through a separate highmem/TLB mapping.
 	 * Keep U-Boot proper in directly addressable low memory for now.
 	 */
-	if (size_mb > EN7580_LOWMEM_MAX_MB) {
-		debug("EN7580 DRAM: limiting lowmem from %u MiB to %u MiB\n",
-		      size_mb, EN7580_LOWMEM_MAX_MB);
-		size_mb = EN7580_LOWMEM_MAX_MB;
-	}
+	gd->ram_size = size_mb * SZ_1M;
+	if (size_mb > EN7580_LOWMEM_MAX_MB)
+		gd->ram_size = EN7580_LOWMEM_MAX_MB * SZ_1M;
 
-	gd->ram_size = (phys_size_t)size_mb * SZ_1M;
 	return 0;
 }
 
 int dram_init_banksize(void)
 {
-	int bank;
+	u32 value, size_mb;
+
+	value = readl((void __iomem *)EN7580_SYS_GLOBAL_PARM);
+	size_mb = (value & EN7580_DRAM_SIZE_MASK) >> EN7580_DRAM_SIZE_SHIFT;
+	if (size_mb < 32 || size_mb > 2048) {
+		printf("Invalid EN7580 calibrated DRAM size: %u MiB\n", size_mb);
+		return -EINVAL;
+	}
 
 	gd->bd->bi_dram[0].start = gd->ram_base;
-	gd->bd->bi_dram[0].size = gd->ram_size;
+	gd->bd->bi_dram[0].size = size_mb * SZ_1M;
 
-	for (bank = 1; bank < CONFIG_NR_DRAM_BANKS; bank++) {
-		gd->bd->bi_dram[bank].start = 0;
-		gd->bd->bi_dram[bank].size = 0;
+	gd->bd->bi_dram[1].start = 0;
+	gd->bd->bi_dram[1].size = 0;
+
+	if (size_mb > EN7580_LOWMEM_MAX_MB) {
+		gd->bd->bi_dram[0].start = gd->ram_base;
+		gd->bd->bi_dram[0].size = EN7580_LOWMEM_MAX_MB * SZ_1M;
+
+		gd->bd->bi_dram[1].start = 0x9c000000;
+		gd->bd->bi_dram[1].size = (size_mb - EN7580_LOWMEM_MAX_MB) * SZ_1M;
 	}
 
 	return 0;
