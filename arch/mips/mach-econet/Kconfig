@@ -54,7 +54,7 @@ config SYS_SOC
 
 config SYS_BOARD
 	default "en7512" if TARGET_EN751221
-	default "en751627" if TARGET_EN751627
+	default "en7528" if TARGET_EN751627
 	default "en7528" if TARGET_EN7528
 	default "en7580" if TARGET_EN7580
 
