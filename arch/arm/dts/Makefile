@@ -1193,6 +1193,9 @@ dtb-$(CONFIG_TARGET_CORSTONE1000) += corstone1000-mps3.dtb \
 
 dtb-$(CONFIG_TARGET_COREPRIMEVELTE) += pxa1908-samsung-coreprimevelte.dtb
 
+dtb-$(CONFIG_TARGET_EN7523) += en7523-evb.dtb
+dtb-$(CONFIG_TARGET_AN7552) += an7552-evb.dtb an7563-evb.dtb
+
 include $(srctree)/scripts/Makefile.dts
 
 # Add any required device tree compiler flags here

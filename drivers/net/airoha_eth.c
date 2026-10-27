@@ -43,6 +43,7 @@
 #endif
 
 #include "airoha/pcs-airoha.h"
+#include "airoha/phy-an7552.h"
 
 #define AIROHA_MAX_NUM_GDM_PORTS	4
 #define AIROHA_MAX_NUM_QDMA		1
@@ -186,6 +187,14 @@
 #define CDM1_BASE			0x0400
 #define GDM1_BASE			0x0500
 #define PPE1_BASE			0x0c00
+
+#define AN7552_FE_RST_GLO_CFG		0x0004
+#define AN7552_FE_RST_CORE		BIT(0)
+#define AN7552_FE_PCE_CFG			0x0070
+#define AN7552_PSE_SHARE_USED_THD		0x00d0
+#define AN7552_PSE_FQ_CFG			0x014c
+#define AN7552_QDMA2_FC_MAPPING5		0x21c4
+#define AN7552_GDMP_SRAM_SEL		0x0074
 
 #define CDM2_BASE			0x1400
 #define GDM2_BASE			0x1500
@@ -622,6 +631,7 @@ struct airoha_gdm_port {
 
 struct airoha_eth {
 	void __iomem *fe_regs;
+	void __iomem *gdmp_regs;
 	void __iomem *switch_regs;
 	struct udevice *switch_mdio_dev;
 
@@ -1094,6 +1104,7 @@ static int airoha_get_fe_port(struct airoha_gdm_port *port)
 		return EN751221_FPORT_GDM1;
 	case 0x7580:
 	case 0x7523:
+	case 0x7552:
 		/* FIXME: GDM1 is the only supported port */
 		return FE_PSE_PORT_GDM1;
 	case 0x7583:
@@ -1202,6 +1213,22 @@ static int airoha_fe_init(struct airoha_gdm_port *port)
 		en751221_fe_trace(port->qdma->eth, port->id, "fe: before");
 
 	airoha_fe_maccr_init(port);
+
+	if (port->qdma->eth->soc->version == 0x7552) {
+		struct airoha_eth *eth = port->qdma->eth;
+
+		/* U-Boot uses the CPU path without PPE, PCE or special tags. */
+		airoha_fe_wr(eth, AN7552_FE_PCE_CFG, 0);
+		airoha_fe_wr(eth, REG_CDM1_HWF_CHN_EN, 0);
+		airoha_fe_wr(eth, REG_CDM2_HWF_CHN_EN, 0);
+		airoha_fe_clear(eth, REG_CDM_CSG_CFG, CDM_STAG_EN);
+		airoha_fe_rmw(eth, REG_FE_CPORT_CFG, BIT(24),
+			      FE_CPORT_PAD_EN | BIT(25));
+		/* No PON consumer is registered in U-Boot. */
+		airoha_fe_rmw(eth, REG_GDM_FWD_CFG(2),
+			      GDM_UCFQ_MASK | GDM_BCFQ_MASK |
+			      GDM_MCFQ_MASK | GDM_OCFQ_MASK, 0xffff);
+	}
 
 	if (airoha_is_gen1(port->qdma->eth))
 		en751221_fe_trace(port->qdma->eth, port->id, "fe: after");
@@ -2097,6 +2124,16 @@ static int airoha_hw_init(struct udevice *dev,
 
 	mdelay(20);
 
+	if (eth->soc->version == 0x7552) {
+		/* Match the AN7552 SDK before QDMA gets its descriptor bases. */
+		writel(3, eth->gdmp_regs + AN7552_GDMP_SRAM_SEL);
+		airoha_fe_wr(eth, AN7552_PSE_FQ_CFG, 0x500);
+		airoha_fe_wr(eth, AN7552_FE_RST_GLO_CFG, AN7552_FE_RST_CORE);
+		mdelay(1);
+		airoha_fe_wr(eth, AN7552_PSE_SHARE_USED_THD, 0x01e001f4);
+		airoha_fe_wr(eth, AN7552_QDMA2_FC_MAPPING5, 0x004b004a);
+	}
+
 	for (i = 0; i < ARRAY_SIZE(eth->qdma); i++) {
 		ret = airoha_qdma_init(dev, eth, &eth->qdma[i]);
 		if (ret)
@@ -2652,7 +2689,7 @@ static int airoha_switch_init(struct udevice *dev, struct airoha_eth *eth)
 			  airoha_switch_rr(eth, SWITCH_SYS_CTRL));
 		return 0;
 	}
-	if (data->version == 0x7580) {
+	if (data->version == 0x7580 || data->version == 0x7552) {
 		int port;
 
 		airoha_switch_wr(eth, SWITCH_MFC,
@@ -2882,6 +2919,12 @@ static int airoha_eth_probe(struct udevice *dev)
 	if (!eth->fe_regs)
 		return -ENOMEM;
 
+	if (data->version == 0x7552) {
+		eth->gdmp_regs = dev_remap_addr_name(dev, "gdmp");
+		if (!eth->gdmp_regs)
+			return -EINVAL;
+	}
+
 	if (!data->direct_reset) {
 		eth->rsts.resets = devm_kcalloc(dev, AIROHA_MAX_NUM_RSTS,
 						sizeof(struct reset_ctl), GFP_KERNEL);
@@ -2949,6 +2992,20 @@ static int airoha_eth_probe(struct udevice *dev)
 		mdio_dev = airoha_switch_mdio_init(dev);
 		if (!IS_ERR_OR_NULL(mdio_dev))
 			eth->switch_mdio_dev = mdio_dev;
+	}
+
+	if (data->version == 0x7552) {
+		u32 poll;
+
+		if (!eth->switch_mdio_dev)
+			return -ENODEV;
+		poll = airoha_switch_rr(eth, SWITCH_PHY_POLL);
+		airoha_switch_wr(eth, SWITCH_PHY_POLL,
+				 poll & ~(SWITCH_PHY_AP_EN | SWITCH_EEE_POLL_EN));
+		ret = an7552_switch_phy_init(eth->switch_mdio_dev);
+		airoha_switch_wr(eth, SWITCH_PHY_POLL, poll);
+		if (ret)
+			return ret;
 	}
 
 	ofnode_for_each_subnode(node, dev_ofnode(dev)) {
@@ -3499,6 +3556,10 @@ static int airoha_eth_send(struct udevice *dev, void *packet, int length)
 		msg1 = FIELD_PREP(QDMA_ETH_TXMSG_FPORT_MASK, fport) |
 		       FIELD_PREP(QDMA_ETH_TXMSG_METER_MASK, 0x7f);
 
+	/* AN7552 uses all ones to disable both accounting group selectors. */
+	if (qdma->eth->soc->version == 0x7552)
+		msg1 |= GENMASK(10, 0);
+
 	val = FIELD_PREP(QDMA_DESC_LEN_MASK, length);
 	WRITE_ONCE(desc->ctrl, cpu_to_le32(val));
 	WRITE_ONCE(desc->addr, cpu_to_le32(dma_addr));
@@ -3668,6 +3729,12 @@ static const struct airoha_eth_soc_data en7523_data = {
 	.switch_compatible = "airoha,en7523-switch",
 };
 
+static const struct airoha_eth_soc_data an7552_data = {
+	.version = 0x7552,
+	.switch_mdio = true,
+	.switch_compatible = "airoha,an7552-switch",
+};
+
 static const struct airoha_eth_soc_data en751221_data = {
 	.version = 0x7512,
 	.econet = true,
@@ -3734,6 +3801,9 @@ static const struct udevice_id airoha_eth_ids[] = {
 	},
 	{ .compatible = "airoha,en7523-eth",
 	  .data = (ulong)&en7523_data,
+	},
+	{ .compatible = "airoha,an7552-eth",
+	  .data = (ulong)&an7552_data,
 	},
 	{ .compatible = "airoha,en7581-eth",
 	  .data = (ulong)&en7581_data,

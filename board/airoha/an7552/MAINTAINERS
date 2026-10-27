@@ -1,0 +1,13 @@
+AN7552 / AN7563
+M:	Matheus Sampaio Queiroga <srherobrine20@gmail.com>
+S:	Maintained
+F:	arch/arm/mach-airoha/an7552/
+F:	board/airoha/an7552/
+F:	arch/arm/dts/an7552*
+F:	arch/arm/dts/an7563*
+F:	configs/an7552_evb_defconfig
+F:	configs/an7563_evb_defconfig
+F:	include/configs/an7552.h
+F:	drivers/pinctrl/airoha/pinctrl-an7563.c
+F:	drivers/net/airoha/phy-an7552.*
+F:	doc/board/airoha/an7552.rst

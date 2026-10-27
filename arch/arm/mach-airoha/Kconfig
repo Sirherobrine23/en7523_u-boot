@@ -20,6 +20,19 @@ config TARGET_EN7523
 	  With advanced hardware design, EN7523 provides high processing
 	  performance and low power consumption.
 
+config TARGET_AN7552
+	bool "Airoha AN7552/AN7563 SoCs"
+	select CPU_V7A
+	select ARMV7_SET_CORTEX_SMPEN
+	select REGMAP
+	select OF_SYSTEM_SETUP
+	select ARCH_FIXUP_FDT_MEMORY
+	help
+	  Support the dual-core Cortex-A53 AN7552 family, including AN7563,
+	  in AArch32 mode. U-Boot runs after the vendor DRAM initialization
+	  and trusted firmware, as in the A7552 SDK boot flow.
+	  The evaluation boards provide serial, SPI flash and copper Ethernet.
+
 config TARGET_AN7581
 	bool "Airoha AN7581 SoC"
 	select ARM64
@@ -46,16 +59,19 @@ endchoice
 
 config SYS_SOC
 	default "en7523" if TARGET_EN7523
+	default "an7552" if TARGET_AN7552
 	default "an7581" if TARGET_AN7581
 	default "an7583" if TARGET_AN7583
 
 config SYS_BOARD
 	default "en7523" if TARGET_EN7523
+	default "an7552" if TARGET_AN7552
 	default "an7581" if TARGET_AN7581
 	default "an7583" if TARGET_AN7583
 
 config SYS_CONFIG_NAME
 	default "en7523" if TARGET_EN7523
+	default "an7552" if TARGET_AN7552
 	default "an7581" if TARGET_AN7581
 	default "an7583" if TARGET_AN7583
 

@@ -1,0 +1,25 @@
+// SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+/dts-v1/;
+
+#include "an7552.dtsi"
+
+/ {
+	model = "Airoha AN7552 Evaluation Board";
+	compatible = "airoha,an7552-evb", "airoha,an7552";
+};
+
+&eth {
+	status = "okay";
+};
+
+&spi0 {
+	status = "okay";
+
+	nand@0 {
+		compatible = "spi-nand";
+		reg = <0>;
+		spi-max-frequency = <50000000>;
+		spi-tx-bus-width = <1>;
+		spi-rx-bus-width = <2>;
+	};
+};

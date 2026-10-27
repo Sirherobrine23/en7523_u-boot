@@ -364,7 +364,8 @@ static int airoha_reset_probe(struct udevice *dev)
 		return reset_init(dev, en7580_rst_map, en7581_rst_ofs,
 				  ARRAY_SIZE(en7580_rst_map));
 
-	if (ofnode_device_is_compatible(node, "airoha,en7523-scu"))
+	if (ofnode_device_is_compatible(node, "airoha,en7523-scu") ||
+	    ofnode_device_is_compatible(node, "airoha,an7552-scu"))
 		return reset_init(dev, en7523_rst_map, en7581_rst_ofs,
 				  ARRAY_SIZE(en7523_rst_map));
 
