@@ -5,10 +5,10 @@ bootled_pwr=green:power-36
 
 bootconf=config-1
 bootfile=openwrt-airoha-en7528-tplink_xc220-g3v-initramfs-kernel.bin
-bootloaderfile=openwrt-airoha-en7528-tplink_xc220-g3v-uboot-bootloader.bin
+bootloaderfile=openwrt-airoha-en7528-tplink_xc220-g3v-tcboot.bin
 
 boot_tftp=tftpboot $loadaddr $bootfile && bootm $loadaddr#$bootconf
-nor_read_openwrt=mtd read firmware $loadaddr 0x0 0x800000 && iminfo $loadaddr
+nor_read_openwrt=mtd read firmware $loadaddr 0x0 0x800000
 
 boot_openwrt=led $bootled_pwr blink 255; run nor_read_openwrt && bootm $loadaddr#$bootconf; echo Install openwrt ; run boot_tftp ; led $bootled_pwr on
 

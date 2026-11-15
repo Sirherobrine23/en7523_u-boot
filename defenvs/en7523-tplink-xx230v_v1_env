@@ -5,12 +5,12 @@ bootled_pwr=green:power
 
 bootconf=config-1
 bootfile=openwrt-airoha-en7523-tplink_xx230v-v1-initramfs-kernel.bin
-bootloaderfile=openwrt-airoha-en7523-tplink_xx230v-v1-uboot-bootloader.bin
+bootloaderfile=openwrt-airoha-en7523-tplink_xx230v-v1-tcboot.bin
 
 boot_tftp=tftpboot $loadaddr $bootfile && bootm $loadaddr#$bootconf
-ubi_read_openwrt=ubi read $loadaddr fit && iminfo $loadaddr
+ubi_read_openwrt=ubi read $loadaddr fit
 
-boot_openwrt=led $bootled_pwr blink 255; ( run ubi_read_openwrt || echo Install openwrt ; run boot_tftp ) && bootm $loadaddr#$bootconf ; led $bootled_pwr on
+boot_openwrt=led $bootled_pwr blink 255; run ubi_read_openwrt && bootm $loadaddr#$bootconf || echo Install openwrt ; run boot_tftp ; led $bootled_pwr on
 boot_ubi=ubi part ubi && run boot_openwrt
 
 upgrade_uboot=\
@@ -18,10 +18,9 @@ upgrade_uboot=\
   mtd erase u-boot && mtd write u-boot 0x89600000
 
 format_ubi_part=\
+  ubi detach; \
   mtd read spi-nand0 0x89400000 0xa0000 $art_size && \
   mtd erase ubi && ubi part ubi && \
-  ubi create ubootenv 0x1f000 && \
-  ubi create ubootenv2 0x1f000 && \
   ubi create art $art_size && ubi write 0x89400000 art $art_size && \
   run upgrade_uboot
 
