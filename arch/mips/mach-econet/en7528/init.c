@@ -9,10 +9,12 @@
 #include <asm/global_data.h>
 #include <asm/system.h>
 #include <linux/bitops.h>
+#include <linux/bitfield.h>
 #include <linux/errno.h>
 #include <linux/io.h>
 #include <linux/sizes.h>
 #include <soc/airoha/pkgids.h>
+#include <time.h>
 
 DECLARE_GLOBAL_DATA_PTR;
 
@@ -31,17 +33,13 @@ int dram_init(void)
 	 * the vendor GET_DRAM_SIZE() contract, which returns dram_size << 4.
 	 */
 	value = __raw_readl((void __iomem *)EN7528_SYS_GLOBAL_PARM);
-	if (IS_ENABLED(CONFIG_TARGET_EN751627))
-		size_units = value & GENMASK(11, 0);
-	else
-		size_units = (value >> 20) & GENMASK(11, 0);
-
+	size_units = (value >> 20) & GENMASK(11, 0);
 	size_mb = size_units << 4;
 
 	debug("EN751627/EN7528 DRAM: global-param=%08x units=%u size=%u MiB\n",
 	      value, size_units, size_mb);
 
-	if (size_mb < 32 || size_mb > 512) {
+	if (size_mb < 32 || size_mb > 1024) {
 		printf("Invalid EN751627/EN7528 calibrated DRAM size: %u MiB\n",
 		       size_mb);
 		return -EINVAL;
@@ -74,6 +72,17 @@ int ft_system_setup(void *blob, struct bd_info *bd)
 	u64 size[1] = { bd->bi_dram[0].size };
 
 	return fdt_fixup_memory_banks(blob, start, size, 1);
+}
+#endif
+
+#ifdef CONFIG_TARGET_EN751627
+ulong notrace get_tbclk(void)
+{
+	u32 value = __raw_readl((void __iomem *)EN7528_SYS_GLOBAL_PARM);
+	u32 units = FIELD_GET(GENMASK(19, 12), value);
+
+	/* DRAMC stores CPU frequency in units of 4 MHz; Count runs at /2. */
+	return units ? (ulong)units * 2000000 : CONFIG_SYS_MIPS_TIMER_FREQ;
 }
 #endif
 

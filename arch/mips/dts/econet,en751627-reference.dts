@@ -22,18 +22,6 @@
 	status = "okay";
 };
 
-&spi0 {
-	status = "okay";
-
-	flash@0 {
-		compatible = "spi-nand";
-		reg = <0>;
-		spi-max-frequency = <25000000>;
-		spi-tx-bus-width = <1>;
-		spi-rx-bus-width = <1>;
-	};
-};
-
 &eth {
 	status = "okay";
 };
@@ -44,4 +32,32 @@
 
 &switch {
 	status = "okay";
+};
+
+&spi0 {
+	status = "okay";
+
+	nand: nand@0 {
+		compatible = "spi-nand";
+		reg = <0>;
+		spi-max-frequency = <50000000>;
+		spi-tx-bus-width = <1>;
+		spi-rx-bus-width = <2>;
+
+		partitions {
+			compatible = "fixed-partitions";
+			#address-cells = <1>;
+			#size-cells = <1>;
+	
+			partition@0 {
+				label = "u-boot";
+				reg = <0x000000 0x100000>;
+			};
+	
+			partition@100000 {
+				label = "ubi";
+				reg = <0x100000 0x000000>;
+			};
+		};
+	};
 };
