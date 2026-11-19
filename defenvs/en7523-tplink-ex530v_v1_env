@@ -1,4 +1,4 @@
-loadaddr=0x89400000
+loadaddr=0x85000000
 ipaddr=192.168.1.1
 serverip=192.168.1.10
 bootled_pwr=green:power
@@ -14,14 +14,14 @@ boot_openwrt=led $bootled_pwr blink 255; run ubi_read_openwrt && bootm $loadaddr
 boot_ubi=ubi part ubi && run boot_openwrt
 
 upgrade_uboot=\
-  mw.b 0x89800000 0xff 0x100000 && tftpboot 0x89800000 ${bootloaderfile} && \
-  mtd erase u-boot && mtd write u-boot 0x89800000
+  mw.b 0x85000000 0xff 0x100000 && tftpboot 0x85000000 ${bootloaderfile} && \
+  mtd erase u-boot && mtd write u-boot 0x85000000
 
 format_ubi_part=\
   ubi detach; \
-  mtd read spi-nand0 0x89400000 0xa0000 0x400000 && \
+  mtd read spi-nand0 0x85100000 0xa0000 0x400000 && \
   mtd erase ubi && ubi part ubi && \
-  ubi create art 0x400000 && ubi write 0x89400000 art 0x400000
+  ubi create art 0x400000 && ubi write 0x85100000 art 0x400000
 
 bootcmd=run boot_ubi
 bootdelay=3

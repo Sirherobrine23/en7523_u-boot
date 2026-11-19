@@ -1,4 +1,4 @@
-loadaddr=0x89400000
+loadaddr=0x85000000
 ipaddr=192.168.1.1
 serverip=192.168.1.10
 bootled_pwr=blue:wan-online-8
@@ -14,20 +14,20 @@ boot_openwrt=led $bootled_pwr blink 255; run ubi_read_openwrt && bootm $loadaddr
 boot_ubi=ubi part ubi && run boot_openwrt
 
 upgrade_uboot=\
-  mw.b 0x896C0000 0xff 0x100000 && tftpboot 0x896C0000 ${bootloaderfile} && \
-  mtd erase u-boot && mtd write u-boot 0x896C0000
+  mw.b 0x85000000 0xff 0x100000 && tftpboot 0x85000000 ${bootloaderfile} && \
+  mtd erase u-boot && mtd write u-boot 0x85000000
 
 format_ubi_part=\
   ubi detach; \
-  mtd read spi-nand0 0x89400000 0x50c0000 0x040000 && \
-  mtd read spi-nand0 0x89440000 0x5100000 0x040000 && \
-  mtd read spi-nand0 0x89480000 0x6dc0000 0x240000 && \
+  mtd read spi-nand0 0x85100000 0x50c0000 0x040000 && \
+  mtd read spi-nand0 0x85140000 0x5100000 0x040000 && \
+  mtd read spi-nand0 0x85180000 0x6dc0000 0x240000 && \
   \
   mtd erase ubi && ubi part ubi && \
   ubi create ubootenv 0x40000 && \
   ubi create ubootenv2 0x40000 && \
-  ubi create art 0x400000 && ubi write 0x89480000 art 0x400000 && \
-  env import -b 0x89400000 0x040000 ethaddr asp_gpon_sn asp_gpon_pw || env import -b 0x89440000 0x040000 ethaddr asp_gpon_sn asp_gpon_pw; \
+  ubi create art 0x400000 && ubi write 0x85180000 art 0x400000 && \
+  env import -b 0x85100000 0x040000 ethaddr asp_gpon_sn asp_gpon_pw || env import -b 0x85140000 0x040000 ethaddr asp_gpon_sn asp_gpon_pw; \
   saveenv && saveenv && run upgrade_uboot
 
 bootcmd=run boot_ubi
