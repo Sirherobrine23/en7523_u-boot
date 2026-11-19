@@ -272,6 +272,24 @@ struct airoha_snand_priv {
 	int dma;
 };
 
+/*
+ * dma_map_single() in this U-Boot keeps the CPU virtual address as its
+ * mapping cookie. On 32-bit MIPS, KSEG0/KSEG1 aliases (0x8.../0xa...)
+ * are not physical addresses that the NFI bus master can DMA to.
+ * Keep the original cookie for dma_unmap_single(), but program the
+ * controller with the physical address of the buffer.
+ */
+static dma_addr_t airoha_snand_dma_hw_addr(void *buf, dma_addr_t mapped)
+{
+#ifdef CONFIG_MIPS
+	(void)mapped;
+	return virt_to_phys(buf);
+#else
+	(void)buf;
+	return mapped;
+#endif
+}
+
 static void airoha_snand_update_bits(void __iomem *base, u32 reg,
 				     u32 mask, u32 value)
 {
@@ -920,7 +938,8 @@ static ssize_t airoha_snand_dirmap_read(struct spi_mem_dirmap_desc *desc,
 				  DMA_FROM_DEVICE);
 
 	/* set dma addr */
-	NFI_WRITE(priv, REG_SPI_NFI_STRADDR, dma_addr);
+	NFI_WRITE(priv, REG_SPI_NFI_STRADDR,
+		  airoha_snand_dma_hw_addr(txrx_buf, dma_addr));
 
 	/*
 	 * Setup transfer length
@@ -1064,7 +1083,8 @@ static ssize_t airoha_snand_dirmap_write(struct spi_mem_dirmap_desc *desc,
 				  DMA_TO_DEVICE);
 
 	/* set dma addr */
-	NFI_WRITE(priv, REG_SPI_NFI_STRADDR, dma_addr);
+	NFI_WRITE(priv, REG_SPI_NFI_STRADDR,
+		  airoha_snand_dma_hw_addr(txrx_buf, dma_addr));
 
 	/*
 	 * Setup transfer length
