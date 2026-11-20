@@ -257,6 +257,7 @@ struct airoha_snand_soc_data {
 	bool has_nfi;
 	bool has_nfi2spi;
 	bool has_boot_trp;
+	bool no_dma_read;
 	bool double_cs;
 	u8 manual_dummy;
 };
@@ -853,7 +854,7 @@ static ssize_t airoha_snand_dirmap_read(struct spi_mem_dirmap_desc *desc,
 	size_t bytes;
 	int err;
 
-	if (!priv->dma) {
+	if (!priv->dma || priv->soc->no_dma_read) {
 		/* simplified version of spi_mem_no_dirmap_read() */
 		struct spi_mem_op op = desc->info.op_tmpl;
 
@@ -1371,6 +1372,12 @@ static const struct airoha_snand_soc_data en751221_spi_data = {
 	.manual_dummy = 1,
 };
 
+static const struct airoha_snand_soc_data en751627_spi_data = {
+	.has_nfi = true,
+	.has_nfi2spi = true,
+	.no_dma_read = true,
+};
+
 static const struct airoha_snand_soc_data en7523_spi_data = {
 	.has_nfi = true,
 	.has_nfi2spi = true,
@@ -1379,6 +1386,7 @@ static const struct airoha_snand_soc_data en7523_spi_data = {
 
 static const struct udevice_id airoha_snand_ids[] = {
 	{ .compatible = "airoha,en751221-spi", .data = (ulong)&en751221_spi_data },
+	{ .compatible = "airoha,en751627-spi", .data = (ulong)&en751627_spi_data },
 	{ .compatible = "airoha,en7523-spi", .data = (ulong)&en7523_spi_data },
 	{ .compatible = "airoha,en7581-snand", .data = (ulong)&en7523_spi_data },
 	{ }
