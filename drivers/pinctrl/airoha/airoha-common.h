@@ -69,7 +69,7 @@ struct airoha_pinctrl_func_group {
 		u32 offset;
 		u32 mask;
 		u32 val;
-	} regmap[2];
+	} regmap[4];
 	int regmap_size;
 };
 

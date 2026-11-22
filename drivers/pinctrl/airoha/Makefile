@@ -3,6 +3,7 @@
 obj-$(CONFIG_PINCTRL_AIROHA)		+= pinctrl-airoha.o
 
 obj-$(CONFIG_PINCTRL_AIROHA_EN751221)	+= pinctrl-en751221.o
+obj-$(CONFIG_PINCTRL_AIROHA_EN751627)	+= pinctrl-en751627.o
 obj-$(CONFIG_PINCTRL_AIROHA_EN7528)	+= pinctrl-en7528.o
 obj-$(CONFIG_PINCTRL_AIROHA_EN7580)	+= pinctrl-en7580.o
 obj-$(CONFIG_PINCTRL_AIROHA_EN7523)	+= pinctrl-en7523.o

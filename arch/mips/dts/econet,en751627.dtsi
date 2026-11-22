@@ -54,7 +54,7 @@
 			reg = <0x1fbf0200 0xc0>;
 
 			pinctrl: pinctrl {
-				compatible = "airoha,en7528-pinctrl";
+				compatible = "airoha,en751627-pinctrl";
 				airoha,chip-scu = <&chip_scu>;
 
 				gpio-controller;

@@ -18,6 +18,15 @@ config PINCTRL_AIROHA_EN751221
 	  Enable pin multiplexing, pin configuration and GPIO support for
 	  EcoNet EN751221 family SoCs.
 
+config PINCTRL_AIROHA_EN751627
+	bool "EcoNet EN7516/EN7527 pin controller and gpio driver"
+	depends on TARGET_EN751627
+	select PINCTRL_AIROHA
+	help
+	  Enable pin multiplexing, pin configuration and GPIO support for
+	  EcoNet EN7516/EN7527 family SoCs. Some mux and electrical settings
+	  are provisional and still need validation on hardware.
+
 config PINCTRL_AIROHA_EN7528
 	bool "EcoNet EN7528 pin controller and gpio driver"
 	depends on TARGET_EN7528

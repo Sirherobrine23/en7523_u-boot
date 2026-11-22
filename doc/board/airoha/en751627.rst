@@ -31,6 +31,15 @@ reset and switch compatibles retain EN7528 fallbacks for their shared
 register layout. SPI and SCU regmaps use native-endian 32-bit MMIO; UART
 uses aligned big-endian 32-bit accesses.
 
+The EN751627 pinctrl driver is ported from the Linux driver and exposes
+GPIO0-41, peripheral mux groups, pull configuration and drive strength
+through the shared Airoha pinctrl/GPIO core. Standalone pads are available
+for pin configuration only. The driver retains the experimental status of
+the Linux data: several pad mappings, LED routing and electrical settings
+are provisional and still need validation on EN7516/EN7527 hardware.
+Probe does not initialize entire mux registers; selecting a pin state or
+configuring GPIO direction updates the corresponding selector bits.
+
 The generic reference DTS enables GDM1, the integrated switch and a single
 SPI-NAND on CS0. No board-specific flash partitions are assumed. For a
 SPI-NOR board, change the flash compatible to ``jedec,spi-nor`` in the
