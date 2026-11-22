@@ -1,0 +1,168 @@
+// SPDX-License-Identifier: GPL-2.0+
+/dts-v1/;
+#include "econet,en751627.dtsi"
+
+/ {
+	model = "Zyxel VMG8623-T50B";
+	compatible = "econet,en751627-zyxel_vmg8623-t50b", "econet,en751627";
+
+	memory@0 {
+		device_type = "memory";
+		/* Placeholder; dram_init uses the vendor calibrated size. */
+		reg = <0x00000000 0x10000000>;
+	};
+
+	chosen {
+		stdout-path = "serial0:115200n8";
+	};
+
+	keys {
+		compatible = "gpio-keys";
+
+		key-reset {
+			label = "Reset";
+			gpios = <&pinctrl 0 GPIO_ACTIVE_LOW>;
+			linux,code = <KEY_RESTART>;
+			debounce-interval = <60>;
+		};
+
+		wps {
+			label = "wps";
+			gpios = <&pinctrl 28 GPIO_ACTIVE_LOW>;
+			linux,code = <KEY_WPS_BUTTON>;
+			debounce-interval = <60>;
+		};
+
+		key-wlan {
+			label = "wifi";
+			gpios = <&pinctrl 2 GPIO_ACTIVE_LOW>;
+			linux,code = <KEY_RFKILL>;
+			debounce-interval = <60>;
+		};
+	};
+
+	leds {
+		compatible = "gpio-leds";
+
+		led_power_green: led-power-green {
+			color = <LED_COLOR_ID_GREEN>;
+			function = LED_FUNCTION_STATUS;
+			function-enumerator = <8>;
+			gpios = <&pinctrl 8 GPIO_ACTIVE_LOW>;
+		};
+
+		led_power_red: led-power-red {
+			color = <LED_COLOR_ID_RED>;
+			function = LED_FUNCTION_STATUS;
+			function-enumerator = <6>;
+			gpios = <&pinctrl 6 GPIO_ACTIVE_LOW>;
+		};
+
+		led-internet {
+			color = <LED_COLOR_ID_GREEN>;
+			function = LED_FUNCTION_WAN_ONLINE;
+			function-enumerator = <4>;
+			gpios = <&pinctrl 4 GPIO_ACTIVE_LOW>;
+		};
+
+		led_internet_red: led-internet-red {
+			color = <LED_COLOR_ID_RED>;
+			function = LED_FUNCTION_WAN_ONLINE;
+			function-enumerator = <3>;
+			gpios = <&pinctrl 3 GPIO_ACTIVE_LOW>;
+		};
+
+		led_dsl: led-dsl {
+			color = <LED_COLOR_ID_GREEN>;
+			function = LED_FUNCTION_STATUS;
+			function-enumerator = <5>;
+			gpios = <&pinctrl 5 GPIO_ACTIVE_LOW>;
+		};
+
+		led_voip_green: led-voip-green {
+			color = <LED_COLOR_ID_GREEN>;
+			function = LED_FUNCTION_STATUS;
+			function-enumerator = <9>;
+			gpios = <&pinctrl 9 GPIO_ACTIVE_LOW>;
+		};
+
+		led_voip_amber: led-voip-amber {
+			color = <LED_COLOR_ID_AMBER>;
+			function = LED_FUNCTION_STATUS;
+			function-enumerator = <10>;
+			gpios = <&pinctrl 10 GPIO_ACTIVE_LOW>;
+		};
+
+		led_wlan_2g: led-wlan-2g {
+			color = <LED_COLOR_ID_AMBER>;
+			function = LED_FUNCTION_STATUS;
+			function-enumerator = <21>;
+			gpios = <&pinctrl 21 GPIO_ACTIVE_LOW>;
+		};
+
+		led_wlan_5g: led-wlan-5g {
+			color = <LED_COLOR_ID_AMBER>;
+			function = LED_FUNCTION_STATUS;
+			function-enumerator = <20>;
+			gpios = <&pinctrl 20 GPIO_ACTIVE_LOW>;
+		};
+
+		led_wps_2g: led-wps-2g {
+			color = <LED_COLOR_ID_AMBER>;
+			function = LED_FUNCTION_STATUS;
+			function-enumerator = <23>;
+			gpios = <&pinctrl 23 GPIO_ACTIVE_LOW>;
+		};
+
+		led_wps_5g: led-wps-5g {
+			color = <LED_COLOR_ID_AMBER>;
+			function = LED_FUNCTION_STATUS;
+			function-enumerator = <22>;
+			gpios = <&pinctrl 22 GPIO_ACTIVE_LOW>;
+		};
+	};
+};
+
+&uart0 {
+	status = "okay";
+};
+
+&eth {
+	status = "okay";
+};
+
+&gdm1 {
+	status = "okay";
+};
+
+&switch {
+	status = "okay";
+};
+
+&spi0 {
+	status = "okay";
+
+	nand: nand@0 {
+		compatible = "spi-nand";
+		reg = <0>;
+		spi-max-frequency = <50000000>;
+		spi-tx-bus-width = <1>;
+		spi-rx-bus-width = <2>;
+
+		partitions {
+			compatible = "fixed-partitions";
+			#address-cells = <1>;
+			#size-cells = <1>;
+	
+			partition@0 {
+				label = "u-boot";
+				reg = <0x000000 0x100000>;
+			};
+	
+			partition@100000 {
+				label = "ubi";
+				reg = <0x100000 0x000000>;
+			};
+		};
+	};
+};
