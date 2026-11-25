@@ -258,6 +258,8 @@ struct airoha_snand_soc_data {
 	bool has_nfi2spi;
 	bool has_boot_trp;
 	bool no_dma_read;
+	bool no_dma_write;
+	bool single_io_program;
 	bool double_cs;
 	u8 manual_dummy;
 };
@@ -758,10 +760,19 @@ static bool airoha_snand_is_page_ops(const struct spi_mem_op *op)
 static bool airoha_snand_supports_op(struct spi_slave *slave,
 				     const struct spi_mem_op *op)
 {
+	struct airoha_snand_priv *priv = dev_get_priv(slave->dev->parent);
+
 	if (!spi_mem_default_supports_op(slave, op))
 		return false;
 
 	if (op->cmd.buswidth != 1)
+		return false;
+
+	/* Use the single-I/O PROGRAM LOAD variants on EN751627. */
+	if (priv->soc->single_io_program && op->addr.nbytes == 2 &&
+	    op->data.dir == SPI_MEM_DATA_OUT &&
+	    (op->cmd.opcode == SPI_NAND_OP_PROGRAM_LOAD_QUAD ||
+	     op->cmd.opcode == SPI_NAND_OP_PROGRAM_LOAD_RAMDON_QUAD))
 		return false;
 
 	if (airoha_snand_is_page_ops(op))
@@ -1018,7 +1029,8 @@ static ssize_t airoha_snand_dirmap_write(struct spi_mem_dirmap_desc *desc,
 	size_t bytes;
 	int err;
 
-	if (!priv->dma || !airoha_snand_dma_write_ok(desc, offs, len))
+	if (!priv->dma || priv->soc->no_dma_write ||
+	    !airoha_snand_dma_write_ok(desc, offs, len))
 		return airoha_snand_no_dirmap_write(desc, offs, len, buf);
 
 	bytes = len;
@@ -1376,6 +1388,8 @@ static const struct airoha_snand_soc_data en751627_spi_data = {
 	.has_nfi = true,
 	.has_nfi2spi = true,
 	.no_dma_read = true,
+	.no_dma_write = true,
+	.single_io_program = true,
 };
 
 static const struct airoha_snand_soc_data en7523_spi_data = {
