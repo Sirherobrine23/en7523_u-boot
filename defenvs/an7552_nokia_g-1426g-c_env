@@ -1,0 +1,16 @@
+loadaddr=0x8a000000
+ipaddr=192.168.1.1
+serverip=192.168.1.10
+bootfile=openwrt-airoha-an7552-nokia_g-1426g-c-initramfs-kernel.bin
+boot_ubi=ubi part data && run boot_production
+boot_production=ubi read $loadaddr kernel && bootm $loadaddr
+boot_tftp=tftpboot $loadaddr $bootfile && bootm $loadaddr
+bootcmd=run boot_ubi
+bootdelay=3
+bootmenu_confirm_return=askenv - Press ENTER to return to menu ; bootmenu 60
+bootmenu_default=0
+bootmenu_delay=3
+bootmenu_title=      OpenWrt (Nokia G-1426G-C)
+bootmenu_0=Run default boot command.=run boot_ubi
+bootmenu_1=Boot initramfs via TFTP.=run boot_tftp ; run bootmenu_confirm_return
+bootmenu_2=Reboot.=reset
