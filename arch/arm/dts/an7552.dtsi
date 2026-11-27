@@ -15,7 +15,7 @@
 
 	aliases {
 		serial0 = &uart1;
-		spi0 = &snfi;
+		spi0 = &spi0;
 		ethernet0 = &gdm1;
 	};
 
